@@ -5,14 +5,11 @@ namespace HomeHero.Models
 {
     public class Aptitude_User
     {
-       
 		[Key]
         public int userApID { get; set; }
-
         [ForeignKey("")]
         public int aptitudeID { get; set; }
         [ForeignKey("")]
         public int userID { get; set; }
-
     }
 }
