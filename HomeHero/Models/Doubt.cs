@@ -6,14 +6,16 @@ namespace HomeHero.Models
     public class Doubt
     {
         [Key]
-        public int DoubtID { get; set; }
-        [ForeignKey("")]
-        public string questionerID { get; set; }
-        [ForeignKey("")]
-        public string responderID { get; set; }
-        public string questionContent { get; set; }
-        public string answerContent { get; set; }
-        public DateTime questionDate { get; set; }
-        public DateTime answerDate { get; set;}
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int DoubtID { get; set; }  
+        public int QuestionerID { get; set; }
+        public virtual User? Questioner { get; set; }
+        public int ResponderID { get; set; }
+        [ForeignKey("ResponderID")]
+        public virtual User? Responder { get; set; }
+        public string QuestionContent { get; set; }
+        public string AnswerContent { get; set; }
+        public DateTime QuestionDate { get; set; }
+        public DateTime AnswerDate { get; set;}
     }
 }

@@ -1,3 +1,6 @@
+using HomeHero.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace HomeHero
 {
     public class Program
@@ -8,7 +11,8 @@ namespace HomeHero
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddDbContext<HomeHeroContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("Conn")));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

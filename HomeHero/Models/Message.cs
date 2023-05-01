@@ -6,12 +6,15 @@ namespace HomeHero.Models
     public class Message
     {
         [Key]
-        public int mesaggeID { get; set; }
-        [ForeignKey("")]
-        public int chatID { get; set; }
-        [ForeignKey("")]
-        public int userChatID { get; set; }
-        public string messageContent { get; set; }
-        public DateTime dateMessage { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int MesaggeID { get; set; }      
+        public int ChatID { get; set; }
+        [ForeignKey("ChatID")]
+        public virtual Chat? Chat { get; set; }
+        public int UserChatID { get; set; }
+        [ForeignKey("UserChatID")]
+        public virtual User User { get; set; }
+        public string MessageContent { get; set; }
+        public DateTime DateMessage { get; set; }
     }
 }

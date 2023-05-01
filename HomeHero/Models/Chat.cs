@@ -6,9 +6,12 @@ namespace HomeHero.Models
     public class Chat
     {
         [Key]
-        public int chatID { get; set; }
-        [ForeignKey("")]
-        public int requestID { get; set; }
-        public DateTime chatCreationDate { get; set; } 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ChatID { get; set; }
+        public int RequestID { get; set; }
+        [ForeignKey("RequestID")]
+        public Request? Request { get; set; }
+        public DateTime ChatCreationDate { get; set; }
+        public virtual ICollection<Message> Messages { get; set;}
     }
 }

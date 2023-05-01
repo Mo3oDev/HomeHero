@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeHero.Models
 {
-    public class Role
+    public class RequestState
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int RoleID { get; set; }
-        public string NameRole { get; set; }
-        public virtual ICollection<User> Users { get; set;}
+        public int ReqStateID { get; set; }    
+        public int NameState { get; set; }
+        public virtual ICollection<Request> Requests { get; set; }
     }
 }

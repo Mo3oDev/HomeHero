@@ -6,16 +6,18 @@ namespace HomeHero.Models
     public class Qualification
     {
         [Key]
-        public int qualificationID { get; set; }
-        public decimal qualification { get; set; }
-        [ForeignKey("")]
-        public int helperUserID { get; set; }
-        [ForeignKey("")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int QualificationID { get; set; }
+        public decimal QualificationNumber { get; set; }       
+        public int HelperUserID { get; set; }
+        [ForeignKey("HelperUserID")]
+        public virtual User? HelperUser { get; set; }
         public int ApplicantUserID { get; set; }
-        [ForeignKey("")]
-        public int requestID { get; set; }
-        public string comment { get; set; }
-
-
+        [ForeignKey("ApplicantUserID")]
+        public virtual User? ApplicantUser { get; set; }
+        public int RequestID { get; set; }
+        [ForeignKey("RequestID")]
+        public virtual Request? Request { get; set; }
+        public string Comment { get; set; }
     }
 }
