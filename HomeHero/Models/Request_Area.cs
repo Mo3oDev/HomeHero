@@ -6,10 +6,13 @@ namespace HomeHero.Models
     public class Request_Area
     {
         [Key]
-        public int reqAreaID { get; set; }
-        [ForeignKey("")]
-        public int requestID { get; set; }
-        [ForeignKey("")]
-        public int areaID { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int RequestAreaID { get; set; }       
+        public int RequestID { get; set; }
+        [ForeignKey("RequestID")]
+        public virtual Request Request { get; set; }
+        public int AreaID { get; set; }
+        [ForeignKey("AreaID")]
+        public virtual Area Area { get; set; }
     }
 }
