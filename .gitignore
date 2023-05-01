@@ -9,10 +9,11 @@
 *.user
 *.userosscache
 *.sln.docstates
-# Ignore specific files and carpets 
+# Ignore specific files and carpets
 /bin/
 /obj/
-/appsettings.json
+/appsettings.Development.json
+/Data/Migrations/
 *.bak
 *.log
 .vs/
