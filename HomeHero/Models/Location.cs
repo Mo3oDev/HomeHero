@@ -1,13 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeHero.Models
 {
     public class Location
     {
         [Key]
-        public int locationID { get; set; }
-        public string city { get; set; }
-        public string address { get; set; }
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int LocationID { get; set; }
+        public string City { get; set; }
+        public string Address { get; set; }
+        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<Request> Requests { get; set; }
     }
 }

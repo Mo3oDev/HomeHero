@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeHero.Models
 {
     public class PayMethod
     {
         [Key]
-        public int pMethodID { get; set; }
-        public string namePMethod { get; set; }
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int PMethodID { get; set; }
+        public string NamePMethod { get; set; }
+        public virtual ICollection<PaymentRecord> PaymentRecords { get; set; }  
     }
 }

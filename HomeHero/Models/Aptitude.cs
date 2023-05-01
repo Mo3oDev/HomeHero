@@ -1,13 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeHero.Models
 {
     public class Aptitude
     {
         [Key]
-        public int aptitudeID { get; set; }
-        public string aptitudeName { get; set; }
-        public string aptitudeDescription { get; set; }
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int AptitudeID { get; set; }
+        public string AptitudeName { get; set; }
+        public string AptitudeDescription { get; set; }
+        public virtual ICollection<Aptitude_User> Aptitude_Users { get; set; }
     }
 }
