@@ -9,6 +9,13 @@
 *.user
 *.userosscache
 *.sln.docstates
+# Ignore specific files and carpets 
+/bin/
+/obj/
+/appsettings.json
+*.bak
+*.log
+.vs/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
