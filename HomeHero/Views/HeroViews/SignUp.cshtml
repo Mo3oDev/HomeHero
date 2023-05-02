@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Registarse";
+}
+
+@section logo{
+    <a class=" img-container " asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
+}
+@section inicioLI{
+
+}
+@section Main{
+    <section class="darkMain">
+        <div class="container text-white">
+            <div class="row d-flex justify-content-between">
+                <div class="col-6">
+                    <img class="img-fluid" src="~/Images/SignUp.png"/>
+                    <h1><span class="h">H</span>ome<span class="h">H</span>Hero</h1>
+                </div>
+                <div class="col-6">
+                    <from>
+                        <h2 > Crear una cuenta nueva</h2>
+                        <p>¿Ya estás registrado?<a asp-controller="Home" asp-action="LogIn">Inicia sesión aquí.</a></p>
+                        <form asp-controller="Home" asp-action="SignUpAction" method="post">
+                            <div class="form-group">
+                                <label for="name" class="control-label">NOMBRE</label>
+                                <input type="text" id="name" name="name" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="control-label">EMAIL</label>
+                                <input type="email" id="email" name="email" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="control-label">CONTRASEÑA</label>
+                                <input type="password" id="password" name="password" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="birthDate" class="control-label">EMAIL</label>
+                                <input type="date" id="birthDate" name="birthDate" class="form-control" />
+                            </div>
+                            <button type="submit" class="btn btn-primary m-2 fs-5">REGISTRARSE</button>
+                        </form>
+                    </from>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+

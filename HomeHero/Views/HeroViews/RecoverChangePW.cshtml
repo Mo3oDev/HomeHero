@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Recuperacion";
+}
+
+@section logo{
+    <a class=" img-container " asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
+}
+@section inicioLI{
+
+}
+@section Main{
+    <section class="darkMain">
+        <div class="container text-white">
+            <div class="row d-flex justify-content-between">
+                <div class="col-6">
+                    <from>
+                        <h2>Recupera tu contraseña</h2>
+                        <p>El pin es Correcto</p>
+                        <form asp-controller="Home" asp-action="SignUpAction" method="post">
+                            <div class="form-group">
+                                <label for="newPassword" class="control-label">NUEVA CONTRASEÑA</label>
+                                <input type="password" id="newPassword" name="newPassword" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword2" class="control-label">CONFIRMA LA NUEVA CONTRASEÑA</label>
+                                <input type="password" id="newPassword2" name="newPassword2" class="form-control" />
+                            </div>
+                            <button type="submit" class="btn btn-primary m-2 fs-5">CONTINUAR</button>
+                        </form>
+                    </from>
+                </div>
+                <div class="col-6">
+                    <img class="img-fluid" src="~/Images/logoRecover.png" />
+                    <h1><span class="h">H</span>ome<span class="h">H</span>Hero</h1>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    }

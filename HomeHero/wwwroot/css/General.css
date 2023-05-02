@@ -1,0 +1,63 @@
+﻿body {
+    background-image: url(../Images/patronBackground.jpg);
+    background-repeat: repeat;
+    margin: 0%;
+}
+
+.font-title {
+    font-family: 'Bruno Ace SC', cursive;
+    font-size: 1.6em;
+}
+
+.img-container{
+    width: 80px;
+}
+
+.img-container2 {
+    width: 48px;
+}
+
+.h {
+    font-family: 'Pacifico', cursive;
+    letter-spacing: .15em;
+    color: #387ccf;
+}
+
+.nav-custom {
+    background-color: rgb(34, 31, 31, 0.85);
+}
+
+.nav-custom a {
+    color:#e5eaea;
+}
+
+.logIn {
+    background: #de3124;
+    margin-right: 2em;
+    height: 100%;
+}
+
+.signUp {
+    background: #387ccf;
+    margin-right: 1em;
+}
+
+
+.nav-custom li {
+    font-family: 'Dosis', sans-serif;
+    font-weight:500;
+    padding: 0.1em 1.4em;
+    height: 100%;
+    border-radius: 20px;
+    border-bottom: none;
+    border-top: none;
+}
+.header{
+    height:12vh;
+}
+.darkMain {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(34, 31, 31, 0.85);
+    height: 88vh;
+}
