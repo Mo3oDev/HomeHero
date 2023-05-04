@@ -20,7 +20,28 @@ namespace HomeHero.Controllers
 
         public IActionResult Privacy()
         {
-            return View();
+            return View(); 
+        }
+        public IActionResult LogIn()
+        {
+            return View("~/Views/HeroViews/Login.cshtml");
+        }
+
+        public IActionResult RecoverSendCode()
+        {
+            return View("~/Views/HeroViews/RecoverSendCode.cshtml");
+        }
+        public IActionResult RecoverSendCodeAction(string email, int recoverPin)
+        {
+            return View("~/Views/HeroViews/RecoverChangePW.cshtml");
+        }
+        public IActionResult SignUp()
+        {
+            return View("~/Views/HeroViews/SignUp.cshtml");
+        }
+        public IActionResult Solicitudes()
+        {
+            return View("~/Views/HeroViews/SearchRequest.cshtml");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
