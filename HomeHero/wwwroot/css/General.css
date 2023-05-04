@@ -22,7 +22,12 @@
     letter-spacing: .15em;
     color: #387ccf;
 }
-
+.priColor {
+    color: #387ccf;
+}
+.secColor {
+    color: #FF9003;
+}
 .nav-custom {
     background-color: rgb(34, 31, 31, 0.85);
 }
@@ -60,4 +65,36 @@
     padding: 0;
     background-color: rgb(34, 31, 31, 0.85);
     height: 88vh;
+}
+
+@media screen and (max-width: 768px) {
+    .darkMain {
+        height: 100%;
+        padding:5%;
+    }
+}
+
+.title-page{
+   font-size:3em;
+}
+
+.formField{
+    padding-bottom: 3%;
+}
+
+.formField input{
+    padding: 2%;
+    margin-top:1%;
+    width:85%;
+    border:none;
+    border-radius:0px;
+    background:#e3d9d9;
+}
+    .formField input:focus {
+        background: #e3d9d9;
+    }
+
+.btn-form{
+    border-radius:2px;
+    text-align:center;
 }
