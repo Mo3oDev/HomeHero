@@ -1,7 +1,18 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "HomeHero";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Primera Pagina Home Hero </h1>
-</div>
+@section logo{
+    <a class=" img-container " asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
+}
+@section inicioLI{
+    <li class="nav-item logIn ">
+        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogIn">Iniciar Sesion</a>
+    </li>
+    <li class="nav-item signUp">
+        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="SignUp">Registrarse</a>
+    </li>
+}
+@section Main{
+
+}
