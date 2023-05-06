@@ -32,6 +32,10 @@ namespace HomeHero.Controllers
             return View("~/Views/HeroViews/Login.cshtml");
         }
 
+        public IActionResult LogInAction(string password,string email)
+        {
+            return View("~/Views/HeroViews/Principal.cshtml");
+        }
         public IActionResult RecoverSendCode()
         {
             return View("~/Views/HeroViews/RecoverSendCode.cshtml");

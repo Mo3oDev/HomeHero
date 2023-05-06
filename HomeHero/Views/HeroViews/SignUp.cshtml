@@ -12,28 +12,23 @@
     <section class="darkMain">
         <div class="container text-white">
             <div class="row d-flex justify-content-between">
-                <div class="col-6">
-                    <img class="img-fluid" src="~/Images/SignUp.png" />
-                    <h1><span class="h">H</span>ome<span class="h">H</span>Hero</h1>
+                <div class="col-lg-6 col-md-6 col-sm-12 text-center p-4">
+                    <img class="img-fluid" src="~/Images/SignUp.png"/>
+                    <p class="font-title title-page"><span class="h">H</span>ome<span class="h">H</span>ero</p>
                 </div>
-                <div class="col-6">
-                    <from>
-                        <h2> Crear una cuenta nueva</h2>
-                        <p>¿Ya estás registrado?<a asp-controller="Home" asp-action="LogIn">Inicia sesión aquí.</a></p>
+                <div class="col-lg-6 col-md-6 col-sm-12 p-4">
+                        <h2 class="priColor h1 p-2"> Crear una cuenta nueva</h2>
+                    <p class="fs-6">¿Ya estás registrado?  <a class="text-decoration-none priColor fw-bold" asp-controller="Home" asp-action="LogIn">Inicia sesión aquí.</a></p>
                         <form asp-controller="Home" asp-action="SignUpAction" method="post">
-                            <div class="form-group">
-                                <label for="name" class="control-label">NOMBRE(S)</label>
+                            <div class=" form-group formField">
+                                <label for="name" class="control-label">NOMBRE</label>
                                 <input type="text" id="name" name="name" class="form-control" />
                             </div>
-                            <div class="form-group">
-                                <label for="surnames" class="control-label">APELLIDO(S)</label>
-                                <input type="text" id="surnames" name="surnames" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label for="email" class="control-label">CORREO</label>
+                            <div class="form-group formField">
+                                <label for="email" class="control-label">EMAIL</label>
                                 <input type="email" id="email" name="email" class="form-control" />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group formField">
                                 <label for="password" class="control-label">CONTRASEÑA</label>
                                 <input type="password" id="password" name="password" class="form-control" />
                             </div>
@@ -52,7 +47,6 @@
                         </div>*@
                             <button type="submit" class="btn btn-primary m-2 fs-5">REGISTRARSE</button>
                         </form>
-                    </from>
                 </div>
             </div>
         </div>
