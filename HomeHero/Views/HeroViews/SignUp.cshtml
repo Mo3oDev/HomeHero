@@ -13,20 +13,24 @@
         <div class="container text-white">
             <div class="row d-flex justify-content-between">
                 <div class="col-6">
-                    <img class="img-fluid" src="~/Images/SignUp.png"/>
+                    <img class="img-fluid" src="~/Images/SignUp.png" />
                     <h1><span class="h">H</span>ome<span class="h">H</span>Hero</h1>
                 </div>
                 <div class="col-6">
                     <from>
-                        <h2 > Crear una cuenta nueva</h2>
+                        <h2> Crear una cuenta nueva</h2>
                         <p>¿Ya estás registrado?<a asp-controller="Home" asp-action="LogIn">Inicia sesión aquí.</a></p>
                         <form asp-controller="Home" asp-action="SignUpAction" method="post">
                             <div class="form-group">
-                                <label for="name" class="control-label">NOMBRE</label>
+                                <label for="name" class="control-label">NOMBRE(S)</label>
                                 <input type="text" id="name" name="name" class="form-control" />
                             </div>
                             <div class="form-group">
-                                <label for="email" class="control-label">EMAIL</label>
+                                <label for="surnames" class="control-label">APELLIDO(S)</label>
+                                <input type="text" id="surnames" name="surnames" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="control-label">CORREO</label>
                                 <input type="email" id="email" name="email" class="form-control" />
                             </div>
                             <div class="form-group">
@@ -34,9 +38,18 @@
                                 <input type="password" id="password" name="password" class="form-control" />
                             </div>
                             <div class="form-group">
-                                <label for="birthDate" class="control-label">EMAIL</label>
-                                <input type="date" id="birthDate" name="birthDate" class="form-control" />
+                                <label for="location">CIUDAD:</label>
+                                <select name="location" id="location" class="form-control">
+                                    @foreach (var location in ViewBag.LocationData)
+                                    {
+                                        <option value="@location.Value">@location.Text</option>
+                                    }
+                                </select>
                             </div>
+                            @* <div class="form-group">
+                        <label for="birthDate" class="control-label">FECHA DE NACIMIENTO:</label>
+                        <input type="date" id="birthDate" name="birthDate" class="form-control" />
+                        </div>*@
                             <button type="submit" class="btn btn-primary m-2 fs-5">REGISTRARSE</button>
                         </form>
                     </from>

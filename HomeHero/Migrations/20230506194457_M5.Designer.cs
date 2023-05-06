@@ -4,6 +4,7 @@ using HomeHero.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeHero.Migrations
 {
     [DbContext(typeof(HomeHeroContext))]
-    partial class HomeHeroContextModelSnapshot : ModelSnapshot
+    [Migration("20230506194457_M5")]
+    partial class M5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -309,6 +312,7 @@ namespace HomeHero.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LocationID"));
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
@@ -588,41 +592,33 @@ namespace HomeHero.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LocationResidenceID")
+                    b.Property<int?>("LocationResidenceID")
                         .HasColumnType("int");
 
                     b.Property<string>("NamesUser")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("QualificationUser")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                    b.Property<int?>("QualificationUser")
+                        .HasColumnType("int");
 
                     b.Property<string>("RealUserID")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(2);
+                    b.Property<int?>("RoleID")
+                        .HasColumnType("int");
 
                     b.Property<string>("SexUser")
                         .HasColumnType("nvarchar(1)");
 
                     b.Property<string>("SurnamesUser")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("VolunteerPermises")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.HasKey("UserId");
 
@@ -932,15 +928,11 @@ namespace HomeHero.Migrations
                 {
                     b.HasOne("HomeHero.Models.Location", "Location")
                         .WithMany("Users")
-                        .HasForeignKey("LocationResidenceID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LocationResidenceID");
 
                     b.HasOne("HomeHero.Models.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleID");
 
                     b.Navigation("Location");
 
