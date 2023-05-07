@@ -32,6 +32,17 @@ namespace HomeHero.Data
         public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Set default values in User Model
+            modelBuilder.Entity<User>()
+                .Property(p => p.QualificationUser)
+                .HasDefaultValue(0);
+            modelBuilder.Entity<User>()
+                .Property(p => p.VolunteerPermises)
+                .HasDefaultValue(false);
+            modelBuilder.Entity<User>()
+               .Property(p => p.RoleID)
+               .HasDefaultValue(2);
+
             modelBuilder.Entity<Complaint>()
                 .HasOne(q => q.AttenderUser)
                 .WithMany()
