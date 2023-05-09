@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using HomeHero.Filters;
 
 namespace HomeHero.Controllers
 {
@@ -65,8 +66,7 @@ namespace HomeHero.Controllers
                 {
                     ExpiresUtc = DateTime.Now.AddMinutes(45)
                 });
-
-                return View("~/Views/HeroViews/PaginaProtegida.cshtml");
+                return RedirectToAction("Index", "Home");
             }
         }
         public IActionResult RecoverSendCode()
@@ -117,10 +117,16 @@ namespace HomeHero.Controllers
             return View("~/Views/Manage/AccessError.cshtml");
         }
 
-        public async Task<IActionResult> LogOut()
+        public IActionResult LogOut()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return View("~/Views/HeroViews/Login.cshtml");
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
         }
+        [AuthorizeUsers]
+        public IActionResult ProtectedPage()
+        {
+            return View("~/Views/HeroViews/ProtectedPage.cshtml");
+        }
+
     }
 }
