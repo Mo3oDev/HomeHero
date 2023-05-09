@@ -1,4 +1,7 @@
 using HomeHero.Data;
+using HomeHero.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeHero
@@ -13,7 +16,47 @@ namespace HomeHero
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<HomeHeroContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("Conn")));
+
+            //Create a service for login 
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(50);
+            });
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(config =>
+                {
+                    config.AccessDeniedPath = "/Manage/AccessError";
+                });
+
+            builder.Services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
+
+            builder.Services.AddControllersWithViews(options => options.EnableEndpointRouting = false)
+                .AddSessionStateTempDataProvider();
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ADMINISTRADORES", policy => policy.RequireRole("ADMIN"));
+            });
+
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var dbContext = services.GetRequiredService<HomeHeroContext>();
+                    dbContext.Database.EnsureDeleted();
+                    dbContext.Database.EnsureCreated();
+                    SeedData.Initialize(services);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error occurred while deleting the data: " + ex.Message);
+                }
+
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

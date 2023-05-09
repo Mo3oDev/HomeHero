@@ -369,7 +369,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-
 /HomeHero/appsettings.json
-
+/HomeHero/appsettings.Development.json
+/HomeHero/Migrations
 
