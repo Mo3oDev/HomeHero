@@ -1,9 +1,13 @@
 ﻿using HomeHero.Data;
 using HomeHero.Models;
 using HomeHero.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
+using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HomeHero.Controllers
 {
@@ -24,17 +28,46 @@ namespace HomeHero.Controllers
 
         public IActionResult Privacy()
         {
-            return View(); 
+            return View();
         }
         public IActionResult LogIn()
         {
-   
+
             return View("~/Views/HeroViews/Login.cshtml");
         }
-
-        public IActionResult LogInAction(string password,string email)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogInAction([FromForm] string email, [FromForm] string password)
         {
-            return View("~/Views/HeroViews/Principal.cshtml");
+            HomeHeroServices heroServices = new HomeHeroServices(_context);
+            User user = heroServices.LogInUser(email, password);
+            if (user == null)
+            {
+                ViewData["message"] = "Datos invalidos!";
+                return View("~/Views/HeroViews/Login.cshtml");
+            }
+            else
+            {
+                ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
+
+                Claim claimUserName = new(ClaimTypes.Name, user.NamesUser);
+                Claim claimRole = new(ClaimTypes.Role, _context.Roles.FirstOrDefault(e => e.RoleID == user.RoleID).NameRole);
+                Claim claimIdUsuario = new("IdUsuario", user.UserId.ToString());
+                Claim claimEmail = new("EmailUsuario", user.Email);
+
+                identity.AddClaim(claimUserName);
+                identity.AddClaim(claimRole);
+                identity.AddClaim(claimIdUsuario);
+                identity.AddClaim(claimEmail);
+
+                ClaimsPrincipal userPrincipal = new ClaimsPrincipal(identity);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, new AuthenticationProperties
+                {
+                    ExpiresUtc = DateTime.Now.AddMinutes(45)
+                });
+
+                return View("~/Views/HeroViews/PaginaProtegida.cshtml");
+            }
         }
         public IActionResult RecoverSendCode()
         {
@@ -63,10 +96,30 @@ namespace HomeHero.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignUpAction([FromForm] string name , [FromForm] string surnames, [FromForm] string location, [FromForm] string email, [FromForm] string password)
+        public async Task<IActionResult> SignUpAction([FromForm] string name, [FromForm] string surnames, [FromForm] string location, [FromForm] string email, [FromForm] string password)
         {
             HomeHeroServices heroServices = new HomeHeroServices(_context);
-            await heroServices.AddUser(name, surnames,int.Parse(location),email, password);
+            bool registered = await heroServices.AddUser(name, surnames, int.Parse(location), email, password);
+            if (registered)
+                ViewBag.Message = "¡Usuario registrado con exito!";
+            else
+            {
+                ViewBag.Message = "¡El usuario ya existe!";
+                return View("~/Views/HeroViews/Login.cshtml");
+            }
+
+            return View("~/Views/HeroViews/Login.cshtml");
+        }
+
+        public IActionResult AccessError()
+        {
+            ViewBag.Message = "Error de acceso";
+            return View("~/Views/Manage/AccessError.cshtml");
+        }
+
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return View("~/Views/HeroViews/Login.cshtml");
         }
     }

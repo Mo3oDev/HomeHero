@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "Pagina Protegida";
+}
+@section Main{
+
+<h1 class="text-center mt-3">Hola @Context.User.Identity.Name, estas viendo una pagina protegida</h1>
+<h3 class="text-center"><a asp-controller="Home" asp-action="LogOut">Cerrar sesión</a></h3>
+}

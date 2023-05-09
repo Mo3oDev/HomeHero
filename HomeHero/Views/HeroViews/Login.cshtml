@@ -1,36 +1,36 @@
 ﻿@{
     ViewData["Title"] = "Inicio Sesion";
 }
-
-@section logo{
-    <a class=" img-container " asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
-}
-@section inicioLI{
-
-}
 @section Main{
+   
     <section class="darkMain">
+        @if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <div class="alert alert-success" role="alert">
+                @ViewBag.Message
+            </div>
+        }     
         <div class="container text-white">
             <div class="row d-flex justify-content-between">
                 <div class="col-lg-6 col-md-6 col-sm-12 p-4">
-                        <h2 class=" priColor h1 p-2"> Iniciar Sesion</h2>
+                    <h2 class="priColor h1">Iniciar Sesión</h2>
                     <p>¿Aun no estás registrado?  <a class="text-decoration-none priColor fw-bold" asp-controller="Home" asp-action="SignUp">Registrate aquí.</a></p>
                     <form asp-controller="Home" asp-action="LogInAction" method="post">
-                            <div class="form-group formField">
-                                <label for="email" class="control-label">EMAIL</label>
-                                <input type="email" id="email" name="email" class="form-control" />
-                            </div>
-                            <div class="form-group formField">
-                                <label for="password" class="control-label">CONTRASEÑA</label>
-                                <input type="password" id="password" name="password" class="form-control" />
-                            </div>
-                            <a class="text-decoration-none priColor d-block pb-2 fw-bold" asp-controller="Home" asp-action="RecoverSendCode">Olvide mi contraseña</a>
-                        <button type="submit" class="btn btn-light priColor btn-form fw-bolder fs-5">CONTINUAR</button>
-                        </form>
+                        <div class="form-group">
+                            <label for="email" class="control-label">EMAIL</label>
+                            <input type="email" id="email" name="email" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="control-label">CONTRASEÑA</label>
+                            <input type="password" id="password" name="password" class="form-control" />
+                        </div>
+                        <a class="text-decoration-none priColor d-block  fw-bold" asp-controller="Home" asp-action="RecoverSendCode">Olvide mi contraseña</a>
+                        <button type="submit" class="btn btn-primary fs-5">CONTINUAR</button>
+                    </form>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 p-4  text-center">
                     <img class="img-fluid" src="~/Images/logoLogIn.png" />
-                    <h1 class="font-title title-page "><span class="h">H</span>ome<span class="h">H</span>Hero</h1>
+                    <h1 class="font-title title-page "><span class="h">H</span>ome<span class="h">H</span>ero</h1>
                 </div>
             </div>
 
