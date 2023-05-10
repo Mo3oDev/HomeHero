@@ -34,11 +34,11 @@ namespace HomeHero.Services
         }
         public void ChangePassword(int userID, string password)
         {
-            User user = _context.Users.Find(userID);
+            User user = _context.User.Find(userID);
             byte[] salt = GenerateSalt();
             user.Salt = salt;
             user.Password = HashPassword(password, salt);
-            _context.Users.Update(user);
+            _context.User.Update(user);
             _context.SaveChangesAsync();
         }
 
@@ -98,7 +98,7 @@ namespace HomeHero.Services
         }
         public User? SaltIsCorrect(string inputSalt)
         {
-            User user = _context.Users.SingleOrDefault(e => e.Password.Equals(inputSalt));
+            User user = _context.User.SingleOrDefault(e => e.Password.Equals(inputSalt));
             if (user == null) return null;
             else return user;
         }

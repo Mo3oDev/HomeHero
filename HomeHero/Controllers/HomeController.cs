@@ -154,11 +154,12 @@ namespace HomeHero.Controllers
             return View("~/Views/HeroViews/RecoverSendCode.cshtml");
         }
 
-        public IActionResult RecoverSendCodeAction([FromForm] string email)
+        public async Task<IActionResult> RecoverSendCodeAction([FromForm] string email)
         {
             if (_heroServices.HHeroEncrypt.ExistEmail(email))
             {
                 ViewBag.RecoveryM = "Mensaje de recuperación enviado correctamente!";
+                await _heroServices.HHeroEmail.SendEmailAsync("juanmiguelvasquezmoreno@gmail.com", "Recuperacion de Contraseña - HomeHero","asb","Yami");
                 ViewBag.ValidateM = false;
                 return View("~/Views/HeroViews/RecoverChangePW.cshtml");
             }
