@@ -57,7 +57,7 @@ namespace HomeHero.Services
             if (query.Count() > 0) return true;
             else return false;
         }
-        public User? LogInUser(string email, string password)
+        public User LogInUser(string email, string password)
         {
 
             User user = _context.User.SingleOrDefault(x => x.Email == email);

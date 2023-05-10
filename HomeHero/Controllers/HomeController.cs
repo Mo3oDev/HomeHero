@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using HomeHero.Filters;
+using System.Text;
 
 namespace HomeHero.Controllers
 {
@@ -16,6 +17,7 @@ namespace HomeHero.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly HomeHeroContext _context;
+
         public HomeController(ILogger<HomeController> logger, HomeHeroContext context)
         {
             _logger = logger;
@@ -49,6 +51,7 @@ namespace HomeHero.Controllers
         {
             HomeHeroServices heroServices = new HomeHeroServices(_context);
             User user = heroServices.LogInUser(email, password);
+           
             if (user == null)
             {
                 ViewData["message"] = "Datos invalidos!";
@@ -58,22 +61,31 @@ namespace HomeHero.Controllers
             {
                 ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
 
-                Claim claimUserName = new(ClaimTypes.Name, user.NamesUser);
-                Claim claimRole = new(ClaimTypes.Role, _context.Role.FirstOrDefault(e => e.RoleID == user.RoleID).NameRole);
-                Claim claimIdUsuario = new("IdUsuario", user.UserId.ToString());
-                Claim claimEmail = new("EmailUsuario", user.Email);
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.NamesUser),
+                    new Claim(ClaimTypes.Role, _context.Role.FirstOrDefault(e => e.RoleID == user.RoleID).NameRole),
+                    new Claim("IdUsuario", user.UserId.ToString()),
+                    new Claim("EmailUsuario", user.Email),
+                    new Claim("Qualification",user.QualificationUser.ToString()),
+                    new Claim(ClaimTypes.Surname,user.SurnamesUser),
+                    new Claim("LocationRecidence",user.LocationResidenceID.ToString()),
+                    new Claim("Curriculum", Convert.ToBase64String(user.Curriculum)),
+                    new Claim("VolunteerPermises",user.VolunteerPermises.ToString()),
+                    new Claim("sexUser",user.SexUser.ToString()),
+                };
 
-                identity.AddClaim(claimUserName);
-                identity.AddClaim(claimRole);
-                identity.AddClaim(claimIdUsuario);
-                identity.AddClaim(claimEmail);
+                identity.AddClaim(claims.FirstOrDefault(c => c.Type == ClaimTypes.Name));
+                identity.AddClaim(claims.FirstOrDefault(c => c.Type == ClaimTypes.Role));
+                identity.AddClaim(claims.FirstOrDefault(c => c.Type == "IdUsuario"));
+                identity.AddClaim(claims.FirstOrDefault(c => c.Type == "EmailUsuario"));
 
                 ClaimsPrincipal userPrincipal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, new AuthenticationProperties
                 {
                     ExpiresUtc = DateTime.Now.AddMinutes(45)
                 });
-                ViewData["user"] = user;
+                
                 return RedirectToAction("PrincipalMb", "Home");
             }
         }
@@ -88,6 +100,24 @@ namespace HomeHero.Controllers
         }
         public IActionResult ProfileMb()
         {
+            var claimsPrincipal = HttpContext.User;
+            var roleName = claimsPrincipal.FindFirstValue(ClaimTypes.Role);
+            User user = new User
+            {
+                UserId = Convert.ToInt32(claimsPrincipal.FindFirstValue("IdUsuario")),
+                NamesUser = claimsPrincipal.FindFirstValue(ClaimTypes.Name),
+                SurnamesUser = claimsPrincipal.FindFirstValue(ClaimTypes.Surname),
+                RoleID = _context.Role.FirstOrDefault(e => e.NameRole == roleName).RoleID,
+                Email = claimsPrincipal.FindFirstValue("EmailUsuario"),
+                SexUser = claimsPrincipal.FindFirstValue("sexUser")[0],
+                QualificationUser = Convert.ToInt32(claimsPrincipal.FindFirstValue("Qualification")),
+                VolunteerPermises = Convert.ToBoolean(claimsPrincipal.FindFirstValue("VolunteerPermises")),
+                Curriculum = Encoding.UTF8.GetBytes(claimsPrincipal.FindFirstValue("Curriculum")),
+                LocationResidenceID = Convert.ToInt32(claimsPrincipal.FindFirstValue("LocationRecidence"))
+            };
+            
+            ViewData["missindFields"] = 0;
+            ViewData["user"] = user;
             return View("~/Views/HeroViews/profileMb.cshtml");
         }
 
