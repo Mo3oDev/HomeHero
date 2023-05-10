@@ -40,13 +40,13 @@ namespace HomeHero.Services
                 rng.GetBytes(salt);
             return salt;
         }
-        public static string HashPassword(string password, byte[] salt)
+        public static byte[] HashPassword(string password, byte[] salt)
         {
             byte[] saltedPassword = Encoding.UTF8.GetBytes(password).Concat(salt).ToArray();
             using (var sha256 = SHA256.Create())
             {
                 byte[] hashedPassword = sha256.ComputeHash(saltedPassword);
-                return Convert.ToBase64String(hashedPassword) ;
+                return hashedPassword ;
             }
         }
         private bool ExistEmail(string email)
@@ -79,9 +79,9 @@ namespace HomeHero.Services
 
                 // Convertimos el hash a una cadena de texto en formato base64
                 string encodedHash = Convert.ToBase64String(hashedPassword);
-
+                string BdPass = Convert.ToBase64String(user.Password);
                 // Comparamos el hash calculado con el almacenado en la BD
-                if (encodedHash == user.Password) return user;
+                if (encodedHash == BdPass) return user;
                 else return null;
             }
         }

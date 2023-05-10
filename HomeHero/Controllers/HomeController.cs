@@ -73,6 +73,7 @@ namespace HomeHero.Controllers
                 {
                     ExpiresUtc = DateTime.Now.AddMinutes(45)
                 });
+                ViewData["user"] = user;
                 return RedirectToAction("PrincipalMb", "Home");
             }
         }

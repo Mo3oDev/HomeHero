@@ -43,6 +43,7 @@ namespace HomeHero.Data
                .Property(p => p.RoleID)
                .HasDefaultValue(2);
 
+
             modelBuilder.Entity<Complaint>()
                 .HasOne(q => q.AttenderUser)
                 .WithMany()

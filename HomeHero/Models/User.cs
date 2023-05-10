@@ -16,7 +16,9 @@ namespace HomeHero.Models
         public string SurnamesUser { get; set; }
         public int QualificationUser { get; set; }
         public string Email  { get; set; }
-        public string Password { get; set; }
+
+        [Column(TypeName = "varbinary(max)")]
+        public byte[] Password { get; set; }
         public byte[] Salt { get; set; }
         public int LocationResidenceID { get; set; }
         [ForeignKey("LocationResidenceID")]
