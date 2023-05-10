@@ -19,7 +19,7 @@ namespace HomeHero.Services
             else
             {
                 byte[] salt = GenerateSalt();
-                _context.Users.Add(new User
+                _context.User.Add(new User
                 {
                     NamesUser = name,
                     SurnamesUser = surname,
@@ -62,7 +62,7 @@ namespace HomeHero.Services
         }
         public bool ExistEmail(string email)
         {
-            var query = from users in _context.Users
+            var query = from users in _context.User
                         where users.Email == email
                         select users;
             if (query.Count() > 0) return true;
@@ -71,7 +71,7 @@ namespace HomeHero.Services
         public User? LogInUser(string email, string password)
         {
 
-            User user = _context.Users.SingleOrDefault(x => x.Email == email);
+            User user = _context.User.SingleOrDefault(x => x.Email == email);
             if (user == null)
                 return null;
             else

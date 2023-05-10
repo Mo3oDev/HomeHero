@@ -10,8 +10,8 @@ namespace HomeHero.Models
             using (var context = new HomeHeroContext(
                 serviceProvider.GetRequiredService<DbContextOptions<HomeHeroContext>>()))
             {
-                if (context.Roles.Any()) return;
-                context.Roles.AddRange(
+                if (context.Role.Any()) return;
+                context.Role.AddRange(
                     new Role
                     {
                         NameRole = "Admon"
@@ -30,9 +30,9 @@ namespace HomeHero.Models
                         NameRole = "TSupport"
                     }
                     );
-                if (context.Locations.Any())
+                if (context.Location.Any())
                     return;
-                context.Locations.AddRange(
+                context.Location.AddRange(
                     new Location { City = "AGUA DE DIOS" },
                     new Location { City = "ALBAN" },
                     new Location { City = "ANAPOIMA" },

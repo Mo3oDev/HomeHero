@@ -26,7 +26,14 @@ namespace HomeHero.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (!User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("PrincipalMb", "Home");
+            }
         }
 
         public IActionResult Privacy()
@@ -52,7 +59,7 @@ namespace HomeHero.Controllers
             {
                 ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
                 Claim claimUserName = new(ClaimTypes.Name, user.NamesUser);
-                Claim claimRole = new(ClaimTypes.Role, _context.Roles.FirstOrDefault(e => e.RoleID == user.RoleID).NameRole);
+                Claim claimRole = new(ClaimTypes.Role, _context.Role.FirstOrDefault(e => e.RoleID == user.RoleID).NameRole);
                 Claim claimIdUsuario = new("IdUsuario", user.UserId.ToString());
                 Claim claimEmail = new("EmailUsuario", user.Email);
 
@@ -66,13 +73,34 @@ namespace HomeHero.Controllers
                 {
                     ExpiresUtc = DateTime.Now.AddMinutes(45)
                 });
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("PrincipalMb", "Home");
             }
+        }
+
+        public IActionResult PrincipalMb()
+        {
+            return View("~/Views/HeroViews/Principal.cshtml");
+        }
+        public IActionResult OfferHelp()
+        {
+            return View("~/Views/HeroViews/OfferHelp.cshtml");
+        }
+        public IActionResult ProfileMb()
+        {
+            return View("~/Views/HeroViews/profileMb.cshtml");
+        }
+
+        public IActionResult AksHelp()
+        {
+            var data = _context.Location.ToList();
+            ViewBag.LocationData = new SelectList(data, "LocationID", "City");
+            return View("~/Views/HeroViews/AskHelp.cshtml");
+            
         }
 
         public IActionResult SignUp()
         {
-            var data = _context.Locations.ToList();
+            var data = _context.Location.ToList();
             ViewBag.LocationData = new SelectList(data, "LocationID", "City");
             return View("~/Views/HeroViews/SignUp.cshtml");
         }

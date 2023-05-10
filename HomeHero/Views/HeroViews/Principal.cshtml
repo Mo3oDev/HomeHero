@@ -1,18 +1,42 @@
 ﻿@{
-    ViewData["Title"] = "Inicio Sesion";
+    ViewData["Title"] = "Principal";
 }
 
 @section logo{
-    <a class=" img-container " asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
+    <a class=" img-container2" asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/iconSol.png" /></a>
 }
 @section inicioLI{
     <li class="nav-item logIn ">
-        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogIn">Ver Perfil</a>
+        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
     </li>
     <li class="nav-item signUp">
-        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="SignUp">Cerrar Seccion</a>
+        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
     </li>
 }
-@section main{
 
+@section main{
+    <section>
+        <div class="container text-white">
+            <div class="row d-flex justify-content-evenly align-items-start">
+                <div onclick="location.href='@Url.Action("AksHelp", "Home")'" class="col-lg-3 col-md-5 col-sm-10 p-5 mt-5 text-center d-flex flex-column">
+                   <h2 class="font-title pb-5">Pedir Ayuda</h2>
+                    <div class="flex-grow-1">
+                       <img class="img-fluid" src="~/Images/AskForHelp.png"/>
+                   </div>
+                </div>
+                <div onclick="location.href='@Url.Action("Privacy", "Home")'" class="col-lg-3 col-md-5 col-sm-10 p-5 mt-5 text-center d-flex flex-column">
+                    <h2 class="font-title pb-5">Buscar Solicitudes</h2>
+                    <div class="flex-grow-1">
+                        <img class="img-fluid" src="~/Images/SearchRequest.png" />
+                    </div>
+                </div>
+                <div onclick="location.href='@Url.Action("OfferHelp", "Home")'" class="col-lg-3 col-md-5 col-sm-10 p-5 mt-5 text-center d-flex flex-column">
+                    <h2 class="font-title pb-5">Ofrecer ayuda</h2>
+                    <div class="flex-grow-1">
+                        <img class="img-fluid" src="~/Images/offerhelp.png" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 }

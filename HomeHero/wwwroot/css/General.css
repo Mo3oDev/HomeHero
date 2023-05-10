@@ -67,12 +67,7 @@
     height: 88vh;
 }
 
-@media screen and (max-width: 768px) {
-    .darkMain {
-        height: 100%;
-        padding:5%;
-    }
-}
+
 
 .title-page{
    font-size:3em;
@@ -97,4 +92,55 @@
 .btn-form{
     border-radius:2px;
     text-align:center;
+}
+
+.flex-column {
+    height:480px;
+    border-radius: 4px;
+    background: rgb(69, 61, 61, 0.80);
+}
+
+.flex-column:hover {
+        background: rgb(48, 44, 44, 0.80);
+        color: #FF9003;
+        transform: scale(1.01);
+        transition: transform 0.25s;
+}
+
+.thirdBg {
+    background: rgb(69, 61, 61, 0.80);
+}
+
+.fourthBg {
+    background: #0e3462d9;
+}
+
+.reqProfile{
+    height: 100vh;
+}
+
+.medCol {
+    width: 45%;
+}
+.thirdBg form textarea {
+    height: 150px; 
+    resize: none;
+    overflow-y: auto;
+    max-width: 100%;
+    box-sizing: border-box; 
+}
+
+user-img:hover {
+    cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+    .darkMain {
+        height: 100%;
+        padding: 5%;
+    }
+
+    .flex-column {
+        height: auto;
+    }
 }
