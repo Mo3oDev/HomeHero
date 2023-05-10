@@ -1,5 +1,57 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
+    ViewData["Title"] = "ApplyRequest";
 }
+
+@section ApplyRequest_Logo{
+        <a class="img-container" asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
+}
+
+@section ApplyRequest_Main{
+        <section class="darkMain">
+            <div class="container text-white">
+                <div class="row d-flex justify-content-between align-items-center">
+                    <div class="col-6">
+                        <img class="img-fluid" src="~/Images/SignUp.png" />
+                        <h1><span class="h">H</span>ome<span class="h">H</span>Hero</h1>
+                    </div>
+                    <div class="col-3 text-center">
+                        <img src="https://img.icons8.com/ios/452/user-male-circle.png" style="height: 150px; width: 150px;" />
+                    </div>
+                    <div class="col-3">
+                        <form asp-controller="Home" asp-action="SignUpAction" method="post">
+                            <h3 id="op">NOMBRE</h3>
+                            <div class="form-group">
+                                <label for="name" class="control-label" id="op2">MI EXPERIENCIA</label>
+                                <input type="text" id="op3" name="name" class="form-control" />
+                            </div>
+                            <div class="linea">
+                                <label for="email" class="control-label" id="op2">EDAD</label>
+
+                                <input type="email" id="email" name="email" class="form-control" />
+                            </div>
+                            <div class="linea">
+                                <label for="password" class="control-label" id="op2">CONTRASEÑA</label>
+                                <input type="password" id="password" name="password" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="birthDate" class="control-label" id="op2">SUBE TU HOJA DE VIDA</label>
+
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04">
+                                        <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" id="inputGroupFileAddon04">Upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+}
+
