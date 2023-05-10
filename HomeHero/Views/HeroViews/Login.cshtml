@@ -9,15 +9,16 @@
 @section Main{
    
     <section class="darkMain">
-        @if (!string.IsNullOrEmpty(ViewBag.Message))
-        {
-            <div class="alert alert-success" role="alert">
-                @ViewBag.Message
-            </div>
-        }     
+      
         <div class="container text-white">
             <div class="row d-flex justify-content-between">
                 <div class="col-lg-6 col-md-6 col-sm-12 p-4">
+                    @if (!string.IsNullOrEmpty(ViewBag.Message))
+                    {
+                        <div class="alert alert-info" role="alert">
+                            @ViewBag.Message
+                        </div>
+                    }
                     <h2 class="priColor h1">Iniciar Sesión</h2>
                     <p>¿Aun no estás registrado?  <a class="text-decoration-none priColor fw-bold" asp-controller="Home" asp-action="SignUp">Registrate aquí.</a></p>
                     <form asp-controller="Home" asp-action="LogInAction" method="post">

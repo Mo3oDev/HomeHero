@@ -1,14 +1,15 @@
 ﻿using HomeHero.Data;
 using HomeHero.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 namespace HomeHero.Services
 {
-    public class HomeHeroServices
+    public class HHeroEncrypt
     {
         readonly HomeHeroContext _context;
-        public HomeHeroServices(HomeHeroContext context)
+        public HHeroEncrypt(HomeHeroContext context)
         {
             _context = context;
         }
@@ -31,6 +32,16 @@ namespace HomeHero.Services
                 return true;
             }
         }
+        public void ChangePassword(int userID, string password)
+        {
+            User user = _context.Users.Find(userID);
+            byte[] salt = GenerateSalt();
+            user.Salt = salt;
+            user.Password = HashPassword(password, salt);
+            _context.Users.Update(user);
+            _context.SaveChangesAsync();
+        }
+
         public static byte[] GenerateSalt()
         {
             Random random = new Random();
@@ -46,10 +57,10 @@ namespace HomeHero.Services
             using (var sha256 = SHA256.Create())
             {
                 byte[] hashedPassword = sha256.ComputeHash(saltedPassword);
-                return Convert.ToBase64String(hashedPassword) ;
+                return Convert.ToBase64String(hashedPassword);
             }
         }
-        private bool ExistEmail(string email)
+        public bool ExistEmail(string email)
         {
             var query = from users in _context.User
                         where users.Email == email
@@ -64,7 +75,7 @@ namespace HomeHero.Services
             if (user == null)
                 return null;
             else
-            {         
+            {
                 // Codificamos la contraseña a bytes (asumimos que está en formato UTF-8)
                 byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
 
@@ -84,6 +95,12 @@ namespace HomeHero.Services
                 if (encodedHash == user.Password) return user;
                 else return null;
             }
+        }
+        public User? SaltIsCorrect(string inputSalt)
+        {
+            User user = _context.Users.SingleOrDefault(e => e.Password.Equals(inputSalt));
+            if (user == null) return null;
+            else return user;
         }
     }
 }
