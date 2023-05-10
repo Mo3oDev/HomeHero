@@ -12,34 +12,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Dosis:wght@400;500&family=Pacifico&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/9ce1ab805c.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm nav-custom box-shadow header">
             <div class="container-fluid">
-                <a class=" img-container " asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
+                @RenderSection("logo");
                 <a class="navbar-brand font-title" asp-area="" asp-controller="Home" asp-action="Index"><span class="h">H</span>ome<span class="h">H</span>ero</a>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
                     <ul class="navbar-nav d-flex ">
-                        @if (!User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item logIn ">
-                                <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogIn">Iniciar Sesion</a>
-                            </li>
-                            <li class="nav-item signUp">
-                                <a class="nav-link " asp-area="" asp-controller="Home" asp-action="SignUp">Registrarse</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item logIn ">
-                                <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProtectedPage">EjemploDePagina</a>
-                            </li>
-                            <li class="nav-item signUp">
-                                <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
-                            </li>
-                        }
+                            @RenderSection("inicioLI")
                     </ul>
                 </div>
             </div>
