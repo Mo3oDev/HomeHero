@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Mi Perfil";
+}
+
+@section logo{
+    <a class=" img-container2" asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/iconSol.png" /></a>
+}
+@section inicioLI{
+    <li class="nav-item signUp">
+        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
+    </li>
+}
+@section main{
+    <section>
+        <div class="container-fluid text-white">
+            <div class="row d-flex justify-content-evenly align-items-start p-4 mt-3">
+               <div class="col-6 p-2 thirdBg">
+                    <h4>Perfil</h4>
+               </div>
+                <div class="col-5 p-2 fourthBg reqProfile">
+                    <h4>Mis solicitudes</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+}

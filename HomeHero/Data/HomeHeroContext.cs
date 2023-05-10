@@ -10,26 +10,26 @@ namespace HomeHero.Data
         public HomeHeroContext(DbContextOptions<HomeHeroContext> options)
             : base(options)
         { }
-        public DbSet<Application> Applications { get; set; }
-        public DbSet<Aptitude> Aptitudes { get; set; }
-        public DbSet<Aptitude_User> Aptitude_Users { get; set; }
-        public DbSet<Area> Areas { get; set; }
-        public DbSet<AttentionRequest> AttentionRequests { get; set; }
-        public DbSet<Chat> Chats { get; set; }
-        public DbSet<Complaint> Complaints { get; set; }
-        public DbSet<Contact> Contacts { get; set; }
-        public DbSet<Doubt> Doubts { get; set; }
-        public DbSet<Location> Locations { get; set; }
-        public DbSet<Message> Messages { get; set; }
-        public DbSet<PaymentRecord> PaymentRecords { get; set; }
-        public DbSet<PayMethod> PayMethods { get; set; }
-        public DbSet<Qualification> Qualifications { get; set; }
-        public DbSet<HomeHero.Models.Request> Requests { get; set; }
-        public DbSet<Request_Area> Request_Areas { get; set; }
-        public DbSet<RequestState> RequestStates { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<Tutorial> Tutorials { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Application> Application { get; set; }
+        public DbSet<Aptitude> Aptitude { get; set; }
+        public DbSet<Aptitude_User> Aptitude_User { get; set; }
+        public DbSet<Area> Area { get; set; }
+        public DbSet<AttentionRequest> AttentionRequest { get; set; }
+        public DbSet<Chat> Chat { get; set; }
+        public DbSet<Complaint> Complaint { get; set; }
+        public DbSet<Contact> Contact { get; set; }
+        public DbSet<Doubt> Doubt { get; set; }
+        public DbSet<Location> Location { get; set; }
+        public DbSet<Message> Message { get; set; }
+        public DbSet<PaymentRecord> PaymentRecord { get; set; }
+        public DbSet<PayMethod> PayMethod { get; set; }
+        public DbSet<Qualification> Qualification { get; set; }
+        public DbSet<HomeHero.Models.Request> Request { get; set; }
+        public DbSet<Request_Area> Request_Area { get; set; }
+        public DbSet<RequestState> RequestState { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<Tutorial> Tutorial { get; set; }
+        public DbSet<User> User { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Set default values in User Model
