@@ -103,7 +103,7 @@ namespace HomeHero.Controllers
 
             User user = _context.User.FirstOrDefault(u => u.UserId == idUser);
             
-            ViewData["missindFields"] = heroServices.getNullProperties(user);
+            ViewData["missindFields"] = _heroServices.getNullProperties(user);
             ViewData["user"] = user;
             ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
             var data = _context.Location.ToList();

@@ -57,7 +57,7 @@ namespace HomeHero.Services
             using (var sha256 = SHA256.Create())
             {
                 byte[] hashedPassword = sha256.ComputeHash(saltedPassword);
-                return hashedPassword ;
+                return hashedPassword;
             }
         }
         public bool ExistEmail(string email)
@@ -96,15 +96,11 @@ namespace HomeHero.Services
                 else return null;
             }
         }
-
-        internal int getNullProperties(User user)
+        public User? SaltIsCorrect(string inputSalt)
         {
-            int nullProperties = 0;
-            if (user.RealUserID == null) nullProperties++;
-            if (user.SexUser == null) nullProperties++;
-            if (user.Curriculum == null) nullProperties++;
-
-            return nullProperties;
+            User user = _context.User.SingleOrDefault(e => e.Password.Equals(inputSalt));
+            if (user == null) return null;
+            else return user;
         }
     }
 }
