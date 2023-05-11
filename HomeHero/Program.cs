@@ -1,5 +1,6 @@
 using HomeHero.Data;
 using HomeHero.Models;
+using HomeHero.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +38,9 @@ namespace HomeHero
             {
                 options.AddPolicy("ADMINISTRADORES", policy => policy.RequireRole("ADMIN"));
             });
-
+            //Add services to send mails
+            builder.Services.AddSingleton<IHHeroEmail>(new HHeroEmail(builder.Configuration["GmailSettings:Email"],builder.Configuration["GmailSettings:Password"]));
+            
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())
@@ -46,8 +49,8 @@ namespace HomeHero
                 try
                 {
                     var dbContext = services.GetRequiredService<HomeHeroContext>();
-                   // dbContext.Database.EnsureDeleted();
-                   // dbContext.Database.EnsureCreated();
+                    dbContext.Database.EnsureDeleted();
+                    dbContext.Database.EnsureCreated();
                     SeedData.Initialize(services);
                 }
                 catch (Exception ex)
