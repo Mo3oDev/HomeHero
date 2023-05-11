@@ -23,6 +23,7 @@ namespace HomeHero.Controllers
         {
             _logger = logger;
             _context = context;
+            _heroServices = new HHeroServices(context);
         }
 
         public IActionResult Index()
@@ -50,9 +51,7 @@ namespace HomeHero.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogInAction([FromForm] string email, [FromForm] string password)
         {
-            HomeHeroServices heroServices = new HomeHeroServices(_context);
-            User user = heroServices.LogInUser(email, password);
-           
+            User user = _heroServices.HHeroEncrypt.LogInUser(email, password);
             if (user == null)
             {
                 ViewData["message"] = "Datos invalidos!";
@@ -130,14 +129,6 @@ namespace HomeHero.Controllers
             
         }
 
-        public IActionResult RecoverSendCode()
-        {
-            return View("~/Views/HeroViews/RecoverSendCode.cshtml");
-        }
-        public IActionResult RecoverSendCodeAction(string email, int recoverPin)
-        {
-            return View("~/Views/HeroViews/RecoverChangePW.cshtml");
-        }
         public IActionResult SignUp()
         {
             var data = _context.Location.ToList();
@@ -159,8 +150,8 @@ namespace HomeHero.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignUpAction([FromForm] string name, [FromForm] string surnames, [FromForm] string location, [FromForm] string email, [FromForm] string password)
         {
-            HomeHeroServices heroServices = new HomeHeroServices(_context);
-            bool registered = await heroServices.AddUser(name, surnames, int.Parse(location), email, password);
+
+            bool registered = await _heroServices.HHeroEncrypt.AddUser(name, surnames, int.Parse(location), email, password);
             if (registered)
                 ViewBag.Message = "¡Usuario registrado con exito!";
             else
@@ -187,6 +178,55 @@ namespace HomeHero.Controllers
         public IActionResult ProtectedPage()
         {
             return View("~/Views/HeroViews/ProtectedPage.cshtml");
+        }
+        //Password Recovery Functions
+        public IActionResult RecoverSendCode()
+        {
+            return View("~/Views/HeroViews/RecoverSendCode.cshtml");
+        }
+
+        public async Task<IActionResult> RecoverSendCodeAction([FromForm] string email)
+        {
+            if (_heroServices.HHeroEncrypt.ExistEmail(email))
+            {
+                ViewBag.RecoveryM = "Mensaje de recuperación enviado correctamente!";
+                await _heroServices.HHeroEmail.SendEmailAsync("juanmiguelvasquezmoreno@gmail.com", "Recuperacion de Contraseña - HomeHero","asb","Yami");
+                ViewBag.ValidateM = false;
+                return View("~/Views/HeroViews/RecoverChangePW.cshtml");
+            }
+            ViewBag.RecoveryM = "No hay resultados de búsqueda!";
+            return View("~/Views/HeroViews/RecoverSendCode.cshtml");
+        }
+        public IActionResult ValidateAction([FromForm] string recoverPin,[FromForm] string newPassword, [FromForm] string newPassword2)
+        {
+            if (string.IsNullOrWhiteSpace(recoverPin))
+            {
+                ViewBag.ValidateM = false;
+                ViewBag.ValidateMessage = "El pin es incorrecto!";
+                return View("~/Views/HeroViews/RecoverChangePW.cshtml");
+            }
+            if (_heroServices.HHeroEncrypt.SaltIsCorrect(recoverPin) == null)
+            {
+                ViewBag.ValidateM = false;
+                ViewBag.ValidateMessage = "El pin es incorrecto!";
+                return View("~/Views/HeroViews/RecoverChangePW.cshtml");
+            }
+            if (string.IsNullOrWhiteSpace(newPassword) || string.IsNullOrWhiteSpace(newPassword2))
+            {
+                ViewBag.ValidateM = false;
+                ViewBag.ValidateMessage = "Debe llenar los campos!";
+                return View("~/Views/HeroViews/RecoverChangePW.cshtml");
+            }
+            if (newPassword2 != newPassword)
+            {
+                ViewBag.ValidateM = false;
+                ViewBag.ValidateMessage = "Las contraseñas deben coincidir!";
+                return View("~/Views/HeroViews/RecoverChangePW.cshtml");
+            }
+            ViewBag.ValidateM = true;
+            _heroServices.HHeroEncrypt.ChangePassword(_heroServices.HHeroEncrypt.SaltIsCorrect(recoverPin).UserId, newPassword);
+            ViewBag.Message = "El cambio de contraseña se ha realizado correctamente!";
+            return View("~/Views/HeroViews/Login.cshtml");
         }
 
     }
