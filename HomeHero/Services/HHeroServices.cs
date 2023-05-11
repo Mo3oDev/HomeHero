@@ -7,6 +7,7 @@ namespace HomeHero.Services
 {
     public class HHeroServices
     {
+
         readonly HomeHeroContext _context;
         public HHeroEncrypt HHeroEncrypt;
         public HHeroEmail HHeroEmail;
@@ -14,7 +15,7 @@ namespace HomeHero.Services
         {
             _context = context;
             HHeroEncrypt = new HHeroEncrypt(context);
-            HHeroEmail= new HHeroEmail(context);
+           
         }
         
     }

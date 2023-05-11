@@ -32,16 +32,23 @@ namespace HomeHero.Services
                 return true;
             }
         }
-        public void ChangePassword(int userID, string password)
+        public async Task ChangePassword(string password, string inputSalt)
         {
-            User user = _context.User.Find(userID);
-            byte[] salt = GenerateSalt();
-            user.Salt = salt;
-            user.Password = HashPassword(password, salt);
-            _context.User.Update(user);
-            _context.SaveChangesAsync();
+            var users = await _context.User.ToListAsync();
+            User user = users.FirstOrDefault(u => Convert.ToBase64String(u.Password) == inputSalt);
+            if (user == null) return ;
+            else
+            {
+              
+                byte[] salt = GenerateSalt();
+                user.Salt = salt;
+                user.Password = HashPassword(password, salt);
+                _context.User.Update(user);
+                _context.SaveChangesAsync();
+            }
+           
         }
-
+      
         public static byte[] GenerateSalt()
         {
             Random random = new Random();
@@ -96,11 +103,6 @@ namespace HomeHero.Services
                 else return null;
             }
         }
-        public User? SaltIsCorrect(string inputSalt)
-        {
-            User user = _context.User.SingleOrDefault(e => e.Password.Equals(inputSalt));
-            if (user == null) return null;
-            else return user;
-        }
+       
     }
 }

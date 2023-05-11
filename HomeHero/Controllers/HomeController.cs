@@ -16,14 +16,16 @@ namespace HomeHero.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IHHeroEmail _hheroEmail;
         private readonly ILogger<HomeController> _logger;
         private readonly HomeHeroContext _context;
         private readonly HHeroServices _heroServices;
-        public HomeController(ILogger<HomeController> logger, HomeHeroContext context)
+        public HomeController(ILogger<HomeController> logger, HomeHeroContext context, IHHeroEmail hheroEmail)
         {
             _logger = logger;
             _context = context;
             _heroServices = new HHeroServices(context);
+            _hheroEmail = hheroEmail;
         }
 
         public IActionResult Index()
@@ -61,7 +63,7 @@ namespace HomeHero.Controllers
             {
                 ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
 
-                var claims = new List<Claim>
+                var claims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.Name, user.NamesUser),
                     new Claim(ClaimTypes.Role, _context.Role.FirstOrDefault(e => e.RoleID == user.RoleID).NameRole),
@@ -70,9 +72,9 @@ namespace HomeHero.Controllers
                     new Claim("Qualification",user.QualificationUser.ToString()),
                     new Claim(ClaimTypes.Surname,user.SurnamesUser),
                     new Claim("LocationRecidence",user.LocationResidenceID.ToString()),
-                    new Claim("Curriculum", Convert.ToBase64String(user.Curriculum)),
+                    //new Claim("Curriculum", Convert.ToBase64String(user.Curriculum)),
                     new Claim("VolunteerPermises",user.VolunteerPermises.ToString()),
-                    new Claim("sexUser",user.SexUser.ToString()),
+                    //new Claim("sexUser",user.SexUser.ToString())
                 };
 
                 identity.AddClaim(claims.FirstOrDefault(c => c.Type == ClaimTypes.Name));
@@ -85,7 +87,7 @@ namespace HomeHero.Controllers
                 {
                     ExpiresUtc = DateTime.Now.AddMinutes(45)
                 });
-                
+
                 return RedirectToAction("PrincipalMb", "Home");
             }
         }
@@ -109,13 +111,13 @@ namespace HomeHero.Controllers
                 SurnamesUser = claimsPrincipal.FindFirstValue(ClaimTypes.Surname),
                 RoleID = _context.Role.FirstOrDefault(e => e.NameRole == roleName).RoleID,
                 Email = claimsPrincipal.FindFirstValue("EmailUsuario"),
-                SexUser = claimsPrincipal.FindFirstValue("sexUser")[0],
+                //SexUser = claimsPrincipal.FindFirstValue("sexUser")[0],
                 QualificationUser = Convert.ToInt32(claimsPrincipal.FindFirstValue("Qualification")),
                 VolunteerPermises = Convert.ToBoolean(claimsPrincipal.FindFirstValue("VolunteerPermises")),
-                Curriculum = Encoding.UTF8.GetBytes(claimsPrincipal.FindFirstValue("Curriculum")),
+                //Curriculum = Encoding.UTF8.GetBytes(claimsPrincipal.FindFirstValue("Curriculum")),
                 LocationResidenceID = Convert.ToInt32(claimsPrincipal.FindFirstValue("LocationRecidence"))
             };
-            
+
             ViewData["missindFields"] = 0;
             ViewData["user"] = user;
             return View("~/Views/HeroViews/profileMb.cshtml");
@@ -126,7 +128,7 @@ namespace HomeHero.Controllers
             var data = _context.Location.ToList();
             ViewBag.LocationData = new SelectList(data, "LocationID", "City");
             return View("~/Views/HeroViews/AskHelp.cshtml");
-            
+
         }
 
         public IActionResult SignUp()
@@ -187,25 +189,21 @@ namespace HomeHero.Controllers
 
         public async Task<IActionResult> RecoverSendCodeAction([FromForm] string email)
         {
+
             if (_heroServices.HHeroEncrypt.ExistEmail(email))
             {
+                User user = _context.User.FirstOrDefault(e => e.Email == email);
                 ViewBag.RecoveryM = "Mensaje de recuperación enviado correctamente!";
-                await _heroServices.HHeroEmail.SendEmailAsync("juanmiguelvasquezmoreno@gmail.com", "Recuperacion de Contraseña - HomeHero","asb","Yami");
+                await _hheroEmail.SendEmailAsync(email, "Recuperacion de Contraseña - HomeHero", $"<p style=\"color: black;\">Estimado <b>{user.NamesUser}</b>,</p><p style=\"color: black;\">Esperamos que se encuentre bien. Hemos recibido una solicitud de recuperación de cuenta asociada a esta dirección de correo electrónico. Como parte del proceso de recuperación, nos complace proporcionarle el siguiente PIN de recuperación:</p><p style=\"color: black;\"><b>Su PIN de recuperación es el siguiente: {Convert.ToBase64String(user.Password)}</b></p><p style=\"color: black;\">Por favor, utilice este PIN para completar el proceso de recuperación de su cuenta. Le recordamos que no debe compartir su PIN de recuperación con nadie, ya que esto podría comprometer la seguridad de su cuenta.</p><p style=\"color: black;\">Si no ha solicitado un PIN de recuperación o si tiene alguna pregunta, por favor no dude en ponerse en contacto con nuestro equipo de soporte.</p><p style=\"color: black;\">Le agradecemos su confianza en nuestro servicio y nos esforzamos por mantener la seguridad de sus datos.</p><p style=\"color: black;\">Atentamente,</p><p style=\"color: black;\"><b>HomeHero</b></p><p style=\"color: black;\">Equipo de soporte al cliente</p>\r\n", user.NamesUser + " " + user.SurnamesUser);
                 ViewBag.ValidateM = false;
                 return View("~/Views/HeroViews/RecoverChangePW.cshtml");
             }
             ViewBag.RecoveryM = "No hay resultados de búsqueda!";
             return View("~/Views/HeroViews/RecoverSendCode.cshtml");
         }
-        public IActionResult ValidateAction([FromForm] string recoverPin,[FromForm] string newPassword, [FromForm] string newPassword2)
+        public async Task<IActionResult> ValidateAction([FromForm] string recoverPin, [FromForm] string newPassword, [FromForm] string newPassword2)
         {
             if (string.IsNullOrWhiteSpace(recoverPin))
-            {
-                ViewBag.ValidateM = false;
-                ViewBag.ValidateMessage = "El pin es incorrecto!";
-                return View("~/Views/HeroViews/RecoverChangePW.cshtml");
-            }
-            if (_heroServices.HHeroEncrypt.SaltIsCorrect(recoverPin) == null)
             {
                 ViewBag.ValidateM = false;
                 ViewBag.ValidateMessage = "El pin es incorrecto!";
@@ -224,7 +222,7 @@ namespace HomeHero.Controllers
                 return View("~/Views/HeroViews/RecoverChangePW.cshtml");
             }
             ViewBag.ValidateM = true;
-            _heroServices.HHeroEncrypt.ChangePassword(_heroServices.HHeroEncrypt.SaltIsCorrect(recoverPin).UserId, newPassword);
+            await _heroServices.HHeroEncrypt.ChangePassword(newPassword,recoverPin);
             ViewBag.Message = "El cambio de contraseña se ha realizado correctamente!";
             return View("~/Views/HeroViews/Login.cshtml");
         }
