@@ -34,7 +34,7 @@ namespace HomeHero.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return View();
+                return View("~/Views/HeroViews/Login.cshtml");
             }
             else
             {
@@ -115,13 +115,46 @@ namespace HomeHero.Controllers
             return View("~/Views/HeroViews/profileMb.cshtml");
         }
 
-        public IActionResult AksHelp()
+        public IActionResult AskHelp()
         {
             var data = _context.Location.ToList();
             ViewBag.LocationData = new SelectList(data, "LocationID", "City");
             return View("~/Views/HeroViews/AskHelp.cshtml");
 
         }
+        [HttpPost]
+        public async Task<IActionResult>AddRequest([FromForm] string title, [FromForm] string desc, [FromForm] IFormFile image, [FromForm] string location, [FromForm] DateTime dateReq, [FromForm] int cantMb)
+        {
+            if (image == null || image.Length == 0)
+            {
+                ViewBag.ErrorMessage = "Selecciona un archivo de imagen";
+                return RedirectToAction("AskHelp");
+            }
+
+            byte[] fileBytes;
+            using (var ms = new MemoryStream())
+            {
+                await image.CopyToAsync(ms);
+                fileBytes = ms.ToArray();
+            }
+
+            Request request = new Request()
+            {
+                RequestTitle = title,
+                RequestContent = desc,
+                RequestPicture = fileBytes,
+                LocationServiceID = int.Parse(location),
+                PublicationReqDate = dateReq,
+                MembersNeeded = cantMb
+            };
+
+            _context.Request.Add(request);
+            await _context.SaveChangesAsync();
+
+            ViewBag.Message = "La petición se ha generado correctamente";
+            return View("~/Views/HeroViews/Principal.cshtml");
+        }
+
 
         public IActionResult SignUp()
         {
@@ -214,7 +247,7 @@ namespace HomeHero.Controllers
                 return View("~/Views/HeroViews/RecoverChangePW.cshtml");
             }
             ViewBag.ValidateM = true;
-            await _heroServices.HHeroEncrypt.ChangePassword(newPassword,recoverPin);
+            await _heroServices.HHeroEncrypt.ChangePassword(newPassword, recoverPin);
             ViewBag.Message = "El cambio de contraseña se ha realizado correctamente!";
             return View("~/Views/HeroViews/Login.cshtml");
         }
