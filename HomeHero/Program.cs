@@ -28,7 +28,6 @@ namespace HomeHero
                 {
                     config.AccessDeniedPath = "/Manage/AccessError";
                 });
-
             builder.Services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
 
             builder.Services.AddControllersWithViews(options => options.EnableEndpointRouting = false)
@@ -47,8 +46,8 @@ namespace HomeHero
                 try
                 {
                     var dbContext = services.GetRequiredService<HomeHeroContext>();
-                    dbContext.Database.EnsureDeleted();
-                    dbContext.Database.EnsureCreated();
+                   // dbContext.Database.EnsureDeleted();
+                   // dbContext.Database.EnsureCreated();
                     SeedData.Initialize(services);
                 }
                 catch (Exception ex)
@@ -65,7 +64,6 @@ namespace HomeHero
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
