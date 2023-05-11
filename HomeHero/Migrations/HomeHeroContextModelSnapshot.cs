@@ -245,10 +245,6 @@ namespace HomeHero.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContactID"));
 
-                    b.Property<string>("EmailUser")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NumPhone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

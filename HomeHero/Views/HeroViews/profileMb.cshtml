@@ -16,11 +16,72 @@
         <div class="container-fluid text-white">
             <div class="row d-flex justify-content-evenly align-items-start p-4 mt-3">
                <div class="col-6 p-2 thirdBg">
-                    <h4>Perfil</h4>
-                    <p> @ViewBag.user</p>
+                    <div class="row d-flex justify-content-between p-2 m-auto" style="width: 100%;">
+                        @if (ViewBag.modifyProfile == false)
+                        {
+                            <h3 class="text-center secColor font-title pb-2 col-12 border-bottom">Perfil</h3>
+                            <h5 class="pb-2 pt-4 col-8"><b class="secColor">Completa tu perfil: </b> @ViewBag.missindFields Datos Faltantes</h5>
+                            <p class="btn btn-outline-light mt-3  col-3 " onclick="location.href='@Url.Action("profileMb", "Home", new { modifyProfile = true })'">Completar <i class="fa-solid fa-plus"></i></p>
+                            <h5 class="secColor pb-2 pt-4 col-12 font-title text-center"> @ViewBag.user.NamesUser @ViewBag.user.SurnamesUser</h5>
+                            <h5 class="pb-2 col-12"> <span class="secColor">Correo:</span> @ViewBag.user.Email</h5>
+                            <h5 class="pb-2 col-12"> <span class="secColor">Ciudad de residencia:</span> @ViewBag.locationResidence</h5>
+                        }
+                        else{
+                            <h3 class="text-center secColor font-title pb-2 col-12 border-bottom">Actualizacion de datos</h3>
+                            <form asp-controller="Home" asp-action="updateProfile" method="post">
+                                <div class="form-group p-3 pt-0">
+                                    <label for="name" class="control-label">NOMBRE(S)</label>
+                                    <input type="text" id="name" name="name" class="form-control" />
+                                </div>
+                                <div class="form-group p-3 pt-0">
+                                    <label for="surnames" class="control-label">APELLIDO(S)</label>
+                                    <input type="text" id="surnames" name="surnames" class="form-control" />
+                                </div>
+                                <div class="form-group p-3 pt-0">
+                                    <label for="email" class="control-label">CORREO</label>
+                                    <input type="email" id="email" name="email" class="form-control" />
+                                    <span for="email" class="text-danger"></span>
+                                </div>
+                                <div class="form-group p-3 pt-0">
+                                    <label for="idReal" class="control-label">DNI (CC - TI - OTRO)</label>
+                                    <input type="number" id="idReal" name="idReal" class="form-control" />
+                                </div>
+                                <div class="form-group p-3 pt-0">
+                                    <label for="location">CIUDAD:</label>
+                                    <select name="location" id="location" class="form-control">
+                                        @foreach (var location in @ViewBag.LocationData)
+                                        {
+                                            <option value="@location.Value">@location.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group p-3 pt-0">
+                                    <label for="location">SEXO:</label>
+                                    <select name="sex" id="sex" class="form-control">
+                                        <option value="1">Masculino</option>
+                                        <option value="2">Femenino</option>
+                                        <option value="3">No binario</option>
+                                        <option value="4">Prefiero no responder</option>
+                                    </select>
+                                </div>
+                                <div class="form-group p-3 pt-0 d-flex justify-content-around">
+                                    <label for="curriculum" class="control-label pb-1 btn btn-outline-light">
+                                         Curriculum
+                                        <i class="fa-solid fa-upload"></i>
+                                    </label>
+                                    <input type="file" id="curriculum" name="curriculum" class="form-control" style="display: none;" />
+                                    <button type="button" class="btn btn-outline-light" data-toggle="modal" data-target="#ContactList">Ver mis numeros registrados</button>
+                                    <button type="button" class="btn btn-outline-light " data-toggle="modal" data-target="#ContactList">Crear nuevo Nro. Contacto</button>
+                                </div>
+                                <div class="form-group p-3 pt-0 text-center ">
+                                    <button type="submit" class="btn btn-primary mt-2 fs-5">REGISTRARSE</button>
+                                </div>
+                            </form>
+                        }
+        </div>
                </div>
-                <div class="col-5 p-2 fourthBg reqProfile">
-                    <h4>Mis solicitudes</h4>
+                <div class="col-5 p-4 fourthBg reqProfile">
+                    <h3 class="font-title text-center">Mis Solicitudes</h3>
                 </div>
             </div>
         </div>

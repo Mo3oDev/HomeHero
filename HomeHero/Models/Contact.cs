@@ -12,7 +12,6 @@ namespace HomeHero.Models
         [ForeignKey("UserID")]
         public virtual User User { get; set; }  
         public string NumPhone { get; set; }
-        public string EmailUser { get; set; }
 
     }
 }

@@ -10,6 +10,7 @@ using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using HomeHero.Filters;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace HomeHero.Controllers
 {
@@ -17,11 +18,12 @@ namespace HomeHero.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly HomeHeroContext _context;
-
+        private readonly HomeHeroServices heroServices;
         public HomeController(ILogger<HomeController> logger, HomeHeroContext context)
         {
             _logger = logger;
             _context = context;
+            heroServices = new HomeHeroServices(_context);
         }
 
         public IActionResult Index()
@@ -49,7 +51,7 @@ namespace HomeHero.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogInAction([FromForm] string email, [FromForm] string password)
         {
-            HomeHeroServices heroServices = new HomeHeroServices(_context);
+            
             User user = heroServices.LogInUser(email, password);
            
             if (user == null)
@@ -67,12 +69,6 @@ namespace HomeHero.Controllers
                     new Claim(ClaimTypes.Role, _context.Role.FirstOrDefault(e => e.RoleID == user.RoleID).NameRole),
                     new Claim("IdUsuario", user.UserId.ToString()),
                     new Claim("EmailUsuario", user.Email),
-                    new Claim("Qualification",user.QualificationUser.ToString()),
-                    new Claim(ClaimTypes.Surname,user.SurnamesUser),
-                    new Claim("LocationRecidence",user.LocationResidenceID.ToString()),
-                    new Claim("Curriculum", Convert.ToBase64String(user.Curriculum)),
-                    new Claim("VolunteerPermises",user.VolunteerPermises.ToString()),
-                    new Claim("sexUser",user.SexUser.ToString()),
                 };
 
                 identity.AddClaim(claims.FirstOrDefault(c => c.Type == ClaimTypes.Name));
@@ -98,26 +94,22 @@ namespace HomeHero.Controllers
         {
             return View("~/Views/HeroViews/OfferHelp.cshtml");
         }
-        public IActionResult ProfileMb()
+        public IActionResult ProfileMb(bool modifyProfile = false)
         {
             var claimsPrincipal = HttpContext.User;
-            var roleName = claimsPrincipal.FindFirstValue(ClaimTypes.Role);
-            User user = new User
-            {
-                UserId = Convert.ToInt32(claimsPrincipal.FindFirstValue("IdUsuario")),
-                NamesUser = claimsPrincipal.FindFirstValue(ClaimTypes.Name),
-                SurnamesUser = claimsPrincipal.FindFirstValue(ClaimTypes.Surname),
-                RoleID = _context.Role.FirstOrDefault(e => e.NameRole == roleName).RoleID,
-                Email = claimsPrincipal.FindFirstValue("EmailUsuario"),
-                SexUser = claimsPrincipal.FindFirstValue("sexUser")[0],
-                QualificationUser = Convert.ToInt32(claimsPrincipal.FindFirstValue("Qualification")),
-                VolunteerPermises = Convert.ToBoolean(claimsPrincipal.FindFirstValue("VolunteerPermises")),
-                Curriculum = Encoding.UTF8.GetBytes(claimsPrincipal.FindFirstValue("Curriculum")),
-                LocationResidenceID = Convert.ToInt32(claimsPrincipal.FindFirstValue("LocationRecidence"))
-            };
+
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+
+            User user = _context.User.FirstOrDefault(u => u.UserId == idUser);
             
-            ViewData["missindFields"] = 0;
+            ViewData["missindFields"] = heroServices.getNullProperties(user);
             ViewData["user"] = user;
+            ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
+            var data = _context.Location.ToList();
+            ViewData["modifyProfile"] = modifyProfile;
+            ViewBag.LocationData = new SelectList(data, "LocationID", "City");
             return View("~/Views/HeroViews/profileMb.cshtml");
         }
 
