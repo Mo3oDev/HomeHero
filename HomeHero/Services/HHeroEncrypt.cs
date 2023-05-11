@@ -64,7 +64,7 @@ namespace HomeHero.Services
             using (var sha256 = SHA256.Create())
             {
                 byte[] hashedPassword = sha256.ComputeHash(saltedPassword);
-                return hashedPassword ;
+                return hashedPassword;
             }
         }
         public bool ExistEmail(string email)

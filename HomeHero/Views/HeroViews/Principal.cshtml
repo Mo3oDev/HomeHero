@@ -5,6 +5,7 @@
 @section logo{
     <a class=" img-container2" asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/iconSol.png" /></a>
 }
+@section scripts{}
 @section inicioLI{
     <li class="nav-item logIn ">
         <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
@@ -16,7 +17,7 @@
 
 @section main{
     <section>
-        <div class="container text-white">
+        <div class="container-fluid text-white">
             <div class="row d-flex justify-content-evenly align-items-start">
                 <div onclick="location.href='@Url.Action("AksHelp", "Home")'" class="col-lg-3 col-md-5 col-sm-10 p-5 mt-5 text-center d-flex flex-column">
                    <h2 class="font-title pb-5">Pedir Ayuda</h2>

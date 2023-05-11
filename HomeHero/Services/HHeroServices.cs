@@ -17,6 +17,15 @@ namespace HomeHero.Services
             HHeroEncrypt = new HHeroEncrypt(context);
            
         }
-        
+        public int getNullProperties(User user)
+        {
+            int nullProperties = 0;
+            if (user.RealUserID == null) nullProperties++;
+            if (user.SexUser == null) nullProperties++;
+            if (user.Curriculum == null) nullProperties++;
+
+            return nullProperties;
+        }
+
     }
 }

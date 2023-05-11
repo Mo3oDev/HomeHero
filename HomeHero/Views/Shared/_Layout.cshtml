@@ -13,13 +13,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Dosis:wght@400;500&family=Pacifico&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/9ce1ab805c.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("scripts")
 </head>
 
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm nav-custom box-shadow header">
             <div class="container-fluid">
-                @RenderSection("logo");
+                @RenderSection("logo")
                 <a class="navbar-brand font-title" asp-area="" asp-controller="Home" asp-action="Index"><span class="h">H</span>ome<span class="h">H</span>ero</a>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
                     <ul class="navbar-nav d-flex ">
