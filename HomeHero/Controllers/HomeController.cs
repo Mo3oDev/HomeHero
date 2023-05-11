@@ -1,8 +1,9 @@
 ﻿using HomeHero.Data;
+using HomeHero.Filters;
 using HomeHero.Models;
 using HomeHero.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
@@ -17,7 +18,7 @@ namespace HomeHero.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly HomeHeroContext _context;
-
+        private readonly HHeroServices _heroServices;
         public HomeController(ILogger<HomeController> logger, HomeHeroContext context)
         {
             _logger = logger;
