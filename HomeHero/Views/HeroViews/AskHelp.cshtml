@@ -21,48 +21,67 @@
         <div class="container text-white">
             <div class="row d-flex justify-content-evenly align-items-start p-4 mt-3 thirdBg">
                 <h1 class="font-title col-12 pb-2 text-center" style="font-size: 2em;">Creacion de tu solicitud</h1>
-                    <form asp-controller="Home" asp-action="AddRequest" method="post" class="row d-flex justify-content-evenly align-items-start">
-                        <div class="col-lg-5">
+                <form asp-controller="Home" asp-action="AddRequest" method="post" enctype="multipart/form-data" class="row d-flex justify-content-evenly align-items-start">
+                    <div class="col-lg-5">
                         <div class="form-group pb-3">
                             <label for="title" class="control-label pb-1">Titulo de la solicitud</label>
-                                <input type="text" id="title" name="title" class="form-control" />
-                            </div>
+                            <input type="text" id="title" name="title" class="form-control" />
+                        </div>
                         <div class="form-group pb-3">
-                                <label for="desc" class="control-label pb-1">
-                                    ¿De qué trata tu solicitud? Escribe aquí una descripción.
-                                </label>
-                                <textarea type="text" id="desc" name="desc" class="form-control"></textarea>
-                            </div>
+                            <label for="desc" class="control-label pb-1">
+                                ¿De qué trata tu solicitud? Escribe aquí una descripción.
+                            </label>
+                            <textarea type="text" id="desc" name="desc" class="form-control"></textarea>
+                        </div>
                         <div class="form-group pb-3">
                             <label for="image" class="control-label pb-1 btn btn-outline-light">
-                                     Sube una imagen
-                                    <i class="fa-solid fa-upload"></i>
-                                </label>
+                                Sube una imagen
+                                <i class="fa-solid fa-upload"></i>
+                            </label>
                             <input type="file" id="image" name="image" class="form-control" style="display: none;" />
                         </div>
-                        </div>
-                        <div class="col-lg-5">
-                            <div class="form-group pb-3">
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="form-group pb-3">
                             <label for="location" class="pb-1">Ciudad donde se realizara la solicitud</label>
-                                <select name="location" id="location" class="form-control">
-                                    @foreach (var location in @ViewBag.LocationData)
-                                    {
-                                        <option value="@location.Value">@location.Text</option>
-                                    }
-                                    </select>
-                                </div>
-                            <div class="form-group pb-3">
+                            <select name="location" id="location" class="form-control">
+                                @foreach (var location in @ViewBag.LocationData)
+                                {
+                                    <option value="@location.Value">@location.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group pb-3">
                             <label for="dateReq" class="control-label pb-1">Vigencia de la solicitud</label>
-                                    <input type="date" id="dateReq" name="dateReq" class="form-control" />
-                                </div>
-                            <div class="form-group pb-3">
+                            <input type="date" id="dateReq" name="dateReq" class="form-control" />
+                        </div>
+                        <div class="form-group pb-3">
                             <label for="cantMb" class="control-label pb-1">Cantidad de personas necesarias</label>
-                                    <input type="number" id="cantMb" name="cantMb" class="form-control" />
-                            </div>
-                                <button type="submit" class="btn btn-primary mt-2 fs-5">CREAR LA SOLICITUD</button>
-                            </div>
-                    </form>
-                </div>
+                            <input type="number" id="cantMb" name="cantMb" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2 fs-5">CREAR LA SOLICITUD</button>
+                    </div>
+                </form>
             </div>
+        </div>
     </section>
 }
+
+<script>
+    function previewImage(event) {
+        var input = event.target;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var imagePreview = document.getElementById('imagePreview');
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'img-fluid';
+                imagePreview.innerHTML = '';
+                imagePreview.appendChild(img);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+

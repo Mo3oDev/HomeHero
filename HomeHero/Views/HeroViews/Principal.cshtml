@@ -18,7 +18,13 @@
     <section>
         <div class="container text-white">
             <div class="row d-flex justify-content-evenly align-items-start">
-                <div onclick="location.href='@Url.Action("AksHelp", "Home")'" class="col-lg-3 col-md-5 col-sm-10 p-5 mt-5 text-center d-flex flex-column">
+                @if (!string.IsNullOrEmpty(ViewBag.Message))
+                {
+                    <div class="alert alert-info" role="alert">
+                        @ViewBag.Message
+                    </div>
+                }
+                <div onclick="location.href='@Url.Action("AskHelp", "Home")'" class="col-lg-3 col-md-5 col-sm-10 p-5 mt-5 text-center d-flex flex-column">
                    <h2 class="font-title pb-5">Pedir Ayuda</h2>
                     <div class="flex-grow-1">
                        <img class="img-fluid" src="~/Images/AskForHelp.png"/>
@@ -40,3 +46,21 @@
         </div>
     </section>
 }
+
+    <script>
+        function previewImage(event) {
+            var input = event.target;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var imagePreview = document.getElementById('imagePreview');
+                    var img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'img-fluid';
+                    imagePreview.innerHTML = '';
+                    imagePreview.appendChild(img);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>

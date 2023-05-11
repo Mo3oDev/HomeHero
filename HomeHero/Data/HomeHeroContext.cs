@@ -73,11 +73,11 @@ namespace HomeHero.Data
                .HasOne(q => q.ApplicantUser)
                .WithMany()
                .HasForeignKey(q => q.ApplicantUserID);
-            modelBuilder.Entity<HomeHero.Models.Request>()
-               .HasOne(r => r.ApplicantUser)
-               .WithMany()
-               .HasForeignKey(r => r.ApplicantUserID)
-               .OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<HomeHero.Models.Request>()
+            //   .HasOne(r => r.ApplicantUser)
+            //   .WithMany()
+            //   .HasForeignKey(r => r.ApplicantUserID)
+            //   .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Qualification>()
                .HasOne(r => r.ApplicantUser)
                .WithMany()
