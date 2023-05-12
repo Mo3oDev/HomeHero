@@ -1,7 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Registarse";
 }
-@section scripts{}
 @section logo{
     <a class=" img-container " asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
 }
@@ -55,5 +54,77 @@
         </div>
     </section>
 }
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("form").validate({
+                rules: {
+                    name: {
+                        required: true,
+                        minlength: 2
+                    },
+                    surnames: {
+                        required: true,
+                        minlength: 2
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    password: {
+                        required: true,
+                        minlength: 8
+                    },
+                    location: {
+                        required: true
+                    }
+                },
+                messages: {
+                    name: {
+                        required: "Por favor, introduce tu nombre.",
+                        minlength: "El nombre debe tener al menos 2 caracteres."
+                    },
+                    surnames: {
+                        required: "Por favor, introduce tus apellidos.",
+                        minlength: "Los apellidos deben tener al menos 2 caracteres."
+                    },
+                    email: {
+                        required: "Por favor, introduce tu correo electrónico.",
+                        email: "Por favor, introduce un correo electrónico válido."
+                    },
+                    password: {
+                        required: "Por favor, introduce tu contraseña.",
+                        minlength: "La contraseña debe tener al menos 8 caracteres."
+                    },
+                    location: {
+                        required: "Por favor, selecciona una ciudad."
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    if (element.attr("name") == "email") {
+                        error.insertAfter(element.next('span'));
+                    }
+                    else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function (form) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'SignUpAction',
+                        data: $(form).serialize(),
+                        success: function (response) {
+                            // Aquí puedes manejar la respuesta del servidor
+                        }
+                    });
+                    // Evita que el formulario se envíe de la forma normal
+                }
+            });
+        });
+    </script>
+}
+
 }
 
