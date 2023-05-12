@@ -1,0 +1,101 @@
+﻿<h3 class="text-center secColor font-title pb-2 col-12 border-bottom">Actualizacion de datos</h3>
+<form asp-controller="Home" asp-action="updateProfile" method="post">
+    <div class="form-group p-3 pt-0">
+        <label for="name" class="control-label">NOMBRE(S)</label>
+        <input type="text" id="name" name="name" class="form-control" value="@ViewBag.user.NamesUser"/>
+    </div>
+    <div class="form-group p-3 pt-0">
+        <label for="surnames" class="control-label">APELLIDO(S)</label>
+        <input type="text" id="surnames" name="surnames" class="form-control" value="@ViewBag.user.SurnamesUser" />
+    </div>
+    <div class="form-group p-3 pt-0">
+        <label for="email" class="control-label">CORREO</label>
+        <input type="email" id="email" name="email" class="form-control" value="@ViewBag.user.Email" />
+    </div>
+    <div class="form-group p-3 pt-0">
+        <label for="idReal" class="control-label">DNI (CC - TI - OTRO)</label>
+        <input type="number" id="idReal" name="idReal" class="form-control" value="@ViewBag.user.RealUserID"/>
+    </div>
+    <div class="form-group p-3 pt-0">
+        <label for="location">CIUDAD:</label>
+        <select name="location" id="location" class="form-control">
+            @foreach (var location in @ViewBag.LocationData)
+            {
+                if (location.Text == ViewBag.locationResidence)
+                {
+                    <option value="@location.Value" selected>@location.Text</option>
+                }
+                else
+                {
+                    <option value="@location.Value">@location.Text</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="form-group p-3 pt-0">
+        <label for="location">SEXO:</label>
+        <select name="sex" id="sex" class="form-control">
+            @foreach (var sex in @ViewBag.Sexs)
+            {
+                if (sex == ViewBag.user.SexUser)
+                {
+                    <option value="@sex" selected>@sex</option>
+                }
+                else
+                {
+                    <option value="@sex">@sex</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="form-group p-3 pt-0 d-flex justify-content-start">
+        <label for="curriculum" class="control-label pb-1 btn btn-outline-light">
+            Curriculum
+            <i class="fa-solid fa-upload"></i>
+        </label>
+        <input type="file" id="curriculum" name="curriculum" class="form-control" style="display: none;" />
+        <h6 class="secColor mt-2 ms-3" id="fileNameLabel"></h6>
+    </div>
+    <div class="form-group p-3 pt-0 d-flex justify-content-start">
+        <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#ContactList" id="ContactsList">Ver mis numeros registrados</button>
+        <button type="button" class="btn btn-outline-light ms-3" data-bs-toggle="modal" data-bs-target="#addContact">Crear nuevo Nro. Contacto</button>
+    </div>
+    <div class="form-group p-3 pt-0 text-center ">
+        <button type="submit" class="btn btn-primary mt-2 ms-2 me-2 fs-5">Actualizar</button>
+        <button type="button" asp-controller="Home" asp-action="ProfileMb" class="btn btn-danger mt-2 ms-2 me-2 fs-5">Regresar</button>
+    </div>
+</form>
+
+<!-- Modal ContactList -->
+<div class="modal fade" id="ContactList" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content fourthBg text-white">
+            <div class="modal-header">
+                <h5 class="modal-title">Tus Contactos Agregados</h5>
+                <button type="button" class="btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="contact-body">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal addContact -->
+<div class="modal fade" id="addContact" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content fourthBg text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear Contacto</h5>
+                <button type="button" class="btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Home" asp-action="addContact" method="post">
+                    <div class="form-group p-3 pt-0">
+                        <label for="contactNum" class="control-label">Numero de Telefono</label>
+                        <input type="number" id="contactNum" name="contactNum" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-outline-light p-2 ps-4 pe-4 m-auto" data-bs-dismiss="modal">Crear</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
