@@ -137,26 +137,7 @@ namespace HomeHero.Controllers
                 return RedirectToAction("AskHelp");
             }
 
-            byte[] fileBytes;
-            using (var ms = new MemoryStream())
-            {
-                await image.CopyToAsync(ms);
-                fileBytes = ms.ToArray();
-            }
-
-            Request request = new Request()
-            {
-                RequestTitle = title,
-                RequestContent = desc,
-                RequestPicture = fileBytes,
-                LocationServiceID = int.Parse(location),
-                PublicationReqDate = dateReq,
-                MembersNeeded = cantMb
-            };
-
-            _context.Request.Add(request);
-            await _context.SaveChangesAsync();
-
+            await _heroServices.HHeroRequest.AddRequest(title,desc,image,location,dateReq,cantMb);
             ViewBag.Message = "La petición se ha generado correctamente";
             return View("~/Views/HeroViews/Principal.cshtml");
         }

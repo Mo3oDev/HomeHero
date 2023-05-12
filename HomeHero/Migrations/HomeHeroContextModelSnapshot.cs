@@ -440,12 +440,6 @@ namespace HomeHero.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestID"));
 
-                    b.Property<int>("ApplicantUserID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ChatID")
-                        .HasColumnType("int");
-
                     b.Property<int>("LocationServiceID")
                         .HasColumnType("int");
 
@@ -455,9 +449,6 @@ namespace HomeHero.Migrations
                     b.Property<DateTime>("PublicationReqDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ReqStateID")
-                        .HasColumnType("int");
-
                     b.Property<string>("RequestContent")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -465,6 +456,9 @@ namespace HomeHero.Migrations
                     b.Property<byte[]>("RequestPicture")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<int?>("RequestStateReqStateID")
+                        .HasColumnType("int");
 
                     b.Property<string>("RequestTitle")
                         .IsRequired()
@@ -475,13 +469,9 @@ namespace HomeHero.Migrations
 
                     b.HasKey("RequestID");
 
-                    b.HasIndex("ApplicantUserID");
-
-                    b.HasIndex("ChatID");
-
                     b.HasIndex("LocationServiceID");
 
-                    b.HasIndex("ReqStateID");
+                    b.HasIndex("RequestStateReqStateID");
 
                     b.HasIndex("UserId");
 
@@ -865,41 +855,21 @@ namespace HomeHero.Migrations
 
             modelBuilder.Entity("HomeHero.Models.Request", b =>
                 {
-                    b.HasOne("HomeHero.Models.User", "ApplicantUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicantUserID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("HomeHero.Models.Chat", "Chat")
-                        .WithMany()
-                        .HasForeignKey("ChatID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("HomeHero.Models.Location", "Location")
                         .WithMany("Requests")
                         .HasForeignKey("LocationServiceID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeHero.Models.RequestState", "RequestState")
+                    b.HasOne("HomeHero.Models.RequestState", null)
                         .WithMany("Requests")
-                        .HasForeignKey("ReqStateID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RequestStateReqStateID");
 
                     b.HasOne("HomeHero.Models.User", null)
                         .WithMany("Requests")
                         .HasForeignKey("UserId");
 
-                    b.Navigation("ApplicantUser");
-
-                    b.Navigation("Chat");
-
                     b.Navigation("Location");
-
-                    b.Navigation("RequestState");
                 });
 
             modelBuilder.Entity("HomeHero.Models.Request_Area", b =>
