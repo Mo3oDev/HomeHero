@@ -8,7 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using System.Security.Claims;
-using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using HomeHero.Filters;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace HomeHero.Controllers
 {
@@ -67,12 +71,6 @@ namespace HomeHero.Controllers
                     new Claim(ClaimTypes.Role, _context.Role.FirstOrDefault(e => e.RoleID == user.RoleID).NameRole),
                     new Claim("IdUsuario", user.UserId.ToString()),
                     new Claim("EmailUsuario", user.Email),
-                    new Claim("Qualification",user.QualificationUser.ToString()),
-                    new Claim(ClaimTypes.Surname,user.SurnamesUser),
-                    new Claim("LocationRecidence",user.LocationResidenceID.ToString()),
-                    //new Claim("Curriculum", Convert.ToBase64String(user.Curriculum)),
-                    new Claim("VolunteerPermises",user.VolunteerPermises.ToString()),
-                    //new Claim("sexUser",user.SexUser.ToString())
                 };
 
                 identity.AddClaim(claims.FirstOrDefault(c => c.Type == ClaimTypes.Name));
@@ -98,26 +96,22 @@ namespace HomeHero.Controllers
         {
             return View("~/Views/HeroViews/OfferHelp.cshtml");
         }
-        public IActionResult ProfileMb()
+        public IActionResult ProfileMb(bool modifyProfile = false)
         {
             var claimsPrincipal = HttpContext.User;
-            var roleName = claimsPrincipal.FindFirstValue(ClaimTypes.Role);
-            User user = new User
-            {
-                UserId = Convert.ToInt32(claimsPrincipal.FindFirstValue("IdUsuario")),
-                NamesUser = claimsPrincipal.FindFirstValue(ClaimTypes.Name),
-                SurnamesUser = claimsPrincipal.FindFirstValue(ClaimTypes.Surname),
-                RoleID = _context.Role.FirstOrDefault(e => e.NameRole == roleName).RoleID,
-                Email = claimsPrincipal.FindFirstValue("EmailUsuario"),
-                //SexUser = claimsPrincipal.FindFirstValue("sexUser")[0],
-                QualificationUser = Convert.ToInt32(claimsPrincipal.FindFirstValue("Qualification")),
-                VolunteerPermises = Convert.ToBoolean(claimsPrincipal.FindFirstValue("VolunteerPermises")),
-                //Curriculum = Encoding.UTF8.GetBytes(claimsPrincipal.FindFirstValue("Curriculum")),
-                LocationResidenceID = Convert.ToInt32(claimsPrincipal.FindFirstValue("LocationRecidence"))
-            };
-
-            ViewData["missindFields"] = 0;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+            User user = _context.User.FirstOrDefault(u => u.UserId == idUser);
+            
+            ViewData["missindFields"] = _heroServices.getNullProperties(user);
             ViewData["user"] = user;
+            ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
+            var data = _context.Location.ToList();
+            ViewData["modifyProfile"] = modifyProfile;
+            ViewBag.LocationData = new SelectList(data, "LocationID", "City");
+            List<Contact> contactData = _context.Contact.Where(c => c.UserID == idUser).ToList();
+            ViewBag.ContactData = contactData;
             return View("~/Views/HeroViews/profileMb.cshtml");
         }
 
@@ -239,5 +233,48 @@ namespace HomeHero.Controllers
             return View("~/Views/HeroViews/Login.cshtml");
         }
 
+        public IActionResult addContact([FromForm] double contactNum)
+        {
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+
+            _context.Contact.Add(
+                new Contact
+                {
+                    UserID = idUser,
+                    NumPhone = contactNum.ToString()
+                }
+            );
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        public IActionResult GetContactData()
+        {
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+            List<Contact> contactData = _context.Contact.Where(c => c.UserID == idUser).ToList();
+            ViewBag.ContactData = contactData;
+            return PartialView("~/Views/HeroViews/_ContactData.cshtml", contactData);
+        }
+
+        public async Task<IActionResult> removeContact(string[] selectedContacts)
+        {
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+            foreach ( var contactSel in selectedContacts)
+            {
+                Contact contact = _context.Contact.FirstOrDefault(c => c.UserID == idUser && c.NumPhone == contactSel);
+                _context.Contact.Remove(contact);
+                _context.SaveChanges();
+            }
+            return Ok();
+        }
     }
 }

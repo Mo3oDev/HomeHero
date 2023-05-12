@@ -1,0 +1,17 @@
+﻿@if (ViewBag.ContactData.Count != 0)
+{
+    <form asp-controller="Home" asp-action="removeContact" method="post">
+        @foreach (Contact contact in ViewBag.ContactData)
+        {
+            <div class="form-check p-3 pt-0 col-12 ms-3">
+                <label for="contactCheck" class="form-check-label">@contact.NumPhone</label>
+                <input type="checkbox" id="contactCheck_@contact.NumPhone" name="contactsNumSelected" class="form-check-input" value="@contact.NumPhone" />
+            </div>
+        }
+        <button type="submit" class="btn btn-outline-light p-2 ps-4 pe-4 m-auto" data-bs-dismiss="modal">Eliminar</button>
+    </form>
+}
+else
+{
+    <h4>No ha registrado ningun contacto todavia</h4>
+}
