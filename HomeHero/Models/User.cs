@@ -9,7 +9,7 @@ namespace HomeHero.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         public int RoleID { get; set; }
-        [ForeignKey("RoleID")]
+        [ForeignKey("RoleID")] 
         public virtual Role Role { get; set; }
         public string? RealUserID { get; set; }
         public string NamesUser { get; set; }

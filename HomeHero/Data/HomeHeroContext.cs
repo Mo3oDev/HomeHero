@@ -42,8 +42,6 @@ namespace HomeHero.Data
             modelBuilder.Entity<User>()
                .Property(p => p.RoleID)
                .HasDefaultValue(2);
-
-
             modelBuilder.Entity<Complaint>()
                 .HasOne(q => q.AttenderUser)
                 .WithMany()
@@ -74,9 +72,9 @@ namespace HomeHero.Data
                .WithMany()
                .HasForeignKey(q => q.ApplicantUserID);
             modelBuilder.Entity<HomeHero.Models.Request>()
-               .HasOne(r => r.ApplicantUser)
+               .HasOne(r => r.User)
                .WithMany()
-               .HasForeignKey(r => r.ApplicantUserID)
+               .HasForeignKey(r => r.UserId)
                .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Qualification>()
                .HasOne(r => r.ApplicantUser)

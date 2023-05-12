@@ -445,6 +445,9 @@ namespace HomeHero.Migrations
                     b.Property<DateTime>("PublicationReqDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("ReqStateID")
+                        .HasColumnType("int");
+
                     b.Property<string>("RequestContent")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -453,23 +456,25 @@ namespace HomeHero.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<int?>("RequestStateReqStateID")
-                        .HasColumnType("int");
-
                     b.Property<string>("RequestTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId1")
                         .HasColumnType("int");
 
                     b.HasKey("RequestID");
 
                     b.HasIndex("LocationServiceID");
 
-                    b.HasIndex("RequestStateReqStateID");
+                    b.HasIndex("ReqStateID");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Request");
                 });
@@ -482,8 +487,9 @@ namespace HomeHero.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReqStateID"));
 
-                    b.Property<int>("NameState")
-                        .HasColumnType("int");
+                    b.Property<string>("NameState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ReqStateID");
 
@@ -699,9 +705,9 @@ namespace HomeHero.Migrations
             modelBuilder.Entity("HomeHero.Models.Chat", b =>
                 {
                     b.HasOne("HomeHero.Models.Request", "Request")
-                        .WithMany()
+                        .WithMany("Chats")
                         .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Request");
@@ -857,15 +863,27 @@ namespace HomeHero.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeHero.Models.RequestState", null)
+                    b.HasOne("HomeHero.Models.RequestState", "RequestState")
                         .WithMany("Requests")
-                        .HasForeignKey("RequestStateReqStateID");
+                        .HasForeignKey("ReqStateID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HomeHero.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("HomeHero.Models.User", null)
                         .WithMany("Requests")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("Location");
+
+                    b.Navigation("RequestState");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HomeHero.Models.Request_Area", b =>
@@ -949,6 +967,8 @@ namespace HomeHero.Migrations
                     b.Navigation("Applications");
 
                     b.Navigation("AttentionRequests");
+
+                    b.Navigation("Chats");
 
                     b.Navigation("Complaints");
 

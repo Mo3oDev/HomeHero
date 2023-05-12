@@ -125,13 +125,17 @@ namespace HomeHero.Controllers
         [HttpPost]
         public async Task<IActionResult>AddRequest([FromForm] string title, [FromForm] string desc, [FromForm] IFormFile image, [FromForm] string location, [FromForm] DateTime dateReq, [FromForm] int cantMb)
         {
+
             if (image == null || image.Length == 0)
             {
                 ViewBag.ErrorMessage = "Selecciona un archivo de imagen";
                 return RedirectToAction("AskHelp");
             }
-
-            await _heroServices.HHeroRequest.AddRequest(title,desc,image,location,dateReq,cantMb);
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+            await _heroServices.HHeroRequest.AddRequest(title,desc,image,location,dateReq,cantMb,idUser);
             ViewBag.Message = "La petición se ha generado correctamente";
             return View("~/Views/HeroViews/Principal.cshtml");
         }

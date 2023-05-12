@@ -13,7 +13,7 @@ namespace HomeHero.Services
         {
             _context = context;
         }
-        public async Task AddRequest(string title, string desc, IFormFile image, string location, DateTime dateReq, int cantMb)
+        public async Task AddRequest(string title, string desc, IFormFile image, string location, DateTime dateReq, int cantMb, int userId)
         {
             byte[] fileBytes;
             using (var ms = new MemoryStream())
@@ -21,30 +21,30 @@ namespace HomeHero.Services
                 await image.CopyToAsync(ms);
                 fileBytes = ms.ToArray();
             }
-
-            // Crear el registro principal
             Request request1 = new Request
             {
+                UserId = userId,
                 RequestTitle = title,
                 RequestContent = desc,
                 RequestPicture = fileBytes,
                 LocationServiceID = int.Parse(location),
                 PublicationReqDate = dateReq,
-                MembersNeeded = cantMb
+                MembersNeeded = cantMb,
+                ReqStateID = 1,
+               
             };
             _context.Request.Add(request1);
+            await _context.SaveChangesAsync();
 
-            // Crear el registro secundario con la clave foránea
             Chat chat1 = new Chat
             {
-                RequestID = request1.RequestID,
+                RequestID= request1.RequestID,
                 ChatCreationDate = dateReq,
             };
             _context.Chat.Add(chat1);
+            await _context.SaveChangesAsync();
 
-            // Guardar los cambios en la base de datos
-            _context.SaveChangesAsync();
-            
+
         }
     }
 }
