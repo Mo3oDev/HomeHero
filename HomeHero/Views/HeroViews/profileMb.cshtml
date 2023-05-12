@@ -29,59 +29,7 @@
                             <h5 class="pb-2 col-12"> <span class="secColor">Ciudad de residencia:</span> @ViewBag.locationResidence</h5>
                         }
                         else{
-                            <h3 class="text-center secColor font-title pb-2 col-12 border-bottom">Actualizacion de datos</h3>
-                            <form asp-controller="Home" asp-action="updateProfile" method="post">
-                                <div class="form-group p-3 pt-0">
-                                    <label for="name" class="control-label">NOMBRE(S)</label>
-                                    <input type="text" id="name" name="name" class="form-control" />
-                                </div>
-                                <div class="form-group p-3 pt-0">
-                                    <label for="surnames" class="control-label">APELLIDO(S)</label>
-                                    <input type="text" id="surnames" name="surnames" class="form-control" />
-                                </div>
-                                <div class="form-group p-3 pt-0">
-                                    <label for="email" class="control-label">CORREO</label>
-                                    <input type="email" id="email" name="email" class="form-control" />
-                                    <span for="email" class="text-danger"></span>
-                                </div>
-                                <div class="form-group p-3 pt-0">
-                                    <label for="idReal" class="control-label">DNI (CC - TI - OTRO)</label>
-                                    <input type="number" id="idReal" name="idReal" class="form-control" />
-                                </div>
-                                <div class="form-group p-3 pt-0">
-                                    <label for="location">CIUDAD:</label>
-                                    <select name="location" id="location" class="form-control">
-                                        @foreach (var location in @ViewBag.LocationData)
-                                        {
-                                            <option value="@location.Value">@location.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-group p-3 pt-0">
-                                    <label for="location">SEXO:</label>
-                                    <select name="sex" id="sex" class="form-control">
-                                        <option value="1">Masculino</option>
-                                        <option value="2">Femenino</option>
-                                        <option value="3">No binario</option>
-                                        <option value="4">Prefiero no responder</option>
-                                    </select>
-                                </div>
-                                <div class="form-group p-3 pt-0 d-flex justify-content-start">
-                                    <label for="curriculum" class="control-label pb-1 btn btn-outline-light">
-                                         Curriculum
-                                        <i class="fa-solid fa-upload"></i>
-                                    </label>
-                                    <input type="file" id="curriculum" name="curriculum" class="form-control" style="display: none;" />
-                                    <h6 class="secColor mt-2 ms-3" id="fileNameLabel"></h6>
-                                </div>
-                                <div class="form-group p-3 pt-0 d-flex justify-content-start">
-                                    <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#ContactList" id="ContactsList">Ver mis numeros registrados</button>
-                                    <button type="button" class="btn btn-outline-light ms-3" data-bs-toggle="modal" data-bs-target="#addContact">Crear nuevo Nro. Contacto</button>
-                                </div>
-                                <div class="form-group p-3 pt-0 text-center ">
-                                    <button type="submit" class="btn btn-primary mt-2 fs-5">REGISTRARSE</button>
-                                </div>
-                            </form>
+                            Html.RenderPartial("~/Views/HeroViews/_profileUpdate.cshtml");
                         }
         </div>
                </div>
@@ -91,38 +39,4 @@
             </div>
         </div>
     </section>
-
-    <!-- Modal -->
-    <div class="modal fade" id="ContactList" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content fourthBg text-white">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tus Contactos Agregados</h5>
-                    <button type="button" class="btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="contact-body">
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="addContact" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content fourthBg text-white">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Crear Contacto</h5>
-                    <button type="button" class="btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form asp-controller="Home" asp-action="addContact" method="post">
-                        <div class="form-group p-3 pt-0">
-                            <label for="contactNum" class="control-label">Numero de Telefono</label>
-                            <input type="number" id="contactNum" name="contactNum" class="form-control" />
-                        </div>
-                        <button type="submit" class="btn btn-outline-light p-2 ps-4 pe-4 m-auto" data-bs-dismiss="modal">Crear</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 }

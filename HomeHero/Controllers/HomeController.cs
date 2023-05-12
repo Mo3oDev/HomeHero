@@ -105,6 +105,7 @@ namespace HomeHero.Controllers
             ViewData["missindFields"] = _heroServices.getNullProperties(user);
             ViewData["user"] = user;
             ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
+            ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder"};
             var data = _context.Location.ToList();
             ViewData["modifyProfile"] = modifyProfile;
             ViewBag.LocationData = new SelectList(data, "LocationID", "City");
