@@ -1,12 +1,15 @@
 ﻿<h3 class="text-center secColor font-title pb-2 col-12 border-bottom">Actualizacion de datos</h3>
-<form asp-controller="Home" asp-action="updateProfile" method="post">
-    <div class="form-group p-3 pt-0">
-        <label for="name" class="control-label">NOMBRE(S)</label>
-        <input type="text" id="name" name="name" class="form-control" value="@ViewBag.user.NamesUser"/>
-    </div>
+<form asp-controller="Home" asp-action="updateProfile" method="post" enctype="multipart/form-data">
+    @if (ViewBag.user != null)
+    {
+        <div class="form-group p-3 pt-0">
+            <label for="name" class="control-label">NOMBRE(S)</label>
+            <input required type="text" minlength="3" id="name" name="name" class="form-control" value="@ViewBag.user.NamesUser" />
+        </div>
+    }
     <div class="form-group p-3 pt-0">
         <label for="surnames" class="control-label">APELLIDO(S)</label>
-        <input type="text" id="surnames" name="surnames" class="form-control" value="@ViewBag.user.SurnamesUser" />
+        <input required type="text" id="surnames" name="surnames" class="form-control" value="@ViewBag.user.SurnamesUser" />
     </div>
     <div class="form-group p-3 pt-0">
         <label for="email" class="control-label">CORREO</label>
@@ -14,7 +17,7 @@
     </div>
     <div class="form-group p-3 pt-0">
         <label for="idReal" class="control-label">DNI (CC - TI - OTRO)</label>
-        <input type="number" id="idReal" name="idReal" class="form-control" value="@ViewBag.user.RealUserID"/>
+        <input type="number" min="1" id="idReal" name="idReal" class="form-control" value="@ViewBag.user.RealUserID"/>
     </div>
     <div class="form-group p-3 pt-0">
         <label for="location">CIUDAD:</label>
@@ -33,17 +36,20 @@
         </select>
     </div>
     <div class="form-group p-3 pt-0">
-        <label for="location">SEXO:</label>
+        <label for="sex">SEXO:</label>
         <select name="sex" id="sex" class="form-control">
+            @{ int sexValue = 1; }
             @foreach (var sex in @ViewBag.Sexs)
             {
-                if (sex == ViewBag.user.SexUser)
+                if (sexValue == ViewBag.CurrentSex)
                 {
-                    <option value="@sex" selected>@sex</option>
+                    <option value="@sexValue" selected>@sex</option>
+                    sexValue++;
                 }
                 else
                 {
-                    <option value="@sex">@sex</option>
+                    <option value="@sexValue">@sex</option>
+                    sexValue++;
                 }
             }
         </select>
@@ -51,10 +57,18 @@
     <div class="form-group p-3 pt-0 d-flex justify-content-start">
         <label for="curriculum" class="control-label pb-1 btn btn-outline-light">
             Curriculum
-            <i class="fa-solid fa-upload"></i>
+            <i class="fa-solid fa-file-circle-plus"></i>
         </label>
-        <input type="file" id="curriculum" name="curriculum" class="form-control" style="display: none;" />
-        <h6 class="secColor mt-2 ms-3" id="fileNameLabel"></h6>
+        <input accept="application/pdf" type="file" id="curriculum" name="curriculum" class="form-control" style="display: none;" @if (ViewBag.Curriculum != null)
+        {
+            <text> value="@ViewBag.Curriculum"</text>
+        } />
+        <h6 class="secColor mt-2 ms-3" id="fileNameLabel">
+            @if (ViewBag.userFileName != null)
+            {
+                <text>@ViewBag.userFileName</text>
+            }
+        </h6>
     </div>
     <div class="form-group p-3 pt-0 d-flex justify-content-start">
         <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#ContactList" id="ContactsList">Ver mis numeros registrados</button>
@@ -62,7 +76,7 @@
     </div>
     <div class="form-group p-3 pt-0 text-center ">
         <button type="submit" class="btn btn-primary mt-2 ms-2 me-2 fs-5">Actualizar</button>
-        <button type="button" asp-controller="Home" asp-action="ProfileMb" class="btn btn-danger mt-2 ms-2 me-2 fs-5">Regresar</button>
+        <a type="button" onclick="location.href='@Url.Action("profileMb", "Home")'" class="btn btn-danger mt-2 ms-2 me-2 fs-5" >Regresar</a>
     </div>
 </form>
 
