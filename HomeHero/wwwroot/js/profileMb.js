@@ -3,11 +3,13 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     var fileInput = document.getElementById('curriculum');
-    var fileNameLabel = document.getElementById('fileNameLabel');
-    fileInput.addEventListener('change', function () {
-        var fileName = fileInput.files[0].name;
-        fileNameLabel.innerText = fileName;
-    });
+    if (fileInput != null) {
+        var fileNameLabel = document.getElementById('fileNameLabel');
+        fileInput.addEventListener('change', function () {
+            var fileName = fileInput.files[0].name;
+            fileNameLabel.innerText = fileName;
+        });
+    }
 });
 
 $(document).ready(function () {
@@ -45,7 +47,6 @@ $(document).ready(function () {
     });
 });
 
-
 $(document).ready(function () {
     $('#ContactList').submit(function (event) {
         event.preventDefault();
@@ -71,9 +72,4 @@ $(document).ready(function () {
         });
     });
 });
-
-
-
-
-
 

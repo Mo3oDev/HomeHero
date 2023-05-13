@@ -49,8 +49,8 @@ namespace HomeHero
                 try
                 {
                     var dbContext = services.GetRequiredService<HomeHeroContext>();
-                    dbContext.Database.EnsureDeleted();
-                    dbContext.Database.EnsureCreated();
+                    //dbContext.Database.EnsureDeleted();
+                    //dbContext.Database.EnsureCreated();
                     SeedData.Initialize(services);
                 }
                 catch (Exception ex)
