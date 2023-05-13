@@ -4,13 +4,17 @@
     
 }
 @section scripts{
+    <script src="~/js/request.js"></script>
     <script src="~/js/profileMb.js"></script>
 }
 @section logo{
     <a class=" img-container2" asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/iconSol.png" /></a>
 }
 @section inicioLI{
-    <li class="nav-item signUp">
+    <li class="nav-item menuColor">
+        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="principalMb">Menu</a>
+    </li>
+    <li class="nav-item logIn">
         <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
     </li>
 }
