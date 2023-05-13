@@ -1,6 +1,7 @@
 ﻿
 @{
     ViewData["Title"] = "Mi Perfil";
+    
 }
 @section scripts{
     <script src="~/js/profileMb.js"></script>
@@ -19,14 +20,61 @@
             <div class="row d-flex justify-content-evenly align-items-start p-4 mt-3">
                <div class="col-lg-6 col-sm-12 p-2 thirdBg">
                     <div class="row d-flex justify-content-between p-2 m-auto" style="width: 100%;">
+                        @{
+                            User user = (User)ViewBag.user;
+                        }
                         @if (ViewBag.modifyProfile == false)
                         {
                             <h3 class="text-center secColor font-title pb-2 col-12 border-bottom">Perfil</h3>
-                            <h5 class="pb-2 pt-4 col-8"><b class="secColor">Completa tu perfil: </b> @ViewBag.missindFields Datos Faltantes</h5>
-                            <p class="btn btn-outline-light mt-3  col-3 " onclick="location.href='@Url.Action("profileMb", "Home", new { modifyProfile = true })'">Completar <i class="fa-solid fa-plus"></i></p>
-                            <h5 class="secColor pb-2 pt-4 col-12 font-title text-center"> @ViewBag.user.NamesUser @ViewBag.user.SurnamesUser</h5>
-                            <h5 class="pb-2 col-12"> <span class="secColor">Correo:</span> @ViewBag.user.Email</h5>
+                            if (ViewBag.missindFields > 0)
+                            {
+                                <h5 class="pb-2 pt-4 col-8"><b class="secColor">Completa tu perfil: </b> @ViewBag.missindFields Datos Faltantes</h5>
+                            }
+                            <p class="btn btn-outline-light mt-3 col-3" onclick="location.href='@Url.Action("profileMb", "Home", new { modifyProfile = true })'">
+                                @if (ViewBag.missindFields > 0)
+                                {
+                                    <text>Completar </text>
+                                }else
+                                {
+                                    <text>Actualizar perfil</text>
+                                }
+                                <i class="fa-solid fa-plus"></i></p>
+
+                            <h5 class="secColor pb-2 pt-4 col-12 font-title text-center">@user.NamesUser @user.SurnamesUser</h5>
+                            <h5 class="pb-2 col-12"> <span class="secColor">Correo:</span>@user.Email</h5>
                             <h5 class="pb-2 col-12"> <span class="secColor">Ciudad de residencia:</span> @ViewBag.locationResidence</h5>
+                            @if (user.RealUserID != null)
+                            {
+                                <h5 class="pb-2 col-12"> <span class="secColor">Identificacion:</span>@user.RealUserID</h5>
+                            }
+                            <h5 class="pb-2 col-12"> <span class="secColor">Sexo:</span>
+                                @if (user.SexUser == 'M')
+                                {
+                                    <text>Masculino</text>
+                                }
+                                else if (user.SexUser == 'F')
+                                {
+                                    <text>Femenino</text>
+                                }
+                                else if (user.SexUser == '?')
+                                {
+                                    <text>No Binario</text>
+                                }
+                                else
+                                {
+                                    <text>No Identificado</text>
+                                }
+                            </h5>
+                            @if (ViewBag.userFileName != null)
+                            {
+                                <div>
+                                    <h5 class="d-inline p-2 ps-0 me-5 col-12"> <span class="secColor">Curriculum:</h5>
+                                    <a class="p-2 btn btn-outline-light" target="_blank" href="@Url.Action("ViewCurriculum", "Home", new {userId = user.UserId})">
+                                        @ViewBag.userFileName
+                                        <i class="fa-solid fa-file-pdf"></i>
+                                    </a>
+                                </div>
+                            }
                         }
                         else{
                             Html.RenderPartial("~/Views/HeroViews/_profileUpdate.cshtml");

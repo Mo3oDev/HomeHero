@@ -13,6 +13,8 @@ using HomeHero.Filters;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Hosting;
 
 namespace HomeHero.Controllers
 {
@@ -22,12 +24,14 @@ namespace HomeHero.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly HomeHeroContext _context;
         private readonly HHeroServices _heroServices;
-        public HomeController(ILogger<HomeController> logger, HomeHeroContext context, IHHeroEmail hheroEmail)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        public HomeController(ILogger<HomeController> logger, HomeHeroContext context, IHHeroEmail hheroEmail, IWebHostEnvironment hostEnvironment)
         {
             _logger = logger;
             _context = context;
             _heroServices = new HHeroServices(context);
             _hheroEmail = hheroEmail;
+            _hostEnvironment = hostEnvironment;
         }
 
         public IActionResult Index()
@@ -96,25 +100,6 @@ namespace HomeHero.Controllers
         {
             return View("~/Views/HeroViews/OfferHelp.cshtml");
         }
-        public IActionResult ProfileMb(bool modifyProfile = false)
-        {
-            var claimsPrincipal = HttpContext.User;
-            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
-            int idUser;
-            int.TryParse(idUserClaim.Value, out idUser);
-            User user = _context.User.FirstOrDefault(u => u.UserId == idUser);
-            
-            ViewData["missindFields"] = _heroServices.getNullProperties(user);
-            ViewData["user"] = user;
-            ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
-            ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder"};
-            var data = _context.Location.ToList();
-            ViewData["modifyProfile"] = modifyProfile;
-            ViewBag.LocationData = new SelectList(data, "LocationID", "City");
-            List<Contact> contactData = _context.Contact.Where(c => c.UserID == idUser).ToList();
-            ViewBag.ContactData = contactData;
-            return View("~/Views/HeroViews/profileMb.cshtml");
-        }
 
         public IActionResult AskHelp()
         {
@@ -124,7 +109,9 @@ namespace HomeHero.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult>AddRequest([FromForm] string title, [FromForm] string desc, [FromForm] IFormFile image, [FromForm] string location, [FromForm] DateTime dateReq, [FromForm] int cantMb)
+        public async Task<IActionResult>AddRequest([FromForm] string title, [FromForm] string desc,
+            [FromForm] IFormFile image, [FromForm] string location,
+            [FromForm] DateTime dateReq,[FromForm] int cantMb)
         {
             if (image == null || image.Length == 0)
             {
@@ -155,7 +142,6 @@ namespace HomeHero.Controllers
             ViewBag.Message = "La petición se ha generado correctamente";
             return View("~/Views/HeroViews/Principal.cshtml");
         }
-
 
         public IActionResult SignUp()
         {
@@ -253,6 +239,32 @@ namespace HomeHero.Controllers
             return View("~/Views/HeroViews/Login.cshtml");
         }
 
+        public IActionResult ProfileMb(bool modifyProfile = false)
+        {
+            ViewData["modifyProfile"] = modifyProfile;
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+            User user = _context.User.FirstOrDefault(u => u.UserId == idUser);
+            ViewData["missindFields"] = _heroServices.getNullProperties(user);
+            ViewData["user"] = user;
+            ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
+            ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder" };
+            if (user.Curriculum != null)
+            {
+                string userFileName = user.NamesUser.Replace(" ", "_") + "_Curriculum";
+                ViewData["Curriculum"] = Convert.ToBase64String(user.Curriculum);
+                ViewData["userFileName"] = userFileName+".pdf";
+            }
+            ViewData["CurrentSex"] = GetSexUserValue(user.SexUser);
+            var data = _context.Location.ToList();
+            ViewBag.LocationData = new SelectList(data, "LocationID", "City");
+            List<Contact> contactData = _context.Contact.Where(c => c.UserID == idUser).ToList();
+            ViewBag.ContactData = contactData;
+            return View("~/Views/HeroViews/profileMb.cshtml");
+        }
+
         public IActionResult addContact([FromForm] double contactNum)
         {
             var claimsPrincipal = HttpContext.User;
@@ -295,6 +307,70 @@ namespace HomeHero.Controllers
                 _context.SaveChanges();
             }
             return Ok();
+        }
+    
+        public async Task<IActionResult> updateProfile([FromForm]string name,[FromForm]string surnames,
+            [FromForm] string email,[FromForm] int idReal,[FromForm] int location,
+            [FromForm] int sex,[FromForm] IFormFile curriculum)
+        {
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+            var user = _context.User.Find(idUser);
+            user.NamesUser = name;
+            user.SurnamesUser = surnames;
+            if(curriculum != null)
+            {
+                user.Curriculum = ConvertToByteArrayAsync(curriculum);
+            }
+            user.Email = email;
+            if (idReal > 1) user.RealUserID = idReal.ToString();
+            user.LocationResidenceID = location;
+            user.SexUser = GetSexUser(sex);
+            _context.SaveChanges();
+            return RedirectToAction("ProfileMb","Home");
+        }
+        public byte[] ConvertToByteArrayAsync(IFormFile file)
+        {
+            if (file == null) return null;
+
+            using var ms = new MemoryStream();
+            file.CopyTo(ms);
+            return ms.ToArray();
+        }
+
+        private char? GetSexUser(int sex)
+        {
+            if (sex == 1) return 'M';
+            else if (sex == 2) return 'F';
+            else if (sex == 3) return '?';
+            else return '-';
+        }
+
+        private int GetSexUserValue(char? sex)
+        {
+            if (sex == 'M') return 1;
+            else if (sex == 'F') return 2;
+            else if (sex == '?') return 3;
+            else return 4;
+        }
+
+        private FileResult ConvertToPdfFile(byte[] byteArray,ref string fileName)
+        {
+            MemoryStream ms = new MemoryStream(byteArray);
+            return File(ms, "application/pdf", fileName);
+        }
+
+        public async Task<IActionResult> ViewCurriculum(int userId)
+        {
+            var user = await _context.User.FindAsync(userId);
+            if (user == null || user.Curriculum == null)
+            {
+                return NotFound();
+            }
+
+            return File(user.Curriculum, "application/pdf");
         }
     }
 }
