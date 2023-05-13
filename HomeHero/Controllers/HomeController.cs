@@ -104,6 +104,12 @@ namespace HomeHero.Controllers
             return View("~/Views/HeroViews/ManageRequest.cshtml");
         }
 
+        public IActionResult ManageRequest2(int RequestID)
+        {
+            ViewBag.Request = _context.Request.FirstOrDefault(r => r.RequestID == RequestID);
+            return View("~/Views/HeroViews/ManageRequest2.cshtml");
+        }
+
         public IActionResult ProfileMb(bool modifyProfile = false)
         {
             ViewData["modifyProfile"] = modifyProfile;
