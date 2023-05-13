@@ -44,7 +44,7 @@ namespace HomeHero.Services
                 user.Salt = salt;
                 user.Password = HashPassword(password, salt);
                 _context.User.Update(user);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
            
         }

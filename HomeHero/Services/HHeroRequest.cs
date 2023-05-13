@@ -23,14 +23,14 @@ namespace HomeHero.Services
             }
             Request request1 = new Request
             {
-                UserId = userId,
+                UserId_Request = userId,
                 RequestTitle = title,
                 RequestContent = desc,
                 RequestPicture = fileBytes,
                 LocationServiceID = int.Parse(location),
                 PublicationReqDate = dateReq,
                 MembersNeeded = cantMb,
-                ReqStateID = 1,
+                ReqStateID_Request = 1,
                
             };
             _context.Request.Add(request1);
@@ -38,7 +38,7 @@ namespace HomeHero.Services
 
             Chat chat1 = new Chat
             {
-                RequestID= request1.RequestID,
+                RequestID_Chat= request1.RequestID,
                 ChatCreationDate = dateReq,
             };
             _context.Chat.Add(chat1);

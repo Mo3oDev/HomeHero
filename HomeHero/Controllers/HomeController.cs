@@ -68,7 +68,7 @@ namespace HomeHero.Controllers
                 var claims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.Name, user.NamesUser),
-                    new Claim(ClaimTypes.Role, _context.Role.FirstOrDefault(e => e.RoleID == user.RoleID).NameRole),
+                    new Claim(ClaimTypes.Role, _context.Role.FirstOrDefault(e => e.RoleID == user.RoleID_User).NameRole),
                     new Claim("IdUsuario", user.UserId.ToString()),
                     new Claim("EmailUsuario", user.Email),
                 };
@@ -110,7 +110,7 @@ namespace HomeHero.Controllers
             var data = _context.Location.ToList();
             ViewData["modifyProfile"] = modifyProfile;
             ViewBag.LocationData = new SelectList(data, "LocationID", "City");
-            List<Contact> contactData = _context.Contact.Where(c => c.UserID == idUser).ToList();
+            List<Contact> contactData = _context.Contact.Where(c => c.UserID_Contact == idUser).ToList();
             ViewBag.ContactData = contactData;
             return View("~/Views/HeroViews/profileMb.cshtml");
         }
@@ -247,7 +247,7 @@ namespace HomeHero.Controllers
             _context.Contact.Add(
                 new Contact
                 {
-                    UserID = idUser,
+                    UserID_Contact = idUser,
                     NumPhone = contactNum.ToString()
                 }
             );
@@ -261,7 +261,7 @@ namespace HomeHero.Controllers
             var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
             int idUser;
             int.TryParse(idUserClaim.Value, out idUser);
-            List<Contact> contactData = _context.Contact.Where(c => c.UserID == idUser).ToList();
+            List<Contact> contactData = _context.Contact.Where(c => c.UserID_Contact == idUser).ToList();
             ViewBag.ContactData = contactData;
             return PartialView("~/Views/HeroViews/_ContactData.cshtml", contactData);
         }
@@ -274,7 +274,7 @@ namespace HomeHero.Controllers
             int.TryParse(idUserClaim.Value, out idUser);
             foreach ( var contactSel in selectedContacts)
             {
-                Contact contact = _context.Contact.FirstOrDefault(c => c.UserID == idUser && c.NumPhone == contactSel);
+                Contact contact = _context.Contact.FirstOrDefault(c => c.UserID_Contact == idUser && c.NumPhone == contactSel);
                 _context.Contact.Remove(contact);
                 _context.SaveChanges();
             }

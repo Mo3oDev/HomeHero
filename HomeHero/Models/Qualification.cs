@@ -11,13 +11,13 @@ namespace HomeHero.Models
         public decimal QualificationNumber { get; set; }       
         public int HelperUserID { get; set; }
         [ForeignKey("HelperUserID")]
-        public virtual User? HelperUser { get; set; }
+        public virtual User HelperUser { get; set; }
         public int ApplicantUserID { get; set; }
         [ForeignKey("ApplicantUserID")]
-        public virtual User? ApplicantUser { get; set; }
-        public int RequestID { get; set; }
-        [ForeignKey("RequestID")]
-        public virtual Request? Request { get; set; }
+        public virtual User ApplicantUser { get; set; }
+        public int RequestID_Qualification { get; set; }
+        [ForeignKey("RequestID_Qualification")]
+        public virtual Request Request_Qualification { get; set; }
         public string Comment { get; set; }
     }
 }
