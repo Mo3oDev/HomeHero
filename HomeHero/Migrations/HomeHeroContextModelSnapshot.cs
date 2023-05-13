@@ -549,6 +549,10 @@ namespace HomeHero.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<byte[]>("ProfilePicture")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<int>("QualificationUser")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -577,6 +581,10 @@ namespace HomeHero.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
+
+                    b.Property<byte[]>("VolunteerVoucher")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("UserId");
 
