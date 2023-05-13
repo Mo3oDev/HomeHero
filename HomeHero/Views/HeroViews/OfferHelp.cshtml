@@ -7,6 +7,9 @@
     <a class=" img-container2" asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/iconSol.png" /></a>
 }
 @section inicioLI{
+    <li class="nav-item menuColor">
+        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="principalMb">Menu</a>
+    </li>
     <li class="nav-item logIn ">
         <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
     </li>
@@ -17,35 +20,9 @@
 @section main{
     <section>
         <div class="container text-white">
-            <div class="row d-flex justify-content-evenly align-items-start p-4 mt-3 thirdBg">
-                <h1 class="font-title col-12 pb-2 text-center" style="font-size: 2em;">Ofrecer ayuda</h1>
-                <form asp-controller="Home" asp-action="AddRequest" method="post" class="row d-flex justify-content-evenly align-items-start">
-                    <div class="col-lg-5 text-center">
-                        <label for="userImg" class="control-label p-2 btn text-white w-75">
-                            <h4 >Sube una Imagen de ti </h4>
-                            <img class="img-fluid" src="~/Images/uploadImg.png" />
-                        </label>
-                        <input type="file" id="userImg" name="userImg" class="form-control" style="display: none;" />
-                    </div>
-                    <div class="col-lg-5">
-                        <div class="form-group pb-3">
-                            <label for="experince" class="pb-1">Escribe sobre tus experiencias laborales</label>
-                            <textarea type="text" id="experince" name="experince" class="form-control"></textarea>
-                        </div>
-                        <div class="form-group pb-3">
-                            <label for="contactNum" class="control-label pb-1">Numero de contacto</label>
-                            <input type="number" id="contactNum" name="contactNum" class="form-control" />
-                        </div>
-                        <div class="form-group pb-3">
-                            <label for="curriculum" class="control-label pb-1 btn btn-outline-light">
-                                Sube tu curriculum
-                                <i class="fa-solid fa-upload"></i>
-                            </label>
-                            <input type="file" id="curriculum" name="curriculum" class="form-control" style="display: none;" />
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-2 fs-5">SUBIR</button>
-                    </div>
-                </form>
+            <div class="row d-flex justify-content-evenly align-items-start p-4 mt-3 thirdBg" style="height:2000px;">
+                <h1 class="font-title col-12 pb-2 text-center" style="font-size: 2em;">Gestionar Solicitudes</h1>
+               
             </div>
         </div>
     </section>

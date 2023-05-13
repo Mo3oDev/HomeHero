@@ -116,9 +116,9 @@ namespace HomeHero.Controllers
             ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder" };
             if (user.Curriculum != null)
             {
-                string userFileName = user.NamesUser.Replace(" ", "_") + "_Curriculum";
+                
                 ViewData["Curriculum"] = Convert.ToBase64String(user.Curriculum);
-                ViewData["userFileName"] = userFileName + ".pdf";
+                ViewData["userFileName"] = "curriculum.pdf";
             }
             ViewData["CurrentSex"] = GetSexUserValue(user.SexUser);
             var data = _context.Location.ToList();
@@ -165,6 +165,7 @@ namespace HomeHero.Controllers
         {
             ViewBag.Requests = _context.Request.ToList();
             ViewBag.LocationData = _context.Request.Include(r=>r.Location_Request).ToList();
+            ViewBag.RequestSelected = _context.Request.FirstOrDefault();
             return View("~/Views/HeroViews/RequestList.cshtml");
         }
         public IActionResult FilterAction(string titleFilter, string cityFilter, DateTime? dateFilter)
@@ -197,7 +198,7 @@ namespace HomeHero.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel { RequestId2 = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         [HttpPost]
@@ -387,6 +388,15 @@ namespace HomeHero.Controllers
             }
 
             return File(user.Curriculum, "application/pdf");
+        }
+
+        [HttpPost]
+        public IActionResult ReloadModal(int request)
+        {
+            Request req = _context.Request.FirstOrDefault(r => r.RequestID == request);
+            ViewBag.RequestSelected = req;
+            ViewBag.Location = _context.Location.FirstOrDefault(l => l.LocationID == req.LocationServiceID).City;
+            return PartialView("~/Views/HeroViews/_RequestComplete.cshtml", ViewBag.RequestSelected);
         }
     }
 }
