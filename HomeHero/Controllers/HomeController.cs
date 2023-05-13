@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace HomeHero.Controllers
 {
@@ -92,11 +94,12 @@ namespace HomeHero.Controllers
                 return RedirectToAction("PrincipalMb", "Home");
             }
         }
-
+        [AuthorizeUsers]
         public IActionResult PrincipalMb()
         {
             return View("~/Views/HeroViews/Principal.cshtml");
         }
+        [AuthorizeUsers]
         public IActionResult ManageRequest(int activeTab = 1)
         {
             ViewBag.activo = activeTab;
@@ -109,7 +112,7 @@ namespace HomeHero.Controllers
             ViewBag.Request = _context.Request.FirstOrDefault(r => r.RequestID == RequestID);
             return View("~/Views/HeroViews/ManageRequest2.cshtml");
         }
-
+        [AuthorizeUsers]
         public IActionResult ProfileMb(bool modifyProfile = false)
         {
             ViewData["modifyProfile"] = modifyProfile;
@@ -124,7 +127,7 @@ namespace HomeHero.Controllers
             ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder" };
             if (user.Curriculum != null)
             {
-                
+
                 ViewData["Curriculum"] = Convert.ToBase64String(user.Curriculum);
                 ViewData["userFileName"] = "curriculum.pdf";
             }
@@ -135,7 +138,7 @@ namespace HomeHero.Controllers
             ViewBag.ContactData = contactData;
             return View("~/Views/HeroViews/profileMb.cshtml");
         }
-
+        [AuthorizeUsers]
         public IActionResult AskHelp()
         {
             var data = _context.Location.ToList();
@@ -143,10 +146,11 @@ namespace HomeHero.Controllers
             return View("~/Views/HeroViews/AskHelp.cshtml");
 
         }
+        [AuthorizeUsers]
         [HttpPost]
-        public async Task<IActionResult>AddRequest([FromForm] string title, [FromForm] string desc,
+        public async Task<IActionResult> AddRequest([FromForm] string title, [FromForm] string desc,
             [FromForm] IFormFile image, [FromForm] string location,
-            [FromForm] DateTime dateReq,[FromForm] int cantMb)
+            [FromForm] DateTime dateReq, [FromForm] int cantMb)
         {
 
             if (image == null || image.Length == 0)
@@ -158,24 +162,25 @@ namespace HomeHero.Controllers
             var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
             int idUser;
             int.TryParse(idUserClaim.Value, out idUser);
-            await _heroServices.HHeroRequest.AddRequest(title,desc,image,location,dateReq,cantMb,idUser);
+            await _heroServices.HHeroRequest.AddRequest(title, desc, image, location, dateReq, cantMb, idUser);
             ViewBag.Message = "La petición se ha generado correctamente";
             return View("~/Views/HeroViews/Principal.cshtml");
         }
-
         public IActionResult SignUp()
         {
             var data = _context.Location.ToList();
             ViewBag.LocationData = new SelectList(data, "LocationID", "City");
             return View("~/Views/HeroViews/SignUp.cshtml");
         }
+        [AuthorizeUsers]
         public IActionResult RequestList()
         {
             ViewBag.Requests = _context.Request.ToList();
-            ViewBag.LocationData = _context.Request.Include(r=>r.Location_Request).ToList();
+            ViewBag.LocationData = _context.Request.Include(r => r.Location_Request).ToList();
             ViewBag.RequestSelected = _context.Request.FirstOrDefault();
             return View("~/Views/HeroViews/RequestList.cshtml");
         }
+        [AuthorizeUsers]
         public IActionResult FilterAction(string titleFilter, string cityFilter, DateTime? dateFilter)
         {
             var requests = _context.Request.AsQueryable();
@@ -231,7 +236,7 @@ namespace HomeHero.Controllers
             ViewBag.Message = "Error de acceso";
             return View("~/Views/Manage/AccessError.cshtml");
         }
-
+        [AuthorizeUsers]
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -288,6 +293,8 @@ namespace HomeHero.Controllers
             return View("~/Views/HeroViews/Login.cshtml");
         }
 
+
+        [AuthorizeUsers]
         public IActionResult addContact([FromForm] double contactNum)
         {
             var claimsPrincipal = HttpContext.User;
@@ -305,7 +312,7 @@ namespace HomeHero.Controllers
             _context.SaveChanges();
             return Ok();
         }
-
+        [AuthorizeUsers]
         public IActionResult GetContactData()
         {
             var claimsPrincipal = HttpContext.User;
@@ -316,14 +323,14 @@ namespace HomeHero.Controllers
             ViewBag.ContactData = contactData;
             return PartialView("~/Views/HeroViews/_ContactData.cshtml", contactData);
         }
-
+        [AuthorizeUsers]
         public async Task<IActionResult> removeContact(string[] selectedContacts)
         {
             var claimsPrincipal = HttpContext.User;
             var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
             int idUser;
             int.TryParse(idUserClaim.Value, out idUser);
-            foreach ( var contactSel in selectedContacts)
+            foreach (var contactSel in selectedContacts)
             {
                 Contact contact = _context.Contact.FirstOrDefault(c => c.UserID_Contact == idUser && c.NumPhone == contactSel);
                 _context.Contact.Remove(contact);
@@ -331,10 +338,10 @@ namespace HomeHero.Controllers
             }
             return Ok();
         }
-    
-        public async Task<IActionResult> updateProfile([FromForm]string name,[FromForm]string surnames,
-            [FromForm] string email,[FromForm] int idReal,[FromForm] int location,
-            [FromForm] int sex,[FromForm] IFormFile curriculum)
+        [AuthorizeUsers]
+        public async Task<IActionResult> updateProfile([FromForm] string name, [FromForm] string surnames,
+            [FromForm] string email, [FromForm] int idReal, [FromForm] int location,
+            [FromForm] int sex, [FromForm] IFormFile curriculum)
         {
             var claimsPrincipal = HttpContext.User;
             var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
@@ -343,7 +350,7 @@ namespace HomeHero.Controllers
             var user = _context.User.Find(idUser);
             user.NamesUser = name;
             user.SurnamesUser = surnames;
-            if(curriculum != null)
+            if (curriculum != null)
             {
                 user.Curriculum = ConvertToByteArrayAsync(curriculum);
             }
@@ -352,7 +359,7 @@ namespace HomeHero.Controllers
             user.LocationResidenceID = location;
             user.SexUser = GetSexUser(sex);
             _context.SaveChanges();
-            return RedirectToAction("ProfileMb","Home");
+            return RedirectToAction("ProfileMb", "Home");
         }
         public byte[] ConvertToByteArrayAsync(IFormFile file)
         {
@@ -379,12 +386,12 @@ namespace HomeHero.Controllers
             else return 4;
         }
 
-        private FileResult ConvertToPdfFile(byte[] byteArray,ref string fileName)
+        private FileResult ConvertToPdfFile(byte[] byteArray, ref string fileName)
         {
             MemoryStream ms = new MemoryStream(byteArray);
             return File(ms, "application/pdf", fileName);
         }
-
+        [AuthorizeUsers]
         public async Task<IActionResult> ViewCurriculum(int userId)
         {
             var user = await _context.User.FindAsync(userId);
@@ -395,7 +402,7 @@ namespace HomeHero.Controllers
 
             return File(user.Curriculum, "application/pdf");
         }
-
+        [AuthorizeUsers]
         [HttpPost]
         public IActionResult ReloadModal(int request)
         {
@@ -403,6 +410,29 @@ namespace HomeHero.Controllers
             ViewBag.RequestSelected = req;
             ViewBag.Location = _context.Location.FirstOrDefault(l => l.LocationID == req.LocationServiceID).City;
             return PartialView("~/Views/HeroViews/_RequestComplete.cshtml", ViewBag.RequestSelected);
+        }
+        [AuthorizeUsers]
+        [HttpPost]
+        public async Task<IActionResult> AddPostulation([FromForm] int request, [FromForm] int price)
+        {
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+            if (await _heroServices.HHeroPostulation.AddPostulation(request, price, idUser))
+            {
+                ViewBag.Message = "Postulación realizada correctamente!";
+                ViewBag.Requests = _context.Request.ToList();
+                ViewBag.LocationData = _context.Request.Include(r => r.Location_Request).ToList();
+                ViewBag.RequestSelected = _context.Request.FirstOrDefault();
+                return View("~/Views/HeroViews/RequestList.cshtml");
+            }
+
+            ViewBag.Message = "Ya es postulante a esta solicitud, seleccione otra!";
+            ViewBag.Requests = _context.Request.ToList();
+            ViewBag.LocationData = _context.Request.Include(r => r.Location_Request).ToList();
+            ViewBag.RequestSelected = _context.Request.FirstOrDefault();
+            return View("~/Views/HeroViews/RequestList.cshtml");
         }
     }
 }

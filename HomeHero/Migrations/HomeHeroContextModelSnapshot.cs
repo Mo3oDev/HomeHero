@@ -123,9 +123,6 @@ namespace HomeHero.Migrations
                     b.Property<int>("HelperUserID")
                         .HasColumnType("int");
 
-                    b.Property<int>("PaymentRecordID_AttentionRequest")
-                        .HasColumnType("int");
-
                     b.Property<int>("Qualification")
                         .HasColumnType("int");
 
@@ -135,8 +132,6 @@ namespace HomeHero.Migrations
                     b.HasKey("AttentionID");
 
                     b.HasIndex("HelperUserID");
-
-                    b.HasIndex("PaymentRecordID_AttentionRequest");
 
                     b.HasIndex("RequestID_AttentionRequest");
 
@@ -339,6 +334,9 @@ namespace HomeHero.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PRecordID"));
 
+                    b.Property<int?>("AttentionRequestAttentionID")
+                        .HasColumnType("int");
+
                     b.Property<int>("PMethodID_PaymentRecord")
                         .HasColumnType("int");
 
@@ -350,6 +348,8 @@ namespace HomeHero.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.HasKey("PRecordID");
+
+                    b.HasIndex("AttentionRequestAttentionID");
 
                     b.HasIndex("PMethodID_PaymentRecord");
 
@@ -639,12 +639,6 @@ namespace HomeHero.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeHero.Models.PaymentRecord", "PaymentRecord_AttentionRequest")
-                        .WithMany()
-                        .HasForeignKey("PaymentRecordID_AttentionRequest")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("HomeHero.Models.Request", "Request_AttentionRequest")
                         .WithMany("AttentionRequests")
                         .HasForeignKey("RequestID_AttentionRequest")
@@ -652,8 +646,6 @@ namespace HomeHero.Migrations
                         .IsRequired();
 
                     b.Navigation("HelperUser");
-
-                    b.Navigation("PaymentRecord_AttentionRequest");
 
                     b.Navigation("Request_AttentionRequest");
                 });
@@ -755,6 +747,10 @@ namespace HomeHero.Migrations
 
             modelBuilder.Entity("HomeHero.Models.PaymentRecord", b =>
                 {
+                    b.HasOne("HomeHero.Models.AttentionRequest", null)
+                        .WithMany("PaymentRecords")
+                        .HasForeignKey("AttentionRequestAttentionID");
+
                     b.HasOne("HomeHero.Models.PayMethod", "PayMethod_PaymentRecord")
                         .WithMany("PaymentRecords")
                         .HasForeignKey("PMethodID_PaymentRecord")
@@ -875,6 +871,11 @@ namespace HomeHero.Migrations
             modelBuilder.Entity("HomeHero.Models.Area", b =>
                 {
                     b.Navigation("Request_Areas");
+                });
+
+            modelBuilder.Entity("HomeHero.Models.AttentionRequest", b =>
+                {
+                    b.Navigation("PaymentRecords");
                 });
 
             modelBuilder.Entity("HomeHero.Models.Chat", b =>
