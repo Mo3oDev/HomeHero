@@ -67,7 +67,7 @@
                     {
                         var base64 = Convert.ToBase64String(request.RequestPicture);
                         var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                        <div class="card reqCard fourthBg text-white col-3 m-2" data-bs-toggle="modal" data-bs-target="#ReqComplete" data-id="">
+                        <div class="card reqCard fourthBg text-white col-3 m-2 p-0" data-bs-toggle="modal" data-bs-target="#ReqComplete" data-id="">
                             <img src="@imgSrc" class="card-img-top" alt="..." style="width: auto; height:250px; object-fit: cover;">
                             <div class="card-body">
                                 <h5 class="font-title card-title secColor fs-5">@request.RequestTitle</h5>
