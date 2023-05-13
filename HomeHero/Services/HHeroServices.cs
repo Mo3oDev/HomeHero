@@ -12,11 +12,13 @@ namespace HomeHero.Services
         public HHeroEncrypt HHeroEncrypt;
         public HHeroEmail HHeroEmail;
         public HHeroRequest HHeroRequest;
+        public HHeroPostulation HHeroPostulation;
         public HHeroServices(HomeHeroContext context)
         {
             _context = context;
             HHeroEncrypt = new HHeroEncrypt(context);
-           HHeroRequest = new HHeroRequest(context);
+            HHeroRequest = new HHeroRequest(context);
+            HHeroPostulation = new HHeroPostulation(context);
         }
         public int getNullProperties(User user)
         {
