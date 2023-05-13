@@ -14,8 +14,8 @@ namespace HomeHero.Models
         public string? RealUserID { get; set; }
         public string NamesUser { get; set; }
         public string SurnamesUser { get; set; }
-        public byte[] ProfilePicture { get; set; }
-        public byte[] VolunteerVoucher { get; set; }
+        public byte[]? ProfilePicture { get; set; }
+        public byte[]? VolunteerVoucher { get; set; }
         public int QualificationUser { get; set; }
         public string Email  { get; set; }
 
