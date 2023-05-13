@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace HomeHero.Controllers
 {
@@ -103,24 +104,29 @@ namespace HomeHero.Controllers
 
         public IActionResult ProfileMb(bool modifyProfile = false)
         {
+            ViewData["modifyProfile"] = modifyProfile;
             var claimsPrincipal = HttpContext.User;
             var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
             int idUser;
             int.TryParse(idUserClaim.Value, out idUser);
             User user = _context.User.FirstOrDefault(u => u.UserId == idUser);
-            
             ViewData["missindFields"] = _heroServices.getNullProperties(user);
             ViewData["user"] = user;
             ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
-            ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder"};
+            ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder" };
+            if (user.Curriculum != null)
+            {
+                string userFileName = user.NamesUser.Replace(" ", "_") + "_Curriculum";
+                ViewData["Curriculum"] = Convert.ToBase64String(user.Curriculum);
+                ViewData["userFileName"] = userFileName + ".pdf";
+            }
+            ViewData["CurrentSex"] = GetSexUserValue(user.SexUser);
             var data = _context.Location.ToList();
-            ViewData["modifyProfile"] = modifyProfile;
             ViewBag.LocationData = new SelectList(data, "LocationID", "City");
             List<Contact> contactData = _context.Contact.Where(c => c.UserID_Contact == idUser).ToList();
             ViewBag.ContactData = contactData;
             return View("~/Views/HeroViews/profileMb.cshtml");
         }
-
 
         public IActionResult AskHelp()
         {
@@ -155,9 +161,37 @@ namespace HomeHero.Controllers
             ViewBag.LocationData = new SelectList(data, "LocationID", "City");
             return View("~/Views/HeroViews/SignUp.cshtml");
         }
-        public IActionResult Solicitudes()
+        public IActionResult RequestList()
         {
-            return View("~/Views/HeroViews/SearchRequest.cshtml");
+            ViewBag.Requests = _context.Request.ToList();
+            ViewBag.LocationData = _context.Request.Include(r=>r.Location_Request).ToList();
+            return View("~/Views/HeroViews/RequestList.cshtml");
+        }
+        public IActionResult FilterAction(string titleFilter, string cityFilter, DateTime? dateFilter)
+        {
+            var requests = _context.Request.AsQueryable();
+
+            if (!string.IsNullOrEmpty(titleFilter))
+            {
+                requests = requests.Where(r => r.RequestTitle.Contains(titleFilter));
+            }
+
+            if (!string.IsNullOrEmpty(cityFilter))
+            {
+                requests = requests.Where(r => r.Location_Request.City.Contains(cityFilter));
+            }
+
+            if (dateFilter.HasValue)
+            {
+                requests = requests.Where(r => r.PublicationReqDate.Date == dateFilter.Value.Date);
+            }
+
+            // Incluir las relaciones necesarias
+            requests = requests.Include(r => r.Location_Request);
+
+            ViewBag.Requests = requests.ToList();
+            ViewBag.LocationData = _context.Request.Include(r => r.Location_Request).ToList();
+            return View("~/Views/HeroViews/RequestList.cshtml");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -245,31 +279,7 @@ namespace HomeHero.Controllers
             return View("~/Views/HeroViews/Login.cshtml");
         }
 
-        public IActionResult ProfileMb(bool modifyProfile = false)
-        {
-            ViewData["modifyProfile"] = modifyProfile;
-            var claimsPrincipal = HttpContext.User;
-            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
-            int idUser;
-            int.TryParse(idUserClaim.Value, out idUser);
-            User user = _context.User.FirstOrDefault(u => u.UserId == idUser);
-            ViewData["missindFields"] = _heroServices.getNullProperties(user);
-            ViewData["user"] = user;
-            ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
-            ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder" };
-            if (user.Curriculum != null)
-            {
-                string userFileName = user.NamesUser.Replace(" ", "_") + "_Curriculum";
-                ViewData["Curriculum"] = Convert.ToBase64String(user.Curriculum);
-                ViewData["userFileName"] = userFileName+".pdf";
-            }
-            ViewData["CurrentSex"] = GetSexUserValue(user.SexUser);
-            var data = _context.Location.ToList();
-            ViewBag.LocationData = new SelectList(data, "LocationID", "City");
-            List<Contact> contactData = _context.Contact.Where(c => c.UserID == idUser).ToList();
-            ViewBag.ContactData = contactData;
-            return View("~/Views/HeroViews/profileMb.cshtml");
-        }
+        
 
         public IActionResult addContact([FromForm] double contactNum)
         {
