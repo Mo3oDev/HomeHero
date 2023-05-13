@@ -1,17 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeHero.Models
 {
     public class Chat
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ChatID { get; set; }
-        public int RequestID { get; set; }
-        [ForeignKey("RequestID")]
-        public Request? Request { get; set; }
+        [ForeignKey("RequestID_Chat")]
+        public int RequestID_Chat { get; set; }
+        public virtual Request Request_Chat { get; set; }
         public DateTime ChatCreationDate { get; set; }
-        public virtual ICollection<Message> Messages { get; set;}
+        public virtual ICollection<Message> Messages { get; set; }
     }
+
+    
 }

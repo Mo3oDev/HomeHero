@@ -8,9 +8,9 @@ namespace HomeHero.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
-        public int RoleID { get; set; }
-        [ForeignKey("RoleID")]
-        public virtual Role Role { get; set; }
+        public int RoleID_User { get; set; }
+        [ForeignKey("RoleID_User")] 
+        public virtual Role Role_User { get; set; }
         public string? RealUserID { get; set; }
         public string NamesUser { get; set; }
         public string SurnamesUser { get; set; }
@@ -22,7 +22,7 @@ namespace HomeHero.Models
         public byte[] Salt { get; set; }
         public int LocationResidenceID { get; set; }
         [ForeignKey("LocationResidenceID")]
-        public virtual Location Location { get; set; }
+        public virtual Location LocationResidence { get; set; }
         public char? SexUser { get; set; }
         public byte[]? Curriculum { get; set; }
         public bool? VolunteerPermises { get; set; }
@@ -35,7 +35,7 @@ namespace HomeHero.Models
         public virtual ICollection<Complaint>? UnsatisfiedUsers { get; set; }
         public virtual ICollection<Complaint>? AttenderUsers { get; set; }
         public virtual ICollection<Complaint>? ComplaintedUsers { get; set; }
-        public virtual ICollection<Complaint>? Complaints { get; set; }
+        
 
         public virtual ICollection<Contact>? Contacts { get; set; }
         public virtual ICollection<Doubt>? Doubts { get; set; }

@@ -8,21 +8,18 @@ namespace HomeHero.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ComplaintID { get; set; }
-
         public int UnsatisfiedUserID { get; set; }
         [ForeignKey("UnsatisfiedUserID")]
-        public virtual User? UnsatisfiedUser { get; set; }
+        public virtual User UnsatisfiedUser { get; set; }
         public int AttenderUserID { get; set; }
         [ForeignKey("AttenderUserID")]
-        public virtual User? AttenderUser { get; set; }
-
+        public virtual User AttenderUser { get; set; }
         public int ComplaintedUserID { get; set; }
         [ForeignKey("ComplaintedUserID")]
         public virtual User ComplaintedUser { get; set; }
-
-        public int RequestComplaintID { get; set; }
         [ForeignKey("RequestComplaintID")]
-        public virtual Request Request { get; set; }
+        public int RequestComplaintID { get; set; }
+        public virtual Request RequestComplaint { get; set; }
 
         public string ComplaintMessage { get; set; }
         public string ComplaimentState { get; set; }

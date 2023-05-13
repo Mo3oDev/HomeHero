@@ -13,6 +13,6 @@ namespace HomeHero.Models
         public DateTime TutorialIPDate { get; set; }     
         public int CreatorID { get; set; }
         [ForeignKey("CreatorID")]
-        public virtual User User { get; set; }
+        public virtual User Creator { get; set; }
     }
 }
