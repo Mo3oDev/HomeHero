@@ -43,8 +43,6 @@ namespace HomeHero.Services
             };
             _context.Chat.Add(chat1);
             await _context.SaveChangesAsync();
-
-
         }
     }
 }

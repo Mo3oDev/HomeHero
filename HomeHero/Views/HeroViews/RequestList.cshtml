@@ -6,8 +6,12 @@
     <a class=" img-container2" asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/iconSol.png" /></a>
 }
 @section scripts{
+    <script src="~/js/request.js"></script>
 }
 @section inicioLI{
+    <li class="nav-item menuColor">
+        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="principalMb">Menu</a>
+    </li>
     <li class="nav-item logIn ">
         <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
     </li>
@@ -18,9 +22,15 @@
 
 @section main{
     <section>
-        <div class="container-fluid text-black">
+        <div class="container text-black">
             <div class="row d-flex justify-content-evenly align-items-start p-4 mt-3">
-                <div class="col-lg-8 col-sm-12 p-2 thirdBg">
+                <div class="col-lg-12 col-sm-12 p-2 thirdBg">
+                    @if (!string.IsNullOrEmpty(ViewBag.Message))
+                    {
+                        <div class="alert alert-info" role="alert">
+                            @ViewBag.Message
+                        </div>
+                    }
                     <div class="row d-flex justify-content-between p-2 m-auto" style="width: 100%;">
                         <form asp-action="FilterAction" method="get" class="filter-form ">
                             <input type="text" name="titleFilter" placeholder="Filtrar por título" class="filter-input" />
@@ -28,41 +38,42 @@
                             <input type="date" name="dateFilter" placeholder="Filtrar por fecha" class="filter-input" />
                             <input type="submit" value="Filtrar" class="filter-button" />
                         </form>
-
-                        @if (!string.IsNullOrEmpty(ViewBag.Message))
-                        {
-                            <div class="alert alert-info" role="alert">
-                                @ViewBag.Message
-                            </div>
-                        }
-                        <div class="row row-cols-1 row-cols-md-2 g-4">
+                        <div class="row row-cols-1 row-cols-md-2 g-4 d-flex justify-content-evenly">
                             @foreach (Request request in ViewBag.Requests)
                             {
                                 var base64 = Convert.ToBase64String(request.RequestPicture);
                                 var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
 
                                 <div class="col" style="max-width: 350px;">
-                                    
-                                    <div class="card">
+
+                                    <div class="card reqCard fourthBg text-white" data-bs-toggle="modal" data-bs-target="#ReqComplete" data-id="@request.RequestID">
                                         <img src="@imgSrc" class="card-img-top" alt="..." style="width: auto; height:250px; object-fit: cover;">
                                         <div class="card-body">
-                                            <h5 class="card-title">@request.RequestTitle</h5>
-                                            <p class="card-text">Ubicacion: @request.Location_Request.City</p>
-                                            <p class="card-text">@request.RequestContent</p>
-                                            <p class="card-text">Fecha: @request.PublicationReqDate</p>
-                                            <p class="card-text">Heroes solicitados: @request.MembersNeeded</p>
+                                            <h5 class="font-title card-title secColor fs-5">@request.RequestTitle</h5>
+                                            <p class="card-text secColor fw-bold">Ubicacion: <span class="text-white fw-normal">@request.Location_Request.City</span></p>
+                                            <p class="card-text fw-bold">Heroes solicitados: <span class="fw-normal text-white">@request.MembersNeeded</span></p>
                                         </div>
                                     </div>
                                 </div>
                             }
                         </div>
-
-
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <!-- Modal Request Complete Information -->
+    <div class="modal fade" id="ReqComplete" tabindex="-1" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content fourthBg text-white">
+                <div class="modal-header d-flex justify-content-end">
+                    <i class="fa-solid fa-xmark fa-xl secColor" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;"></i>
+                </div>
+                <div class="modal-body" id="request-body">
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 

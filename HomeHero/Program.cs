@@ -27,7 +27,8 @@ namespace HomeHero
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(config =>
                 {
-                    config.AccessDeniedPath = "/Manage/AccessError";
+                    config.LoginPath = "/Home/Login";
+                    config.AccessDeniedPath = "/Home/Index";
                 });
             builder.Services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
 
@@ -36,11 +37,14 @@ namespace HomeHero
 
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy("ADMINISTRADORES", policy => policy.RequireRole("ADMIN"));
+                options.AddPolicy("USERS", policy => policy.RequireRole("User"));
+                options.AddPolicy("SUPPORTS", policy => policy.RequireRole("TSupport"));
+                options.AddPolicy("ADMINISTRATORS", policy => policy.RequireRole("Admon"));
             });
-            //Add services to send mails
-            builder.Services.AddSingleton<IHHeroEmail>(new HHeroEmail(builder.Configuration["GmailSettings:Email"],builder.Configuration["GmailSettings:Password"]));
             
+            //Add services to send mails
+            builder.Services.AddSingleton<IHHeroEmail>(new HHeroEmail(builder.Configuration["GmailSettings:Email"], builder.Configuration["GmailSettings:Password"]));
+
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())

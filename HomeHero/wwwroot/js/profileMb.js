@@ -1,16 +1,7 @@
 
 // Para mostrar el nombre del archivo seleccionado
 
-document.addEventListener('DOMContentLoaded', function () {
-    var fileInput = document.getElementById('curriculum');
-    if (fileInput != null) {
-        var fileNameLabel = document.getElementById('fileNameLabel');
-        fileInput.addEventListener('change', function () {
-            var fileName = fileInput.files[0].name;
-            fileNameLabel.innerText = fileName;
-        });
-    }
-});
+
 
 $(document).ready(function () {
     $('#addContact').submit(function (event) {

@@ -1,0 +1,23 @@
+﻿@model Request
+@{
+    var Extbase64 = Convert.ToBase64String(Model.RequestPicture);
+    var ExtimgSrc = String.Format("data:image/gif;base64,{0}", Extbase64);
+}
+<div class="card fourthBg text-white" >
+    <img src="@ExtimgSrc" class="card-img-top" alt="..." style="width: auto; height:250px; object-fit: cover;">
+    <div class="card-body">
+        <h5 class="font-title card-title secColor fs-5">@Model.RequestTitle</h5>
+        <p class="card-text">@Model.RequestContent</p>
+        <p class="card-text secColor fw-bold">Fecha:<span class="text-white fw-normal">@Model.PublicationReqDate</span> </p>
+        <p class="card-text secColor fw-bold">Ubicacion: <span class="text-white fw-normal">@ViewBag.Location</span></p>
+        <p class="card-text secColor fw-bold">Heroes solicitados: <span class="text-white fw-normal">@Model.MembersNeeded</span></p>
+    </div>
+    <div class="card-footer text-center">
+        <form asp-action="AddPostulation" asp-controller="Home" method="post" class="mt-3">
+            <input type="hidden" name="request" value="@Model.RequestID" />
+            <label for="price" class="fw-bold secColor p-2">Precio:</label>
+            <input type="number" name="price" class="p-2 filter-input w-75" placeholder="Dinero a pedir al solicitante" />
+            <button type="submit" class="btn btn-outline-light mt-2" data-bs-dismiss="modal" aria-label="Close"> Postularse </button>
+        </form>
+    </div>
+</div>

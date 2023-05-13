@@ -15,10 +15,11 @@ namespace HomeHero.Models
         [ForeignKey("HelperUserID")]
         public virtual User? HelperUser { get; set; }
         public decimal AttentionReqValue { get; set; }
-        public DateTime AttentionDate { get; set; }    
-        public int PaymentRecordID_AttentionRequest { get; set; }
-        [ForeignKey("PaymentRecordID_AttentionRequest")]
-        public virtual PaymentRecord PaymentRecord_AttentionRequest { get; set; }
+        public DateTime AttentionDate { get; set; }
+        //public int PaymentRecordID_AttentionRequest { get; set; }
+        //[ForeignKey("PaymentRecordID_AttentionRequest")]
+        //public virtual PaymentRecord PaymentRecord_AttentionRequest { get; set; }
+        public virtual ICollection<PaymentRecord> PaymentRecords { get; set; }
         public int Qualification { get; set; }
     }
 }
