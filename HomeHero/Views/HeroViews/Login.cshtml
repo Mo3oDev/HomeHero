@@ -4,13 +4,15 @@
 @section logo{
     <a class=" img-container " asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
 }
-
-@section inicioLI{}
+@section scripts{
+}
+@section inicioLI{
+}
 
 @section Main{
-   
+
     <section class="darkMain">
-      
+
         <div class="container text-white">
             <div class="row d-flex justify-content-between">
                 <div class="col-lg-6 col-md-6 col-sm-12 p-4">
@@ -25,11 +27,13 @@
                     <form asp-controller="Home" asp-action="LogInAction" method="post">
                         <div class="form-group">
                             <label for="email" class="control-label">EMAIL</label>
-                            <input type="email" id="email" name="email" class="form-control" />
+                            <input type="email" id="email" name="email" class="form-control" required pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,}$" />
+                            <span for="email" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label for="password" class="control-label">CONTRASEÑA</label>
-                            <input type="password" id="password" name="password" class="form-control" />
+                            <input type="password" id="password" name="password" class="form-control" required />
+                            <span for="password" class="text-danger"></span>
                         </div>
                         <a class="text-decoration-none priColor d-block  fw-bold" asp-controller="Home" asp-action="RecoverSendCode">Olvide mi contraseña</a>
                         <button type="submit" class="btn btn-primary fs-5">CONTINUAR</button>
@@ -43,48 +47,4 @@
 
         </div>
     </section>
-}
-@section scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("form").validate({
-                rules: {
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    password: {
-                        required: true,
-                        minlength: 8
-                    }
-                },
-                messages: {
-                    email: {
-                        required: "Por favor, introduce tu correo electrónico.",
-                        email: "Por favor, introduce un correo electrónico válido."
-                    },
-                    password: {
-                        required: "Por favor, introduce tu contraseña.",
-                        minlength: "La contraseña debe tener al menos 8 caracteres."
-                    }
-                },
-                submitHandler: function (form) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '/Home/LogInAction',
-                        data: $(form).serialize(),
-                        success: function (response) {
-                            
-                        },
-                        error: function (xhr, status, error) {
-                          
-                        }
-                    });
-                    return false; 
-                }
-            });
-        });
-    </script>
 }

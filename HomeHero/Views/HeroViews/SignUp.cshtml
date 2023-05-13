@@ -4,42 +4,44 @@
 @section logo{
     <a class=" img-container " asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
 }
-@section inicioLI{}
-
+@section inicioLI{
+}
+@section scripts{
+}
 @section Main{
-
     <section class="darkMain">
         <div class="container text-white">
             <div class="row d-flex justify-content-between">
                 <div class="col-6">
                     <img class="img-fluid" src="~/Images/SignUp.png" />
                     <h1 class="font-title title-page "><span class="h">H</span>ome<span class="h">H</span>ero</h1>
-                </div>              
+                </div>
                 <div class="col-6">
-                    <from>
-                        <h2 class="priColor h1">Crear Cuenta</h2>                       
+                  
+                        <h2 class="priColor h1">Crear Cuenta</h2>
                         <p>¿Ya estás registrado?  <a class="text-decoration-none priColor fw-bold" asp-controller="Home" asp-action="LogIn">Inicia sesión aquí.</a></p>
                         <form asp-controller="Home" asp-action="SignUpAction" method="post">
                             <div class="form-group">
                                 <label for="name" class="control-label">NOMBRE(S)</label>
-                                <input type="text" id="name" name="name" class="form-control" />
+                                <input required type="text" id="name" name="name" class="form-control" />
                             </div>
                             <div class="form-group">
                                 <label for="surnames" class="control-label">APELLIDO(S)</label>
-                                <input type="text" id="surnames" name="surnames" class="form-control" />
+                                <input required type="text" id="surnames" name="surnames" class="form-control" />
                             </div>
                             <div class="form-group">
                                 <label for="email" class="control-label">CORREO</label>
-                                <input type="email" id="email" name="email" class="form-control" />
+                                <input required type="email" id="email" name="email" class="form-control" />
                                 <span for="email" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <label for="password" class="control-label">CONTRASEÑA</label>
-                                <input type="password" id="password" name="password" class="form-control" />
+                                <input required type="password" id="password" name="password" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" title="Debe contener al menos 8 caracteres, incluyendo al menos 1 letra y 1 número." class="form-control" />
+
                             </div>
                             <div class="form-group">
                                 <label for="location">CIUDAD:</label>
-                                <select name="location" id="location" class="form-control">
+                                <select required name="location" id="location" class="form-control">
                                     @foreach (var location in @ViewBag.LocationData)
                                     {
                                         <option value="@location.Value">@location.Text</option>
@@ -48,83 +50,9 @@
                             </div>
                             <button type="submit" class="btn btn-primary mt-2 fs-5">REGISTRARSE</button>
                         </form>
-                    </from>
+                 
                 </div>
             </div>
         </div>
     </section>
 }
-@section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("form").validate({
-                rules: {
-                    name: {
-                        required: true,
-                        minlength: 2
-                    },
-                    surnames: {
-                        required: true,
-                        minlength: 2
-                    },
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    password: {
-                        required: true,
-                        minlength: 8
-                    },
-                    location: {
-                        required: true
-                    }
-                },
-                messages: {
-                    name: {
-                        required: "Por favor, introduce tu nombre.",
-                        minlength: "El nombre debe tener al menos 2 caracteres."
-                    },
-                    surnames: {
-                        required: "Por favor, introduce tus apellidos.",
-                        minlength: "Los apellidos deben tener al menos 2 caracteres."
-                    },
-                    email: {
-                        required: "Por favor, introduce tu correo electrónico.",
-                        email: "Por favor, introduce un correo electrónico válido."
-                    },
-                    password: {
-                        required: "Por favor, introduce tu contraseña.",
-                        minlength: "La contraseña debe tener al menos 8 caracteres."
-                    },
-                    location: {
-                        required: "Por favor, selecciona una ciudad."
-                    }
-                },
-                errorPlacement: function (error, element) {
-                    if (element.attr("name") == "email") {
-                        error.insertAfter(element.next('span'));
-                    }
-                    else {
-                        error.insertAfter(element);
-                    }
-                },
-                submitHandler: function (form) {
-                    $.ajax({
-                        type: 'POST',
-                        url: 'SignUpAction',
-                        data: $(form).serialize(),
-                        success: function (response) {
-                            // Aquí puedes manejar la respuesta del servidor
-                        }
-                    });
-                    // Evita que el formulario se envíe de la forma normal
-                }
-            });
-        });
-    </script>
-}
-
-}
-
