@@ -8,9 +8,9 @@ namespace HomeHero.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ContactID { get; set; }
-        public int UserID { get; set; }
-        [ForeignKey("UserID")]
-        public virtual User User { get; set; }  
+        public int UserID_Contact { get; set; }
+        [ForeignKey("UserID_Contact")]
+        public virtual User User_Contact { get; set; }  
         public string NumPhone { get; set; }
 
     }

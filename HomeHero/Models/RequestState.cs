@@ -8,7 +8,7 @@ namespace HomeHero.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ReqStateID { get; set; }    
-        public int NameState { get; set; }
+        public string NameState { get; set; }
         public virtual ICollection<Request> Requests { get; set; }
     }
 }

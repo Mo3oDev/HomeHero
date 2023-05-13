@@ -72,7 +72,7 @@ namespace HomeHero.Controllers
                 var claims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.Name, user.NamesUser),
-                    new Claim(ClaimTypes.Role, _context.Role.FirstOrDefault(e => e.RoleID == user.RoleID).NameRole),
+                    new Claim(ClaimTypes.Role, _context.Role.FirstOrDefault(e => e.RoleID == user.RoleID_User).NameRole),
                     new Claim("IdUsuario", user.UserId.ToString()),
                     new Claim("EmailUsuario", user.Email),
                 };
@@ -101,6 +101,27 @@ namespace HomeHero.Controllers
             return View("~/Views/HeroViews/OfferHelp.cshtml");
         }
 
+        public IActionResult ProfileMb(bool modifyProfile = false)
+        {
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+            User user = _context.User.FirstOrDefault(u => u.UserId == idUser);
+            
+            ViewData["missindFields"] = _heroServices.getNullProperties(user);
+            ViewData["user"] = user;
+            ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
+            ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder"};
+            var data = _context.Location.ToList();
+            ViewData["modifyProfile"] = modifyProfile;
+            ViewBag.LocationData = new SelectList(data, "LocationID", "City");
+            List<Contact> contactData = _context.Contact.Where(c => c.UserID_Contact == idUser).ToList();
+            ViewBag.ContactData = contactData;
+            return View("~/Views/HeroViews/profileMb.cshtml");
+        }
+
+
         public IActionResult AskHelp()
         {
             var data = _context.Location.ToList();
@@ -113,32 +134,17 @@ namespace HomeHero.Controllers
             [FromForm] IFormFile image, [FromForm] string location,
             [FromForm] DateTime dateReq,[FromForm] int cantMb)
         {
+
             if (image == null || image.Length == 0)
             {
                 ViewBag.ErrorMessage = "Selecciona un archivo de imagen";
                 return RedirectToAction("AskHelp");
             }
-
-            byte[] fileBytes;
-            using (var ms = new MemoryStream())
-            {
-                await image.CopyToAsync(ms);
-                fileBytes = ms.ToArray();
-            }
-
-            Request request = new Request()
-            {
-                RequestTitle = title,
-                RequestContent = desc,
-                RequestPicture = fileBytes,
-                LocationServiceID = int.Parse(location),
-                PublicationReqDate = dateReq,
-                MembersNeeded = cantMb
-            };
-
-            _context.Request.Add(request);
-            await _context.SaveChangesAsync();
-
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+            await _heroServices.HHeroRequest.AddRequest(title,desc,image,location,dateReq,cantMb,idUser);
             ViewBag.Message = "La petición se ha generado correctamente";
             return View("~/Views/HeroViews/Principal.cshtml");
         }
@@ -275,7 +281,7 @@ namespace HomeHero.Controllers
             _context.Contact.Add(
                 new Contact
                 {
-                    UserID = idUser,
+                    UserID_Contact = idUser,
                     NumPhone = contactNum.ToString()
                 }
             );
@@ -289,7 +295,7 @@ namespace HomeHero.Controllers
             var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
             int idUser;
             int.TryParse(idUserClaim.Value, out idUser);
-            List<Contact> contactData = _context.Contact.Where(c => c.UserID == idUser).ToList();
+            List<Contact> contactData = _context.Contact.Where(c => c.UserID_Contact == idUser).ToList();
             ViewBag.ContactData = contactData;
             return PartialView("~/Views/HeroViews/_ContactData.cshtml", contactData);
         }
@@ -302,7 +308,7 @@ namespace HomeHero.Controllers
             int.TryParse(idUserClaim.Value, out idUser);
             foreach ( var contactSel in selectedContacts)
             {
-                Contact contact = _context.Contact.FirstOrDefault(c => c.UserID == idUser && c.NumPhone == contactSel);
+                Contact contact = _context.Contact.FirstOrDefault(c => c.UserID_Contact == idUser && c.NumPhone == contactSel);
                 _context.Contact.Remove(contact);
                 _context.SaveChanges();
             }

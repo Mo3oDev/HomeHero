@@ -40,25 +40,28 @@ namespace HomeHero.Data
                 .Property(p => p.VolunteerPermises)
                 .HasDefaultValue(false);
             modelBuilder.Entity<User>()
-               .Property(p => p.RoleID)
+               .Property(p => p.RoleID_User)
                .HasDefaultValue(2);
-
-
             modelBuilder.Entity<Complaint>()
                 .HasOne(q => q.AttenderUser)
-                .WithMany()
+                .WithMany(a => a.AttenderUsers)
                 .HasForeignKey(q => q.AttenderUserID)
                 .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Complaint>()
                 .HasOne(q => q.UnsatisfiedUser)
-                .WithMany()
+                .WithMany(a=>a.UnsatisfiedUsers)
                 .HasForeignKey(q => q.UnsatisfiedUserID)
                 .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Complaint>()
                 .HasOne(q => q.ComplaintedUser)
-                .WithMany()
+                .WithMany(a=>a.ComplaintedUsers)
                 .HasForeignKey(q => q.ComplaintedUserID)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.NoAction);          
+            modelBuilder.Entity<Complaint>()
+               .HasOne(q => q.RequestComplaint)
+               .WithMany(a => a.ReqComplaints)
+               .HasForeignKey(q => q.RequestComplaintID)
+               .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Doubt>()
                  .HasOne(d => d.Questioner)
                  .WithMany(u => u.Doubts)
@@ -73,14 +76,14 @@ namespace HomeHero.Data
                .HasOne(q => q.ApplicantUser)
                .WithMany()
                .HasForeignKey(q => q.ApplicantUserID);
-            //modelBuilder.Entity<HomeHero.Models.Request>()
-            //   .HasOne(r => r.ApplicantUser)
-            //   .WithMany()
-            //   .HasForeignKey(r => r.ApplicantUserID)
-            //   .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<HomeHero.Models.Request>()
+               .HasOne(r => r.UserRequest)
+               .WithMany(a=>a.Requests)
+               .HasForeignKey(r => r.UserId_Request)
+               .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Qualification>()
                .HasOne(r => r.ApplicantUser)
-               .WithMany()
+               .WithMany(a=>a.Qualifications)
                .HasForeignKey(r => r.ApplicantUserID)
                .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Qualification>()
@@ -89,20 +92,37 @@ namespace HomeHero.Data
                .HasForeignKey(r => r.HelperUserID)
                .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Application>()
-               .HasOne(cu => cu.Request)
-               .WithMany()
-               .HasForeignKey(cu => cu.RequestID)
+               .HasOne(cu => cu.Request_Application)
+               .WithMany(uc => uc.Applications)
+               .HasForeignKey(cu => cu.RequestID_Application)
                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Application>()
+               .HasOne(cu => cu.User_Application)
+               .WithMany(uc => uc.Applications)
+               .HasForeignKey(cu => cu.RequestID_Application)
+               .OnDelete(DeleteBehavior.NoAction);
+
             modelBuilder.Entity<AttentionRequest>()
-              .HasOne(cu => cu.Request)
-              .WithMany()
-              .HasForeignKey(cu => cu.RequestID)
+              .HasOne(cu => cu.Request_AttentionRequest)
+              .WithMany(a => a.AttentionRequests)
+              .HasForeignKey(cu => cu.RequestID_AttentionRequest)
               .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Chat>()
-             .HasOne(cu => cu.Request)
-             .WithMany()
-             .HasForeignKey(cu => cu.RequestID)
+             .HasOne(cu => cu.Request_Chat)
+             .WithMany(a => a.Chats)
+             .HasForeignKey(cu => cu.RequestID_Chat)
              .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Qualification>()
+      .Property(q => q.QualificationNumber)
+      .HasColumnType("decimal(10,4)");
+            modelBuilder.Entity<AttentionRequest>()
+        .Property(a => a.AttentionReqValue)
+        .HasColumnType("decimal(10,4)");
+            modelBuilder.Entity<Application>()
+                .Property(a => a.RequestedPrice)
+                .HasColumnType("decimal(18, 2)");
         }
+
     }
 }

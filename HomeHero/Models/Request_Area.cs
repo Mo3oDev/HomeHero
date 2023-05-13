@@ -8,11 +8,11 @@ namespace HomeHero.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RequestAreaID { get; set; }       
-        public int RequestID { get; set; }
-        [ForeignKey("RequestID")]
-        public virtual Request Request { get; set; }
-        public int AreaID { get; set; }
-        [ForeignKey("AreaID")]
-        public virtual Area Area { get; set; }
+        public int RequestID_Request { get; set; }
+        [ForeignKey("RequestID_Request")]
+        public virtual Request Request_Request_Area { get; set; }
+        public int AreaID_Request { get; set; }
+        [ForeignKey("AreaID_Request")]
+        public virtual Area Area_Request_Area { get; set; }
     }
 }
