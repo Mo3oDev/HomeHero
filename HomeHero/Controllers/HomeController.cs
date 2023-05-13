@@ -97,9 +97,11 @@ namespace HomeHero.Controllers
         {
             return View("~/Views/HeroViews/Principal.cshtml");
         }
-        public IActionResult OfferHelp()
+        public IActionResult ManageRequest(int activeTab = 1)
         {
-            return View("~/Views/HeroViews/OfferHelp.cshtml");
+            ViewBag.activo = activeTab;
+            ViewBag.Requests = _context.Request.ToList();
+            return View("~/Views/HeroViews/ManageRequest.cshtml");
         }
 
         public IActionResult ProfileMb(bool modifyProfile = false)
@@ -279,8 +281,6 @@ namespace HomeHero.Controllers
             ViewBag.Message = "El cambio de contraseña se ha realizado correctamente!";
             return View("~/Views/HeroViews/Login.cshtml");
         }
-
-        
 
         public IActionResult addContact([FromForm] double contactNum)
         {

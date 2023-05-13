@@ -117,6 +117,10 @@
     background: #0e3462d9;
 }
 
+.fifthBg {
+    background-color: rgb(88, 82, 82, 0.86);
+}
+
 .reqProfile{
     height: 100vh;
 }
@@ -177,12 +181,31 @@ user-img:hover {
     height:75px;
 }
 
-    .reqCard:hover {
-        background: #0b294deb;
-        transform: scale(1.005);
-        transition: transform 0.3s;
-        box-shadow: 0 0 4px 1px #08192e9c;
+.bgTabs{
+    background-color:rgb(48, 44, 44, 0.98);   
+    border-radius:3px;
+}
+
+    .bgTabs a {
+        color: aliceblue;
     }
+        .bgTabs a:hover {
+            color: aliceblue;
+            border-color: #a5a3a3 !important;
+        }
+
+    .bgTabs .active {
+        background-color: rgb(88, 82, 82, 0.86) !important;
+        border-color: #a5a3a3 !important;
+        color:#fff !important;
+    }
+
+.reqCard:hover {
+    background: #0b294deb;
+    transform: scale(1.005);
+    transition: transform 0.3s;
+    box-shadow: 0 0 4px 1px #08192e9c;
+}
 
 @media screen and (min-width: 1750px) {
     .flex-column {
