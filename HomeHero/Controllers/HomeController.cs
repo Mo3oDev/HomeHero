@@ -99,10 +99,18 @@ namespace HomeHero.Controllers
         {
             return View("~/Views/HeroViews/Principal.cshtml");
         }
-        [AuthorizeUsers(Roles = "Admin")]
-        public IActionResult OfferHelp()
+        [AuthorizeUsers]
+        public IActionResult ManageRequest(int activeTab = 1)
         {
-            return View("~/Views/HeroViews/OfferHelp.cshtml");
+            ViewBag.activo = activeTab;
+            ViewBag.Requests = _context.Request.ToList();
+            return View("~/Views/HeroViews/ManageRequest.cshtml");
+        }
+
+        public IActionResult ManageRequest2(int RequestID)
+        {
+            ViewBag.Request = _context.Request.FirstOrDefault(r => r.RequestID == RequestID);
+            return View("~/Views/HeroViews/ManageRequest2.cshtml");
         }
         [AuthorizeUsers]
         public IActionResult ProfileMb(bool modifyProfile = false)
