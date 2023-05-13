@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Solicitudes";
+}
+
+@section logo{
+    <a class=" img-container2" asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/iconSol.png" /></a>
+}
+@section scripts{
+}
+@section inicioLI{
+    <li class="nav-item logIn ">
+        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
+    </li>
+    <li class="nav-item signUp">
+        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
+    </li>
+}
+
+@section main{
+    <section>
+        <div class="container-fluid text-black">
+            <div class="row d-flex justify-content-evenly align-items-start p-4 mt-3">
+                <div class="col-lg-8 col-sm-12 p-2 thirdBg">
+                    <div class="row d-flex justify-content-between p-2 m-auto" style="width: 100%;">
+                        <form asp-action="FilterAction" method="get" class="filter-form ">
+                            <input type="text" name="titleFilter" placeholder="Filtrar por título" class="filter-input" />
+                            <input type="text" name="cityFilter" placeholder="Filtrar por ciudad" class="filter-input" />
+                            <input type="date" name="dateFilter" placeholder="Filtrar por fecha" class="filter-input" />
+                            <input type="submit" value="Filtrar" class="filter-button" />
+                        </form>
+
+                        @if (!string.IsNullOrEmpty(ViewBag.Message))
+                        {
+                            <div class="alert alert-info" role="alert">
+                                @ViewBag.Message
+                            </div>
+                        }
+                        <div class="row row-cols-1 row-cols-md-2 g-4">
+                            @foreach (Request request in ViewBag.Requests)
+                            {
+                                var base64 = Convert.ToBase64String(request.RequestPicture);
+                                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                                <div class="col" style="max-width: 350px;">
+                                    
+                                    <div class="card">
+                                        <img src="@imgSrc" class="card-img-top" alt="..." style="width: auto; height:250px; object-fit: cover;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@request.RequestTitle</h5>
+                                            <p class="card-text">Ubicacion: @request.Location_Request.City</p>
+                                            <p class="card-text">@request.RequestContent</p>
+                                            <p class="card-text">Fecha: @request.PublicationReqDate</p>
+                                            <p class="card-text">Heroes solicitados: @request.MembersNeeded</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+
