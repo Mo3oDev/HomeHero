@@ -110,6 +110,8 @@ namespace HomeHero.Controllers
         public IActionResult ManageRequest2(int RequestID)
         {
             ViewBag.Request = _context.Request.FirstOrDefault(r => r.RequestID == RequestID);
+            ViewBag.evaluation = false;
+            ViewBag.payComprobant = false;
             return View("~/Views/HeroViews/ManageRequest2.cshtml");
         }
         [AuthorizeUsers]
@@ -125,6 +127,8 @@ namespace HomeHero.Controllers
             ViewData["user"] = user;
             ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
             ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder" };
+<<<<<<< HEAD
+=======
             if (user.Curriculum != null)
             {
 
@@ -132,6 +136,7 @@ namespace HomeHero.Controllers
                 ViewData["userFileName"] = "curriculum.pdf";
             }
             ViewData["CurrentSex"] = GetSexUserValue(user.SexUser);
+>>>>>>> 2debfb3b3b483e01ff9274e5fc78d4f6942e6390
             var data = _context.Location.ToList();
             ViewBag.LocationData = new SelectList(data, "LocationID", "City");
             List<Contact> contactData = _context.Contact.Where(c => c.UserID_Contact == idUser).ToList();
@@ -353,6 +358,10 @@ namespace HomeHero.Controllers
             if (curriculum != null)
             {
                 user.Curriculum = ConvertToByteArrayAsync(curriculum);
+            }
+            if(image != null)
+            {
+                user.ProfilePicture = ConvertToByteArrayAsync(image);
             }
             user.Email = email;
             if (idReal > 1) user.RealUserID = idReal.ToString();
