@@ -5,14 +5,30 @@
 @section logo{
     <a class=" img-container2" asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/iconSol.png" /></a>
 }
-@section scripts{}
+@section scripts{
+}
 @section inicioLI{
-    <li class="nav-item logIn ">
-        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
-    </li>
-    <li class="nav-item signUp">
-        <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
-    </li>
+    @if (User.IsInRole("Admon"))
+    {
+        <li class="nav-item logIn ">
+            <a class="nav-link " asp-area="" asp-controller="Users" asp-action="">AdminSecret</a>
+        </li>
+        <li class="nav-item logIn ">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
+        </li>
+        <li class="nav-item signUp">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
+        </li>
+    }
+    @if (User.IsInRole("User"))
+    {
+        <li class="nav-item logIn ">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
+        </li>
+        <li class="nav-item signUp">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
+        </li>
+    }
 }
 
 @section main{
@@ -26,10 +42,10 @@
                     </div>
                 }
                 <div onclick="location.href='@Url.Action("AskHelp", "Home")'" class="col-lg-3 col-md-5 col-sm-10 p-5 mt-5 text-center d-flex flex-column">
-                   <h2 class="font-title pb-5">Pedir Ayuda</h2>
+                    <h2 class="font-title pb-5">Pedir Ayuda</h2>
                     <div class="flex-grow-1">
-                       <img class="img-fluid" src="~/Images/AskForHelp.png"/>
-                   </div>
+                        <img class="img-fluid" src="~/Images/AskForHelp.png" />
+                    </div>
                 </div>
                 <div onclick="location.href='@Url.Action("RequestList", "Home")'" class="col-lg-3 col-md-5 col-sm-10 p-5 mt-5 text-center d-flex flex-column">
                     <h2 class="font-title pb-3">Buscar Solicitudes</h2>
@@ -48,20 +64,20 @@
     </section>
 }
 
-    <script>
-        function previewImage(event) {
-            var input = event.target;
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    var imagePreview = document.getElementById('imagePreview');
-                    var img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.className = 'img-fluid';
-                    imagePreview.innerHTML = '';
-                    imagePreview.appendChild(img);
-                }
-                reader.readAsDataURL(input.files[0]);
+<script>
+    function previewImage(event) {
+        var input = event.target;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var imagePreview = document.getElementById('imagePreview');
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'img-fluid';
+                imagePreview.innerHTML = '';
+                imagePreview.appendChild(img);
             }
+            reader.readAsDataURL(input.files[0]);
         }
-    </script>
+    }
+</script>

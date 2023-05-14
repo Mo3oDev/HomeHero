@@ -102,14 +102,32 @@ namespace HomeHero.Controllers
         [AuthorizeUsers]
         public IActionResult ManageRequest(int activeTab = 1)
         {
-            ViewBag.activo = activeTab;
-            ViewBag.Requests = _context.Request.ToList();
+            ViewBag.active = activeTab;
+            if (activeTab == 1)
+            {
+                ViewBag.Requests = _context.Request.Where(e => e.ReqStateID_Request == 1).ToList();
+
+            }
+            else if (activeTab == 2)
+            {
+
+                ViewBag.Requests = _context.Request.Where(e => e.ReqStateID_Request == 2).ToList();
+
+            }
+            else if (activeTab == 3)
+            {
+                ViewBag.Requests = _context.Request.Where(e => e.ReqStateID_Request == 3).ToList();
+
+            }
+
+            _context.Request.Include(r => r.Location_Request).ToList();
             return View("~/Views/HeroViews/ManageRequest.cshtml");
         }
 
         public IActionResult ManageRequest2(int RequestID)
         {
             ViewBag.Request = _context.Request.FirstOrDefault(r => r.RequestID == RequestID);
+            _context.Request.Include(r => r.Location_Request).ToList();
             return View("~/Views/HeroViews/ManageRequest2.cshtml");
         }
         [AuthorizeUsers]

@@ -24,7 +24,7 @@
                 <h1 class="font-title col-12 pb-2 text-center" style="font-size: 2em;">Gestionar Solicitudes</h1>
                 <div class="p-0">
                     <ul class="nav nav-tabs p-0 border-0">
-                        @if (ViewBag.activo == 1)
+                        @if (ViewBag.active == 1)
                         {
                             <li class="nav-item bgTabs">
                                 <a class="nav-link active" onclick="location.href='@Url.Action("ManageRequest", "Home",new {activeTab = 1})'">Pendientes</a>
@@ -36,7 +36,7 @@
                                 <a class="nav-link" onclick="location.href='@Url.Action("ManageRequest", "Home",new {activeTab = 3})'">Finalizado</a>
                             </li>
                         }
-                        else if (ViewBag.activo == 2)
+                        else if (ViewBag.active == 2)
                         {
                             <li class="nav-item bgTabs">
                                 <a class="nav-link" onclick="location.href='@Url.Action("ManageRequest", "Home",new {activeTab = 1})'">Pendientes</a>
@@ -48,7 +48,7 @@
                                 <a class="nav-link" onclick="location.href='@Url.Action("ManageRequest", "Home",new {activeTab = 3})'">Finalizado</a>
                             </li>
                         }
-                        else
+                        else if (ViewBag.active == 3)
                         {
                             <li class="nav-item bgTabs">
                                 <a class="nav-link" onclick="location.href='@Url.Action("ManageRequest", "Home",new {activeTab = 1})'">Pendientes</a>
@@ -71,7 +71,7 @@
                             <img src="@imgSrc" class="card-img-top" alt="..." style="width: auto; height:250px; object-fit: cover;">
                             <div class="card-body">
                                 <h5 class="font-title card-title secColor fs-5">@request.RequestTitle</h5>
-                                <p class="card-text secColor fw-bold">Ubicacion: <span class="text-white fw-normal">city</span></p>
+                                <p class="card-text secColor fw-bold">Ubicacion: <span class="text-white fw-normal">@request.Location_Request.City</span></p>
                                 <p class="card-text fw-bold secColor">Heroes solicitados: <span class="fw-normal text-white">@request.MembersNeeded</span></p>
                             </div>
                         </div>

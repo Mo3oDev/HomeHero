@@ -1,0 +1,124 @@
+﻿@model HomeHero.Models.User
+@{
+    ViewData["Title"] = "Details";
+}
+
+@section logo{
+    <a class=" img-container " asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
+}
+
+@section scripts{
+}
+@section inicioLI{
+    @if (User.IsInRole("Admon"))
+    {
+        <li class="nav-item logIn ">
+            <a class="nav-link " asp-area="" asp-controller="Users" asp-action="">AdminSecret</a>
+        </li>
+        <li class="nav-item logIn ">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
+        </li>
+        <li class="nav-item signUp">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
+        </li>
+    }
+    @if (User.IsInRole("User"))
+    {
+        <li class="nav-item logIn ">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
+        </li>
+        <li class="nav-item signUp">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
+        </li>
+    }
+}
+
+@section Main{
+    <section class="p-4">
+        <div class="container bg-dark text-white rounded py-3" style="max-width: 50%;">
+            <h1 class="text-center mb-4">User Details</h1>
+            <hr class="border-light" />
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Role_User)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Role_User.NameRole)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.RealUserID)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.RealUserID)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.NamesUser)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.NamesUser)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.SurnamesUser)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.SurnamesUser)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ProfilePicture)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ProfilePicture)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.VolunteerVoucher)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.VolunteerVoucher)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.QualificationUser)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.QualificationUser)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.LocationResidence)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.LocationResidence.City)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.SexUser)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.SexUser)
+                </dd>
+                @*<dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Curriculum)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Curriculum)
+                </dd>*@
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.VolunteerPermises)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.VolunteerPermises)
+                </dd>
+            </dl>
+            <div class="row mt-3">
+                <div class="col-12 text-center">
+                    <a asp-action="Edit" asp-route-id="@Model?.UserId" class="btn btn-primary mr-2">Edit</a>
+                    <a asp-action="Index" class="btn btn-light">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </section>
+}

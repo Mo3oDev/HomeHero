@@ -120,6 +120,11 @@ namespace HomeHero.Migrations
                     b.Property<decimal>("AttentionReqValue")
                         .HasColumnType("decimal(10,4)");
 
+                    b.Property<int>("AttentionRequest_StateID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
                     b.Property<int>("HelperUserID")
                         .HasColumnType("int");
 
@@ -130,6 +135,8 @@ namespace HomeHero.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("AttentionID");
+
+                    b.HasIndex("AttentionRequest_StateID");
 
                     b.HasIndex("HelperUserID");
 
@@ -437,23 +444,6 @@ namespace HomeHero.Migrations
                     b.ToTable("Request");
                 });
 
-            modelBuilder.Entity("HomeHero.Models.RequestState", b =>
-                {
-                    b.Property<int>("ReqStateID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReqStateID"));
-
-                    b.Property<string>("NameState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ReqStateID");
-
-                    b.ToTable("RequestState");
-                });
-
             modelBuilder.Entity("HomeHero.Models.Request_Area", b =>
                 {
                     b.Property<int>("RequestAreaID")
@@ -492,6 +482,23 @@ namespace HomeHero.Migrations
                     b.HasKey("RoleID");
 
                     b.ToTable("Role");
+                });
+
+            modelBuilder.Entity("HomeHero.Models.State", b =>
+                {
+                    b.Property<int>("StateID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StateID"));
+
+                    b.Property<string>("NameState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("StateID");
+
+                    b.ToTable("State");
                 });
 
             modelBuilder.Entity("HomeHero.Models.Tutorial", b =>
@@ -633,6 +640,12 @@ namespace HomeHero.Migrations
 
             modelBuilder.Entity("HomeHero.Models.AttentionRequest", b =>
                 {
+                    b.HasOne("HomeHero.Models.State", "AttentionRequest_State")
+                        .WithMany("AttentionRequests")
+                        .HasForeignKey("AttentionRequest_StateID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("HomeHero.Models.User", "HelperUser")
                         .WithMany("AttentionRequests")
                         .HasForeignKey("HelperUserID")
@@ -644,6 +657,8 @@ namespace HomeHero.Migrations
                         .HasForeignKey("RequestID_AttentionRequest")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("AttentionRequest_State");
 
                     b.Navigation("HelperUser");
 
@@ -795,7 +810,7 @@ namespace HomeHero.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeHero.Models.RequestState", "RequestState_Request")
+                    b.HasOne("HomeHero.Models.State", "RequestState")
                         .WithMany("Requests")
                         .HasForeignKey("ReqStateID_Request")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -809,7 +824,7 @@ namespace HomeHero.Migrations
 
                     b.Navigation("Location_Request");
 
-                    b.Navigation("RequestState_Request");
+                    b.Navigation("RequestState");
 
                     b.Navigation("UserRequest");
                 });
@@ -910,14 +925,16 @@ namespace HomeHero.Migrations
                     b.Navigation("Request_Areas");
                 });
 
-            modelBuilder.Entity("HomeHero.Models.RequestState", b =>
-                {
-                    b.Navigation("Requests");
-                });
-
             modelBuilder.Entity("HomeHero.Models.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("HomeHero.Models.State", b =>
+                {
+                    b.Navigation("AttentionRequests");
+
+                    b.Navigation("Requests");
                 });
 
             modelBuilder.Entity("HomeHero.Models.User", b =>

@@ -26,7 +26,7 @@ namespace HomeHero.Data
         public DbSet<Qualification> Qualification { get; set; }
         public DbSet<HomeHero.Models.Request> Request { get; set; }
         public DbSet<Request_Area> Request_Area { get; set; }
-        public DbSet<RequestState> RequestState { get; set; }
+        public DbSet<State> State { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<Tutorial> Tutorial { get; set; }
         public DbSet<User> User { get; set; }
@@ -36,6 +36,9 @@ namespace HomeHero.Data
             modelBuilder.Entity<User>()
                 .Property(p => p.QualificationUser)
                 .HasDefaultValue(0);
+            modelBuilder.Entity<AttentionRequest>()
+                .Property(p => p.AttentionRequest_StateID)
+                .HasDefaultValue(1);
             modelBuilder.Entity<User>()
                 .Property(p => p.VolunteerPermises)
                 .HasDefaultValue(false);
@@ -114,7 +117,7 @@ namespace HomeHero.Data
              .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Qualification>()
-      .Property(q => q.QualificationNumber)
+        .Property(q => q.QualificationNumber)
       .HasColumnType("decimal(10,4)");
             modelBuilder.Entity<AttentionRequest>()
         .Property(a => a.AttentionReqValue)

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<HomeHero.Models.User>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@section logo{
+    <a class=" img-container " asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
+}
+@section scripts{
+}
+@section inicioLI{
+    @if (User.IsInRole("Admon"))
+    {
+        <li class="nav-item logIn ">
+            <a class="nav-link " asp-area="" asp-controller="Users" asp-action="">AdminSecret</a>
+        </li>
+        <li class="nav-item logIn ">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
+        </li>
+        <li class="nav-item signUp">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
+        </li>
+    }
+    @if (User.IsInRole("User"))
+    {
+        <li class="nav-item logIn ">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
+        </li>
+        <li class="nav-item signUp">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
+        </li>
+    }
+}
+
+@section Main{
+  
+    <section class="p-4">
+        <div class="container bg-dark text-white rounded py-3" style="max-width: 100%;">
+            <h1 class="text-center mb-4">Index</h1>
+
+            <div class="text-center mb-3">
+                <a href="@Url.Action("Create")" class="btn btn-primary">Create New</a>
+            </div>
+
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Role_User)</th>
+                        <th>@Html.DisplayNameFor(model => model.RealUserID)</th>
+                        <th>@Html.DisplayNameFor(model => model.NamesUser)</th>
+                        <th>@Html.DisplayNameFor(model => model.SurnamesUser)</th>
+                        <th>@Html.DisplayNameFor(model => model.ProfilePicture)</th>
+                        <th>@Html.DisplayNameFor(model => model.VolunteerVoucher)</th>
+                        <th>@Html.DisplayNameFor(model => model.QualificationUser)</th>
+                        <th>@Html.DisplayNameFor(model => model.Email)</th>
+                        <th>@Html.DisplayNameFor(model => model.LocationResidence)</th>
+                        <th>@Html.DisplayNameFor(model => model.SexUser)</th>
+                        @*<th>@Html.DisplayNameFor(model => model.Curriculum)</th>*@
+                        <th>@Html.DisplayNameFor(model => model.VolunteerPermises)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Role_User.NameRole)</td>
+                            <td>@Html.DisplayFor(modelItem => item.RealUserID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.NamesUser)</td>
+                            <td>@Html.DisplayFor(modelItem => item.SurnamesUser)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ProfilePicture)</td>
+                            <td>@Html.DisplayFor(modelItem => item.VolunteerVoucher)</td>
+                            <td>@Html.DisplayFor(modelItem => item.QualificationUser)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.LocationResidence.LocationID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.SexUser)</td>
+                            @*<td>@Html.DisplayFor(modelItem => item.Curriculum)</td>*@
+                            <td>@Html.DisplayFor(modelItem => item.VolunteerPermises)</td>
+                            <td>
+                                <a href="@Url.Action("Edit", new { id = item.UserId })" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="@Url.Action("Details", new { id = item.UserId })" class="btn btn-info btn-sm">Details</a>
+                                <a href="@Url.Action("Delete", new { id = item.UserId })" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+}
+
+}
