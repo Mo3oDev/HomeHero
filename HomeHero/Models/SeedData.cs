@@ -30,21 +30,33 @@ namespace HomeHero.Models
                         NameRole = "TSupport"
                     }
                     );
-                if (context.RequestState.Any()) return;
-                context.RequestState.AddRange(
-                    new RequestState
+                if (context.State.Any()) return;
+                context.State.AddRange(
+                    new State
                     {
                         NameState = "Preparado"
                     },
-                    new RequestState
+                    new State
                     {
                         NameState = "Progreso"
                     },
-                    new RequestState
+                    new State
+                    {
+                        NameState = "Evaluacion"
+                    },
+                    new State
+                    {
+                        NameState = "Pagado"
+                    },
+                    new State
+                    {
+                        NameState = "PagoConfirmado"
+                    },
+                    new State
                     {
                         NameState = "Terminado"
                     }
-                    );
+                    );             
                 if (context.Location.Any())
                     return;
                 context.Location.AddRange(

@@ -1,0 +1,106 @@
+﻿@model HomeHero.Models.User
+
+@{
+    ViewData["Title"] = "Edit";
+}
+@section logo{
+    <a class=" img-container " asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/mainIcon.png" /></a>
+}
+
+@section inicioLI{
+    @if (User.IsInRole("Admon"))
+    {
+        <li class="nav-item logIn ">
+            <a class="nav-link " asp-area="" asp-controller="Users" asp-action="">AdminSecret</a>
+        </li>
+        <li class="nav-item logIn ">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
+        </li>
+        <li class="nav-item signUp">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
+        </li>
+    }
+    @if (User.IsInRole("User"))
+    {
+        <li class="nav-item logIn ">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="ProfileMb">Mi perfil</a>
+        </li>
+        <li class="nav-item signUp">
+            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="LogOut">Cerrar Sesion</a>
+        </li>
+    }
+}
+
+@section Main{
+    <section class="p-4">
+        <div class="container bg-dark text-white rounded py-3" style="max-width: 50%;">
+            <h1 class="text-center mb-4">Edit User</h1>
+            <hr class="border-light" />
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="UserId" />
+                        <div class="form-group">
+                            <label asp-for="RoleID_User" class="control-label"></label>
+                            <select asp-for="RoleID_User" class="form-control" asp-items="ViewBag.RoleID_User"></select>
+                            <span asp-validation-for="RoleID_User" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="RealUserID" class="control-label"></label>
+                            <input asp-for="RealUserID" class="form-control" />
+                            <span asp-validation-for="RealUserID" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="NamesUser" class="control-label"></label>
+                            <input asp-for="NamesUser" class="form-control" />
+                            <span asp-validation-for="NamesUser" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SurnamesUser" class="control-label"></label>
+                            <input asp-for="SurnamesUser" class="form-control" />
+                            <span asp-validation-for="SurnamesUser" class="text-danger"></span>
+                        </div>                                             
+                        <div class="form-group">
+                            <label asp-for="QualificationUser" class="control-label"></label>
+                            <input asp-for="QualificationUser" class="form-control" />
+                            <span asp-validation-for="QualificationUser" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="LocationResidenceID" class="control-label"></label>
+                            <select asp-for="LocationResidenceID" class="form-control" asp-items="ViewBag.LocationResidenceID"></select>
+                            <span asp-validation-for="LocationResidenceID" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SexUser" class="control-label"></label>
+                            <input asp-for="SexUser" class="form-control" />
+                            <span asp-validation-for="SexUser" class="text-danger"></span>
+                        </div>                        
+                        <div class="form-group">
+                            <label asp-for="VolunteerPermises" class="control-label"></label>
+                            <input asp-for="VolunteerPermises" class="form-control" />
+                            <span asp-validation-for="VolunteerPermises" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary btn-block mt-3" />
+                        </div>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a asp-action="Index" class="btn btn-light btn-block">Back to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+@section scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -18,7 +18,7 @@ namespace HomeHero.Models
         public DateTime PublicationReqDate { get; set; }       
         public int ReqStateID_Request { get; set; }
         [ForeignKey("ReqStateID_Request")]
-        public virtual RequestState RequestState_Request { get; set; }
+        public virtual State RequestState { get; set; }
         public int MembersNeeded { get; set; }
         public byte[] RequestPicture { get; set; }
         public string RequestTitle { get; set; }
