@@ -1,7 +1,6 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Mi Perfil";
-    
+
 }
 @section scripts{
     <script src="~/js/request.js"></script>
@@ -22,7 +21,7 @@
     <section>
         <div class="container-fluid text-white">
             <div class="row d-flex justify-content-evenly align-items-start p-4 mt-3">
-               <div class="col-lg-6 col-sm-12 p-2 thirdBg">
+                <div class="col-lg-6 col-sm-12 p-2 thirdBg">
                     <div class="row d-flex justify-content-between p-2 m-auto" style="width: 100%;">
                         @{
                             User user = (User)ViewBag.user;
@@ -30,11 +29,16 @@
                         @if (ViewBag.modifyProfile == false)
                         {
                             <h3 class="text-center secColor font-title pb-2 col-12 border-bottom">Perfil</h3>
-                            var base64 = Convert.ToBase64String(user.ProfilePicture);
-                            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                            <div class="col-12 text-center">
-                                <img class="img-fluid profileImg_1" src="@imgSrc" />
-                            </div>  
+                            if (user.ProfilePicture != null)
+                            {
+                                var base64 = Convert.ToBase64String(user.ProfilePicture);
+                                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                <div class="col-12 text-center">
+                                    <img class="img-fluid profileImg_1" src="@imgSrc" />
+                                </div>
+                            }
+
+
                             if (ViewBag.missindFields > 0)
                             {
                                 <h5 class="pb-2 pt-4 col-8"><b class="secColor">Completa tu perfil: </b> @ViewBag.missindFields Datos Faltantes</h5>
@@ -43,11 +47,13 @@
                                 @if (ViewBag.missindFields > 0)
                                 {
                                     <text>Completar </text>
-                                }else
+                                }
+                                else
                                 {
                                     <text>Actualizar perfil</text>
                                 }
-                                <i class="fa-solid fa-plus"></i></p>
+                                <i class="fa-solid fa-plus"></i>
+                            </p>
 
                             <h5 class="secColor pb-2 pt-4 col-12 font-title text-center">@user.NamesUser @user.SurnamesUser</h5>
                             <h5 class="pb-2 col-12"> <span class="secColor">Correo:</span>@user.Email</h5>
@@ -56,7 +62,8 @@
                             {
                                 <h5 class="pb-2 col-12"> <span class="secColor">Identificacion:</span>@user.RealUserID</h5>
                             }
-                            <h5 class="pb-2 col-12"> <span class="secColor">Sexo:</span>
+                            <h5 class="pb-2 col-12">
+                                <span class="secColor">Sexo:</span>
                                 @if (user.SexUser == 'M')
                                 {
                                     <text>Masculino</text>
@@ -85,11 +92,12 @@
                                 </div>
                             }
                         }
-                        else{
+                        else
+                        {
                             Html.RenderPartial("~/Views/HeroViews/_profileUpdate.cshtml");
                         }
-        </div>
-               </div>
+                    </div>
+                </div>
                 <div class="col-lg-5 col-sm-12 mt-lg-0 mt-sm-3 p-4 fourthBg reqProfile">
                     <h3 class="font-title text-center">Mis Solicitudes</h3>
                 </div>
