@@ -1,23 +1,22 @@
 ﻿<h3 class="text-center secColor font-title pb-2 col-12 border-bottom">Actualizacion de datos</h3>
 <form asp-controller="Home" asp-action="updateProfile" method="post" enctype="multipart/form-data">
-    @if (ViewBag.user != null)
-    {
+       @{ User user = ViewBag.user; }
         <div class="form-group p-3 pt-0">
             <label for="name" class="control-label">NOMBRE(S)</label>
-            <input required type="text" minlength="3" maxlength="20" id="name" name="name" class="form-control" value="@ViewBag.user.NamesUser" />
+            <input required type="text" minlength="3" maxlength="20" id="name" name="name" class="form-control" value="@user.NamesUser" />
         </div>
-    }
+    
     <div class="form-group p-3 pt-0">
         <label for="surnames" class="control-label">APELLIDO(S)</label>
-        <input required type="text" id="surnames" maxlength="20" name="surnames" class="form-control" value="@ViewBag.user.SurnamesUser" />
+        <input required type="text" id="surnames" maxlength="20" name="surnames" class="form-control" value="@user.SurnamesUser" />
     </div>
     <div class="form-group p-3 pt-0">
         <label for="email" class="control-label">CORREO</label>
-        <input required type="email" id="email" name="email" class="form-control" value="@ViewBag.user.Email" />
+        <input required type="email" id="email" name="email" class="form-control" value="@user.Email" />
     </div>
     <div class="form-group p-3 pt-0">
         <label for="idReal" class="control-label">DNI (CC - TI - OTRO)</label>
-        <input type="number" min="1" id="idReal" name="idReal" class="form-control" value="@ViewBag.user.RealUserID"/>
+        <input type="number" min="1" id="idReal" name="idReal" class="form-control" value="@user.RealUserID"/>
     </div>
     <div class="form-group p-3 pt-0">
         <label for="location">CIUDAD:</label>
@@ -41,7 +40,7 @@
             @{ int sexValue = 1; }
             @foreach (var sex in @ViewBag.Sexs)
             {
-                if (sexValue == ViewBag.CurrentSex)
+                if (sexValue == user.SexUser)
                 {
                     <option value="@sexValue" selected>@sex</option>
                     sexValue++;
@@ -59,14 +58,30 @@
             Curriculum
             <i class="fa-solid fa-file-circle-plus"></i>
         </label>
-        <input accept="application/pdf" type="file" id="fileID" name="curriculum" class="form-control" style="display: none;" @if (ViewBag.Curriculum != null)
+        <input accept="application/pdf" type="file" id="fileID" name="curriculum" class="form-control" style="display: none;" @if (user.Curriculum != null)
         {
-            <text> value="@ViewBag.Curriculum"</text>
+            <text> value="@Convert.ToBase64String(user.Curriculum)"</text>
         } />
         <h6 class="secColor mt-2 ms-3" id="fileNameLabel">
-            @if (ViewBag.userFileName != null)
+            @if (user.Curriculum != null)
             {
-                <text>@ViewBag.userFileName</text>
+                <text>curriculum.pdf</text>
+            }
+        </h6>
+    </div>
+    <div class="form-group p-3 pt-0 d-flex justify-content-start">
+        <label for="imageID" class="control-label pb-1 btn btn-outline-light">
+            Sube una imagen
+            <i class="fa-solid fa-upload"></i>
+        </label>
+        <input type="file" id="imageID" name="image" class="form-control" style="display: none;" accept=".jpg,.png" @if (user.ProfilePicture != null)
+        {
+            <text> value="@Convert.ToBase64String(user.ProfilePicture)"</text>
+        } />
+        <h6 class="secColor mt-2 ms-3" id="imageNameLabel">
+            @if (user.ProfilePicture != null)
+            {
+                <text>Imagen Cargada</text>
             }
         </h6>
     </div>

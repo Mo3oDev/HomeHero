@@ -1,7 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Gestionar Solicitudes";
 }
-@section scripts{}
+@section scripts{
+    <script src="~/js/request.js"></script>
+}
 @section logo{
     <a class=" img-container2" asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/Images/iconSol.png" /></a>
 }
@@ -22,8 +24,8 @@
         <div class="container text-black">
             <div class="row d-flex justify-content-evenly align-items-start p-4 mt-3 thirdBg">
                 <div class=" col-lg-12 col-md-6 col-sm-12 m-2 p-0">
-                    <h5 class="font-title card-title secColor fs-5">button 1</h5>
-                    <h5 class="font-title card-title secColor fs-5">button 2</h5>
+                    <i class=" fa-solid fa-backward fa-lg text-white p-3 fourthBg rounded-2" style="cursor:pointer;"
+                       onclick="location.href='@Url.Action("ManageRequest", "Home")'"></i>
                 </div>
                 @if (ViewBag.Request != null)
                 {
@@ -40,8 +42,54 @@
                             <p class="card-text fw-bold secColor">Heroes solicitados: <span class="fw-normal text-white">@request.MembersNeeded</span></p>
                         </div>
                     </div>
-                    <div class="card fourthBg text-white col-lg-6 col-md-6 col-sm-12 p-0">
-                            <h5 class="font-title card-title secColor fs-5 p-2">Heroes Postulados</h5>
+                    <div class="card fourthBg text-white d-flex justify-content-center col-lg-6 col-md-12 col-sm-12 p-0">
+                         <h5 class="font-title card-title secColor fs-5 p-2 ApplicantsTitle">Heroes Postulados</h5>
+                        <div class="card mb-3 fifthBg  aplicantHeroCard">
+                            <div class="row g-0">
+                                <div class="col-md-4 d-flex">
+                                    <img src="~/Images/testProfile.jpg" class="img-fluid rounded-start profileImg_2" alt="">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Nombre Usuario</h5>
+                                        @if (ViewBag.evaluation == false)
+                                        {
+                                            <form asp-controller="Home" asp-action="Evaluate" method="post">
+                                                <textarea required type="text" name="name" placeholder="Comenta como te parecio el servicio" class="form-control h-75 mb-2 mt-2"></textarea>
+                                                <div class="star-widget">
+                                                    <input type="radio" name="rate" id="rate-1" value="1">
+                                                    <label for="rate-1" class="fas fa-star"></label>
+                                                    <input type="radio" name="rate" id="rate-2" value="2">
+                                                    <label for="rate-2" class="fas fa-star"></label>
+                                                    <input type="radio" name="rate" id="rate-3" value="3">
+                                                    <label for="rate-3" class="fas fa-star"></label>
+                                                    <input type="radio" name="rate" id="rate-4" value="4">
+                                                    <label for="rate-4" class="fas fa-star"></label>
+                                                    <input type="radio" name="rate" id="rate-5" value="5">
+                                                    <label for="rate-5" class="fas fa-star"></label>
+                                                    <h6 class="p-1 ps-0">Evalua el servicio</h6>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary fs-6">Terminar Evaluar</button>
+                                            </form>
+                                        }
+                                        @if (ViewBag.payComprobant == false)
+                                        {
+                                            <form asp-action="payRecord" asp-controller="Home" method="post">
+                                                <div class="form-group mt-4 d-flex justify-content-start">
+                                                    <label for="payID" class="control-label pb-1 btn btn-outline-light">
+                                                        Comprobante de pago
+                                                        <i class="fa-solid fa-file-circle-plus"></i>
+                                                    </label>
+                                                    <input accept="application/pdf" type="file" id="payID" name="payRecord" class="form-control" style="display: none;"/>
+                                                    <h6 class="text-black mt-2 ms-3" id="payNameLabel"></h6>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary mt-1 fs-6">Subir Comprobante</button>
+                                            </form>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 }
             </div>

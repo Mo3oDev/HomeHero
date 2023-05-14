@@ -7,6 +7,23 @@
             fileNameLabel.innerText = fileName;
         });
     }
+    var imageInput = document.getElementById('imageID');
+    if (imageInput != null) {
+        var imageNameLabel = document.getElementById('imageNameLabel');
+        imageInput.addEventListener('change', function () {
+            var fileName = imageInput.files[0].name;
+            imageNameLabel.innerText = fileName;
+        });
+    }
+    var payInput = document.getElementById('payID');
+    if (payInput != null) {
+        var payNameLabel = document.getElementById('payNameLabel');
+        payInput.addEventListener('change', function () {
+            var fileName = payInput.files[0].name;
+            payNameLabel.innerText = fileName;
+        });
+    }
+
     $(".reqCard").click(function () {
         var requestSelected = $(this).data("id");
         console.log(requestSelected);

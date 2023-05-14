@@ -30,6 +30,11 @@
                         @if (ViewBag.modifyProfile == false)
                         {
                             <h3 class="text-center secColor font-title pb-2 col-12 border-bottom">Perfil</h3>
+                            var base64 = Convert.ToBase64String(user.ProfilePicture);
+                            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                            <div class="col-12 text-center">
+                                <img class="img-fluid profileImg_1" src="@imgSrc" />
+                            </div>  
                             if (ViewBag.missindFields > 0)
                             {
                                 <h5 class="pb-2 pt-4 col-8"><b class="secColor">Completa tu perfil: </b> @ViewBag.missindFields Datos Faltantes</h5>

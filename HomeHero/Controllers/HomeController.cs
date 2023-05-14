@@ -110,6 +110,8 @@ namespace HomeHero.Controllers
         public IActionResult ManageRequest2(int RequestID)
         {
             ViewBag.Request = _context.Request.FirstOrDefault(r => r.RequestID == RequestID);
+            ViewBag.evaluation = false;
+            ViewBag.payComprobant = false;
             return View("~/Views/HeroViews/ManageRequest2.cshtml");
         }
         [AuthorizeUsers]
@@ -125,12 +127,6 @@ namespace HomeHero.Controllers
             ViewData["user"] = user;
             ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
             ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder" };
-            if (user.Curriculum != null)
-            {
-
-                ViewData["Curriculum"] = Convert.ToBase64String(user.Curriculum);
-                ViewData["userFileName"] = "curriculum.pdf";
-            }
             ViewData["CurrentSex"] = GetSexUserValue(user.SexUser);
             var data = _context.Location.ToList();
             ViewBag.LocationData = new SelectList(data, "LocationID", "City");
@@ -341,7 +337,7 @@ namespace HomeHero.Controllers
         [AuthorizeUsers]
         public async Task<IActionResult> updateProfile([FromForm] string name, [FromForm] string surnames,
             [FromForm] string email, [FromForm] int idReal, [FromForm] int location,
-            [FromForm] int sex, [FromForm] IFormFile curriculum)
+            [FromForm] int sex, [FromForm] IFormFile curriculum, [FromForm] IFormFile image)
         {
             var claimsPrincipal = HttpContext.User;
             var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
@@ -353,6 +349,10 @@ namespace HomeHero.Controllers
             if (curriculum != null)
             {
                 user.Curriculum = ConvertToByteArrayAsync(curriculum);
+            }
+            if(image != null)
+            {
+                user.ProfilePicture = ConvertToByteArrayAsync(image);
             }
             user.Email = email;
             if (idReal > 1) user.RealUserID = idReal.ToString();
