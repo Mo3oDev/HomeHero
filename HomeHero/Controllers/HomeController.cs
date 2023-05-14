@@ -127,16 +127,7 @@ namespace HomeHero.Controllers
             ViewData["user"] = user;
             ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
             ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder" };
-<<<<<<< HEAD
-=======
-            if (user.Curriculum != null)
-            {
-
-                ViewData["Curriculum"] = Convert.ToBase64String(user.Curriculum);
-                ViewData["userFileName"] = "curriculum.pdf";
-            }
             ViewData["CurrentSex"] = GetSexUserValue(user.SexUser);
->>>>>>> 2debfb3b3b483e01ff9274e5fc78d4f6942e6390
             var data = _context.Location.ToList();
             ViewBag.LocationData = new SelectList(data, "LocationID", "City");
             List<Contact> contactData = _context.Contact.Where(c => c.UserID_Contact == idUser).ToList();
@@ -346,7 +337,7 @@ namespace HomeHero.Controllers
         [AuthorizeUsers]
         public async Task<IActionResult> updateProfile([FromForm] string name, [FromForm] string surnames,
             [FromForm] string email, [FromForm] int idReal, [FromForm] int location,
-            [FromForm] int sex, [FromForm] IFormFile curriculum)
+            [FromForm] int sex, [FromForm] IFormFile curriculum, [FromForm] IFormFile image)
         {
             var claimsPrincipal = HttpContext.User;
             var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
