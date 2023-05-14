@@ -38,7 +38,7 @@
                                 </div>
                             }
 
-
+                            if(!ViewBag.PublicProfile){
                             if (ViewBag.missindFields > 0)
                             {
                                 <h5 class="pb-2 pt-4 col-8"><b class="secColor">Completa tu perfil: </b> @ViewBag.missindFields Datos Faltantes</h5>
@@ -54,7 +54,7 @@
                                 }
                                 <i class="fa-solid fa-plus"></i>
                             </p>
-
+                            }
                             <h5 class="secColor pb-2 pt-4 col-12 font-title text-center">@user.NamesUser @user.SurnamesUser</h5>
                             <h5 class="pb-2 col-12"> <span class="secColor">Correo:</span>@user.Email</h5>
                             <h5 class="pb-2 col-12"> <span class="secColor">Ciudad de residencia:</span> @ViewBag.locationResidence</h5>
@@ -81,10 +81,10 @@
                                     <text>No Identificado</text>
                                 }
                             </h5>
-                            @if (ViewBag.userFileName != null)
+                            @if (user.Curriculum != null)
                             {
                                 <div>
-                                    <h5 class="d-inline p-2 ps-0 me-5 col-12"> <span class="secColor">Curriculum:</h5>
+                                    <h5 class="d-inline p-2 ps-0 col-12"> <span class="secColor">Curriculum:</h5>
                                     <a class="p-2 btn btn-outline-light" target="_blank" href="@Url.Action("ViewCurriculum", "Home", new {userId = user.UserId})">
                                         @ViewBag.userFileName
                                         <i class="fa-solid fa-file-pdf"></i>

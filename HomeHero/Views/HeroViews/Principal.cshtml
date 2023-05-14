@@ -10,7 +10,7 @@
 @section inicioLI{
     @if (User.IsInRole("Admon"))
     {
-        <li class="nav-item logIn ">
+        <li class="nav-item admin ">
             <a class="nav-link " asp-area="" asp-controller="Users" asp-action="">AdminSecret</a>
         </li>
         <li class="nav-item logIn ">
@@ -42,7 +42,7 @@
                     </div>
                 }
                 <div onclick="location.href='@Url.Action("AskHelp", "Home")'" class="col-lg-3 col-md-5 col-sm-10 p-5 mt-5 text-center d-flex flex-column">
-                    <h2 class="font-title pb-5">Pedir Ayuda</h2>
+                    <h2 class="font-title pb-3">Pedir Ayuda</h2>
                     <div class="flex-grow-1">
                         <img class="img-fluid" src="~/Images/AskForHelp.png" />
                     </div>

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using HomeHero.Data;
 using HomeHero.Models;
 using HomeHero.Filters;
+using HomeHero.Services;
 
 namespace HomeHero.Controllers
 {
@@ -15,10 +16,12 @@ namespace HomeHero.Controllers
     public class UsersController : Controller
     {
         private readonly HomeHeroContext _context;
+        private readonly HHeroServices _heroServices;
 
         public UsersController(HomeHeroContext context)
         {
             _context = context;
+            _heroServices = new HHeroServices(context);
         }
 
         // GET: Users
@@ -51,8 +54,10 @@ namespace HomeHero.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
-            ViewData["LocationResidenceID"] = new SelectList(_context.Location, "LocationID", "City");
-            ViewData["RoleID_User"] = new SelectList(_context.Role, "RoleID", "NameRole");
+            var data1 = _context.Location.ToList();
+            ViewBag.LocationData = new SelectList(data1, "LocationID", "City");
+            var data2 = _context.Role.ToList();
+            ViewBag.RolesData = new SelectList(data2, "RoleID", "NameRole");
             return View();
         }
 
@@ -61,16 +66,27 @@ namespace HomeHero.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,RoleID_User,RealUserID,NamesUser,SurnamesUser,ProfilePicture,VolunteerVoucher,QualificationUser,Email,LocationResidenceID,SexUser,Curriculum,VolunteerPermises")] User user)
+        public async Task<IActionResult> Create([FromForm] int RoleID_User, [FromForm] string name, [FromForm] string surnames, [FromForm] int LocationResidenceID, [FromForm] string email, [FromForm] string password)
         {
+            User user = new User();
             if (ModelState.IsValid)
             {
+                byte[] salt = _heroServices.HHeroEncrypt.GenerateSalt();
+                user.RoleID_User = RoleID_User;
+                user.NamesUser = name;
+                user.SurnamesUser = surnames;
+                user.LocationResidenceID = LocationResidenceID;
+                user.Email = email;
+                user.Salt = salt;
+                user.Password = _heroServices.HHeroEncrypt.HashPassword(password, salt);
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["LocationResidenceID"] = new SelectList(_context.Location, "LocationID", "City", user.LocationResidenceID);
-            ViewData["RoleID_User"] = new SelectList(_context.Role, "RoleID", "NameRole", user.RoleID_User);
+            };
+            var data1 = _context.Location.ToList();
+            ViewBag.LocationData = new SelectList(data1, "LocationID", "City");
+            var data2 = _context.Role.ToList();
+            ViewBag.RolesData = new SelectList(data2, "RoleID", "NameRole");
             return View(user);
         }
 
@@ -87,8 +103,10 @@ namespace HomeHero.Controllers
             {
                 return NotFound();
             }
-            ViewData["LocationResidenceID"] = new SelectList(_context.Location, "LocationID", "City", user.LocationResidenceID);
-            ViewData["RoleID_User"] = new SelectList(_context.Role, "RoleID", "NameRole", user.RoleID_User);
+            var data1 = _context.Location.ToList();
+            ViewBag.LocationData = new SelectList(data1, "LocationID", "City");
+            var data2 = _context.Role.ToList();
+            ViewBag.RolesData = new SelectList(data2, "RoleID", "NameRole");
             return View(user);
         }
 
@@ -97,18 +115,21 @@ namespace HomeHero.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,RoleID_User,RealUserID,NamesUser,SurnamesUser,ProfilePicture,VolunteerVoucher,QualificationUser,Email,LocationResidenceID,SexUser,Curriculum,VolunteerPermises")] User user)
+        public async Task<IActionResult> Edit(int id, [FromForm] int RoleID_User, [FromForm] string RealUserID, [FromForm] string NamesUser, [FromForm] string SurnamesUser, [FromForm] int LocationResidenceID, [FromForm] string Email,[FromForm] string VolunteerPermises)
         {
-            if (id != user.UserId)
-            {
-                return NotFound();
-            }
-
+            User user = _context.User.Find(id);
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(user);
+                    user.RoleID_User = RoleID_User;
+                    user.RealUserID = RealUserID;
+                    user.NamesUser = NamesUser;
+                    user.SurnamesUser = SurnamesUser;
+                    user.LocationResidenceID = LocationResidenceID;
+                    user.Email = Email;
+                    user.VolunteerPermises = Convert.ToBoolean(VolunteerPermises);
+                    _context.User.Update(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -124,8 +145,10 @@ namespace HomeHero.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocationResidenceID"] = new SelectList(_context.Location, "LocationID", "City", user.LocationResidenceID);
-            ViewData["RoleID_User"] = new SelectList(_context.Role, "RoleID", "NameRole", user.RoleID_User);
+            var data1 = _context.Location.ToList();
+            ViewBag.LocationData = new SelectList(data1, "LocationID", "City");
+            var data2 = _context.Role.ToList();
+            ViewBag.RolesData = new SelectList(data2, "RoleID", "NameRole");
             return View(user);
         }
 
@@ -163,14 +186,14 @@ namespace HomeHero.Controllers
             {
                 _context.User.Remove(user);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UserExists(int id)
         {
-          return (_context.User?.Any(e => e.UserId == id)).GetValueOrDefault();
+            return (_context.User?.Any(e => e.UserId == id)).GetValueOrDefault();
         }
     }
 }

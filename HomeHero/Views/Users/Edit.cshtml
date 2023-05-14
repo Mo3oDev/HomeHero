@@ -10,7 +10,7 @@
 @section inicioLI{
     @if (User.IsInRole("Admon"))
     {
-        <li class="nav-item logIn ">
+        <li class="nav-item admin">
             <a class="nav-link " asp-area="" asp-controller="Users" asp-action="">AdminSecret</a>
         </li>
         <li class="nav-item logIn ">
@@ -38,34 +38,27 @@
             <hr class="border-light" />
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <form asp-action="Edit">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="UserId" />
+                    <form asp-controller="Users" asp-action="Edit" method="post">
                         <div class="form-group">
                             <label asp-for="RoleID_User" class="control-label"></label>
-                            <select asp-for="RoleID_User" class="form-control" asp-items="ViewBag.RoleID_User"></select>
-                            <span asp-validation-for="RoleID_User" class="text-danger"></span>
+                            <select asp-for="RoleID_User" class="form-control" asp-items="@ViewBag.RolesData"></select>
                         </div>
+
                         <div class="form-group">
                             <label asp-for="RealUserID" class="control-label"></label>
                             <input asp-for="RealUserID" class="form-control" />
-                            <span asp-validation-for="RealUserID" class="text-danger"></span>
                         </div>
+
                         <div class="form-group">
                             <label asp-for="NamesUser" class="control-label"></label>
                             <input asp-for="NamesUser" class="form-control" />
-                            <span asp-validation-for="NamesUser" class="text-danger"></span>
                         </div>
+
                         <div class="form-group">
                             <label asp-for="SurnamesUser" class="control-label"></label>
                             <input asp-for="SurnamesUser" class="form-control" />
-                            <span asp-validation-for="SurnamesUser" class="text-danger"></span>
-                        </div>                                             
-                        <div class="form-group">
-                            <label asp-for="QualificationUser" class="control-label"></label>
-                            <input asp-for="QualificationUser" class="form-control" />
-                            <span asp-validation-for="QualificationUser" class="text-danger"></span>
                         </div>
+
                         <div class="form-group">
                             <label asp-for="Email" class="control-label"></label>
                             <input asp-for="Email" class="form-control" />
@@ -74,22 +67,15 @@
 
                         <div class="form-group">
                             <label asp-for="LocationResidenceID" class="control-label"></label>
-                            <select asp-for="LocationResidenceID" class="form-control" asp-items="ViewBag.LocationResidenceID"></select>
-                            <span asp-validation-for="LocationResidenceID" class="text-danger"></span>
+                            <select asp-for="LocationResidenceID" class="form-control" asp-items="@ViewBag.LocationData"></select>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="SexUser" class="control-label"></label>
-                            <input asp-for="SexUser" class="form-control" />
-                            <span asp-validation-for="SexUser" class="text-danger"></span>
-                        </div>                        
+
                         <div class="form-group">
                             <label asp-for="VolunteerPermises" class="control-label"></label>
-                            <input asp-for="VolunteerPermises" class="form-control" />
-                            <span asp-validation-for="VolunteerPermises" class="text-danger"></span>
+                            <input asp-for="VolunteerPermises" type="text" class="form-control" />
                         </div>
-                        <div class="form-group">
-                            <input type="submit" value="Save" class="btn btn-primary btn-block mt-3" />
-                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-2 fs-5">Edit</button>
                     </form>
                     <div class="text-center mt-3">
                         <a asp-action="Index" class="btn btn-light btn-block">Back to List</a>

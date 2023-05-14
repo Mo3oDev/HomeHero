@@ -42,55 +42,222 @@
                             <p class="card-text fw-bold secColor">Heroes solicitados: <span class="fw-normal text-white">@request.MembersNeeded</span></p>
                         </div>
                     </div>
-                    <div class="card fourthBg text-white d-flex justify-content-center col-lg-6 col-md-12 col-sm-12 p-0">
-                         <h5 class="font-title card-title secColor fs-5 p-2 ApplicantsTitle">Heroes Postulados</h5>
-                        <div class="card mb-3 fifthBg  aplicantHeroCard">
-                            <div class="row g-0">
-                                <div class="col-md-4 d-flex">
-                                    <img src="~/Images/testProfile.jpg" class="img-fluid rounded-start profileImg_2" alt="">
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Nombre Usuario</h5>
-                                        @if (ViewBag.evaluation == false)
-                                        {
-                                            <form asp-controller="Home" asp-action="Evaluate" method="post">
-                                                <textarea required type="text" name="name" placeholder="Comenta como te parecio el servicio" class="form-control h-75 mb-2 mt-2"></textarea>
-                                                <div class="star-widget">
-                                                    <input type="radio" name="rate" id="rate-1" value="1">
-                                                    <label for="rate-1" class="fas fa-star"></label>
-                                                    <input type="radio" name="rate" id="rate-2" value="2">
-                                                    <label for="rate-2" class="fas fa-star"></label>
-                                                    <input type="radio" name="rate" id="rate-3" value="3">
-                                                    <label for="rate-3" class="fas fa-star"></label>
-                                                    <input type="radio" name="rate" id="rate-4" value="4">
-                                                    <label for="rate-4" class="fas fa-star"></label>
-                                                    <input type="radio" name="rate" id="rate-5" value="5">
-                                                    <label for="rate-5" class="fas fa-star"></label>
-                                                    <h6 class="p-1 ps-0">Evalua el servicio</h6>
+                    if (ViewBag.active == 1)
+                    {
+                        <div class="card fourthBg text-white d-flex justify-content-center col-lg-6 col-md-12 col-sm-12 p-0">
+                            <h5 class="font-title card-title secColor fs-5 p-2 ApplicantsTitle">Heroes Postulados</h5>
+
+                            @if (ViewBag.RequestData != null)
+                            {
+
+                                var i = 1;
+
+                                foreach (AttentionRequest reque in ViewBag.RequestData)
+                                {
+                                    <div class="card mb-3 fifthBg  aplicantHeroCard">
+                                        <div class="row g-0">
+                                            @if (reque.HelperUser.ProfilePicture != null)
+                                            {
+                                                var userBase64 = Convert.ToBase64String(reque.HelperUser.ProfilePicture);
+                                                var userImgSrc = String.Format("data:image/gif;base64,{0}", userBase64);
+                                                <div class="col-md-4 d-flex">
+                                                    <div class="col-12 text-center">
+                                                        <img class="img-fluid rounded-start profileImg_2" src="@userImgSrc" />
+                                                    </div>
                                                 </div>
-                                                <button type="submit" class="btn btn-primary fs-6">Terminar Evaluar</button>
-                                            </form>
-                                        }
-                                        @if (ViewBag.payComprobant == false)
-                                        {
-                                            <form asp-action="payRecord" asp-controller="Home" method="post">
-                                                <div class="form-group mt-4 d-flex justify-content-start">
-                                                    <label for="payID" class="control-label pb-1 btn btn-outline-light">
-                                                        Comprobante de pago
-                                                        <i class="fa-solid fa-file-circle-plus"></i>
-                                                    </label>
-                                                    <input accept="application/pdf" type="file" id="payID" name="payRecord" class="form-control" style="display: none;"/>
-                                                    <h6 class="text-black mt-2 ms-3" id="payNameLabel"></h6>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-md-4 d-flex">
+                                                    <img src="~/Images/testProfile.jpg" class="img-fluid rounded-start profileImg_2" alt="">
                                                 </div>
-                                                <button type="submit" class="btn btn-primary mt-1 fs-6">Subir Comprobante</button>
-                                            </form>
-                                        }
+                                            }
+                                            <div class="col-md-8">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Héroe: @reque.HelperUser.NamesUser</h5>
+                                                    <div class="star-widget">
+                                                        <input type="radio" name="rate-@i" id="rate-1-@i" value="1">
+                                                        <label for="rate-1-@i" class="fas fa-star"></label>
+                                                        <input type="radio" name="rate-@i" id="rate-2-@i" value="2">
+                                                        <label for="rate-2-@i" class="fas fa-star"></label>
+                                                        <input type="radio" name="rate-@i" id="rate-3-@i" value="3">
+                                                        <label for="rate-3-@i" class="fas fa-star"></label>
+                                                        <input type="radio" name="rate-@i" id="rate-4-@i" value="4">
+                                                        <label for="rate-4-@i" class="fas fa-star"></label>
+                                                        <input type="radio" name="rate-@i" id="rate-5-@i" value="5">
+                                                        <label for="rate-5-@i" class="fas fa-star"></label>
+                                                    </div>
+                                                    <h5 class="card-title">Precio: $@reque.AttentionReqValue</h5>
+                                                    <div>
+                                                        <button class="btn btn-primary" onclick="location.href='@Url.Action("VisitProfile", "Home", new { idUser = @reque.HelperUserID})'">VerPerfil</button>
+                                                        <button class="btn btn-success" onclick="location.href='@Url.Action("AcceptPostulation", "Home", new { idUser = @reque.HelperUserID,idAttentionRequest = @reque.RequestID_AttentionRequest})'">Aceptar</button>
+                                                        <button class="btn btn-danger" onclick="location.href='@Url.Action("RejectPostulation", "Home", new { idUser = @reque.HelperUserID,idAttentionRequest = @reque.RequestID_AttentionRequest})'">Rechazar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                                    i++;
+                                }
+                            }
                         </div>
-                    </div>
+                    }
+                    if (ViewBag.active == 2)
+                    {
+                        <div class="card fourthBg text-white d-flex justify-content-center col-lg-6 col-md-12 col-sm-12 p-0">
+                            <h5 class="font-title card-title secColor fs-5 p-2 ApplicantsTitle">Heroes Postulados</h5>
+
+                            @if (ViewBag.RequestData != null)
+                            {
+                                foreach (AttentionRequest reque in ViewBag.RequestData)
+                                {
+                                    <div class="card mb-3 fifthBg  aplicantHeroCard">
+                                        <div class="row g-0">
+                                            @if (reque.HelperUser.ProfilePicture != null)
+                                            {
+                                                var userBase64 = Convert.ToBase64String(reque.HelperUser.ProfilePicture);
+                                                var userImgSrc = String.Format("data:image/gif;base64,{0}", userBase64);
+                                                <div class="col-md-4 d-flex">
+                                                    <div class="col-12 text-center">
+                                                        <img class="img-fluid rounded-start profileImg_2" alt="" src="@userImgSrc" />
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-md-4 d-flex">
+                                                    <img src="~/Images/testProfile.jpg" class="img-fluid rounded-start profileImg_2" alt="">
+                                                </div>
+                                            }
+                                            <div class="col-md-8">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Héroe: @reque.HelperUser.NamesUser</h5>
+                                                    <h5 class="card-title">Precio: $@reque.AttentionReqValue</h5>
+                                                    <div>
+                                                        <button class="btn btn-success" onclick="location.href='@Url.Action("EvaluateHero", "Home", new { idUser = @reque.HelperUserID,idAttentionRequest = @reque.RequestID_AttentionRequest})'">Evaluar</button>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                    if (ViewBag.active == 3)
+                    {
+                        <div class="card fourthBg text-white d-flex justify-content-center col-lg-6 col-md-12 col-sm-12 p-0">
+                            <h5 class="font-title card-title secColor fs-5 p-2 ApplicantsTitle">Heroes Postulados</h5>
+
+                            @if (ViewBag.RequestData != null)
+                            {
+                                foreach (AttentionRequest reque in ViewBag.RequestData)
+                                {
+                                    <div class="card-body">
+                                        @if (reque.HelperUser.ProfilePicture != null)
+                                        {
+                                            var userBase64 = Convert.ToBase64String(reque.HelperUser.ProfilePicture);
+                                            var userImgSrc = String.Format("data:image/gif;base64,{0}", userBase64);
+                                            <div class="col-md-4 d-flex">
+                                                <div class="col-12 text-center">
+                                                    <img class="img-fluid rounded-start profileImg_2" alt="" src="@userImgSrc" />
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-md-4 d-flex">
+                                                <img src="~/Images/testProfile.jpg" class="img-fluid rounded-start profileImg_2" alt="">
+                                            </div>
+                                        }
+                                        <h5 class="card-title">Héroe: @reque.HelperUser.NamesUser</h5>
+                                        <form asp-controller="Home" asp-action="Evaluate" method="post">
+                                            <textarea required type="text" name="name" placeholder="Comenta como te parecio el servicio" class="form-control h-75 mb-2 mt-2"></textarea>
+                                            <div class="star-widget">
+                                                <input type="radio" name="rate" id="rate-1" value="1">
+                                                <label for="rate-1" class="fas fa-star"></label>
+                                                <input type="radio" name="rate" id="rate-2" value="2">
+                                                <label for="rate-2" class="fas fa-star"></label>
+                                                <input type="radio" name="rate" id="rate-3" value="3">
+                                                <label for="rate-3" class="fas fa-star"></label>
+                                                <input type="radio" name="rate" id="rate-4" value="4">
+                                                <label for="rate-4" class="fas fa-star"></label>
+                                                <input type="radio" name="rate" id="rate-5" value="5">
+                                                <label for="rate-5" class="fas fa-star"></label>
+                                                <h6 class="p-1 ps-0">Evalua el servicio</h6>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary fs-6">Terminar Evaluar</button>
+                                        </form>
+                                        <form asp-action="payRecord" asp-controller="Home" method="post">
+                                            <div class="form-group mt-4 d-flex justify-content-start">
+                                                <label for="payID" class="control-label pb-1 btn btn-outline-light">
+                                                    Comprobante de pago
+                                                    <i class="fa-solid fa-file-circle-plus"></i>
+                                                </label>
+                                                <input accept="application/pdf" type="file" id="payID" name="payRecord" class="form-control" style="display: none;" />
+                                                <h6 class="text-black mt-2 ms-3" id="payNameLabel"></h6>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary mt-1 fs-6">Subir Comprobante</button>
+                                        </form>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        @* <div class="card fourthBg text-white d-flex justify-content-center col-lg-6 col-md-12 col-sm-12 p-0">
+            <h5 class="font-title card-title secColor fs-5 p-2 ApplicantsTitle">Heroes Postulados</h5>
+            <div class="card mb-3 fifthBg  aplicantHeroCard">
+            <div class="row g-0">
+            <div class="col-md-4 d-flex">
+            <img src="~/Images/testProfile.jpg" class="img-fluid rounded-start profileImg_2" alt="">
+            </div>
+            <div class="col-md-8">
+            <div class="card-body">
+            <h5 class="card-title">Nombre Usuario</h5>
+            @if (ViewBag.evaluation == false)
+            {
+            <form asp-controller="Home" asp-action="Evaluate" method="post">
+            <textarea required type="text" name="name" placeholder="Comenta como te parecio el servicio" class="form-control h-75 mb-2 mt-2"></textarea>
+            <div class="star-widget">
+            <input type="radio" name="rate" id="rate-1" value="1">
+            <label for="rate-1" class="fas fa-star"></label>
+            <input type="radio" name="rate" id="rate-2" value="2">
+            <label for="rate-2" class="fas fa-star"></label>
+            <input type="radio" name="rate" id="rate-3" value="3">
+            <label for="rate-3" class="fas fa-star"></label>
+            <input type="radio" name="rate" id="rate-4" value="4">
+            <label for="rate-4" class="fas fa-star"></label>
+            <input type="radio" name="rate" id="rate-5" value="5">
+            <label for="rate-5" class="fas fa-star"></label>
+            <h6 class="p-1 ps-0">Evalua el servicio</h6>
+            </div>
+            <button type="submit" class="btn btn-primary fs-6">Terminar Evaluar</button>
+            </form>
+            }
+            @if (ViewBag.payComprobant == false)
+            {
+            <form asp-action="payRecord" asp-controller="Home" method="post">
+            <div class="form-group mt-4 d-flex justify-content-start">
+            <label for="payID" class="control-label pb-1 btn btn-outline-light">
+            Comprobante de pago
+            <i class="fa-solid fa-file-circle-plus"></i>
+            </label>
+            <input accept="application/pdf" type="file" id="payID" name="payRecord" class="form-control" style="display: none;" />
+            <h6 class="text-black mt-2 ms-3" id="payNameLabel"></h6>
+            </div>
+            <button type="submit" class="btn btn-primary mt-1 fs-6">Subir Comprobante</button>
+            </form>
+            }
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>*@
+                    }
                 }
             </div>
         </div>

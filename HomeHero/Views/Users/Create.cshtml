@@ -10,7 +10,7 @@
 @section inicioLI{
     @if (User.IsInRole("Admon"))
     {
-        <li class="nav-item logIn ">
+        <li class="nav-item admin">
             <a class="nav-link " asp-area="" asp-controller="Users" asp-action="">AdminSecret</a>
         </li>
         <li class="nav-item logIn ">
@@ -34,62 +34,49 @@
 @section Main{
     <section class="p-4">
         <div class="container bg-dark text-white rounded py-3" style="max-width: 50%;">
-            <h1 class="text-center mb-4">Index</h1>
+            <h1 class="text-center mb-4">Create User</h1>
+            <hr class="border-light" />
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <form asp-controller="Users" asp-action="Create" method="post">
+                        <div class="form-group">
+                            <label asp-for="RoleID_User" class="control-label"></label>
+                            <select asp-for="RoleID_User" class="form-control" asp-items="@ViewBag.RolesData"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="control-label">NamesUser</label>
+                            <input required type="text" id="name" name="name" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="surnames" class="control-label">SurnamesUser</label>
+                            <input required type="text" id="surnames" name="surnames" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="control-label">Email</label>
+                            <input required type="email" id="email" name="email" class="form-control" />
+                            <span for="email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="control-label">Password</label>
+                            <input required type="password" id="password" name="password" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@@$!%*#?&-_]{8,}$" title="Debe contener al menos 8 caracteres, incluyendo al menos 1 letra y 1 número." class="form-control" />
 
-            <div class="text-center mb-3">
-                <a href="@Url.Action("Create")" class="btn btn-primary">Create New</a>
-            </div>
-            <form asp-action="Create">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="RealUserID" class="control-label"></label>
-                    <input asp-for="RealUserID" class="form-control" />
-                    <span asp-validation-for="RealUserID" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="NamesUser" class="control-label"></label>
-                    <input asp-for="NamesUser" class="form-control" />
-                    <span asp-validation-for="NamesUser" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="SurnamesUser" class="control-label"></label>
-                    <input asp-for="SurnamesUser" class="form-control" />
-                    <span asp-validation-for="SurnamesUser" class="text-danger"></span>
-                </div>
-                              
-                <div class="form-group">
-                    <label asp-for="Email" class="control-label"></label>
-                    <input asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Password" class="control-label"></label>
-                    <input asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="LocationResidenceID" class="control-label"></label>
-                    <select asp-for="LocationResidenceID" class="form-control" asp-items="ViewBag.LocationResidenceID"></select>
-                </div>
-                <div class="form-group">
-                    <label asp-for="SexUser" class="control-label"></label>
-                    <input asp-for="SexUser" class="form-control" />
-                    <span asp-validation-for="SexUser" class="text-danger"></span>
-                </div>                
-                <div class="form-group mt-3">
-                    <input type="submit" value="Create" class="btn btn-primary" />
-                </div>
-            </form>
-            <div class="row mt-3">
-                <div class="col-12 text-center">
-                    <a href="@Url.Action("Index")" class="btn btn-light">Back to List</a>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="LocationResidenceID" class="control-label"></label>
+                            <select asp-for="LocationResidenceID" class="form-control" asp-items="@ViewBag.LocationData"></select>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2 fs-5">Create</button>
+                    </form>
+                    <div class="row mt-3">
+                        <div class="col-12 text-center">
+                            <a href="@Url.Action("Index")" class="btn btn-light">Back to List</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
     </section>
-   
+
 }
 @section scripts {
     @{

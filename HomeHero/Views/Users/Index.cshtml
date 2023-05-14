@@ -11,7 +11,7 @@
 @section inicioLI{
     @if (User.IsInRole("Admon"))
     {
-        <li class="nav-item logIn ">
+        <li class="nav-item admin ">
             <a class="nav-link " asp-area="" asp-controller="Users" asp-action="">AdminSecret</a>
         </li>
         <li class="nav-item logIn ">
@@ -33,7 +33,7 @@
 }
 
 @section Main{
-  
+
     <section class="p-4">
         <div class="container bg-dark text-white rounded py-3" style="max-width: 100%;">
             <h1 class="text-center mb-4">Index</h1>
@@ -50,7 +50,7 @@
                         <th>@Html.DisplayNameFor(model => model.NamesUser)</th>
                         <th>@Html.DisplayNameFor(model => model.SurnamesUser)</th>
                         <th>@Html.DisplayNameFor(model => model.ProfilePicture)</th>
-                        <th>@Html.DisplayNameFor(model => model.VolunteerVoucher)</th>
+                       @*<th>@Html.DisplayNameFor(model => model.VolunteerVoucher)</th>*@
                         <th>@Html.DisplayNameFor(model => model.QualificationUser)</th>
                         <th>@Html.DisplayNameFor(model => model.Email)</th>
                         <th>@Html.DisplayNameFor(model => model.LocationResidence)</th>
@@ -68,11 +68,21 @@
                             <td>@Html.DisplayFor(modelItem => item.RealUserID)</td>
                             <td>@Html.DisplayFor(modelItem => item.NamesUser)</td>
                             <td>@Html.DisplayFor(modelItem => item.SurnamesUser)</td>
-                            <td>@Html.DisplayFor(modelItem => item.ProfilePicture)</td>
-                            <td>@Html.DisplayFor(modelItem => item.VolunteerVoucher)</td>
+                            @if (item.ProfilePicture != null && item.ProfilePicture.Length > 0)
+                            {
+                                var base64 = Convert.ToBase64String(item.ProfilePicture);
+                                var imgSrc = String.Format("data:image/png;base64,{0}", base64);
+
+                                <td><img src="@imgSrc" width="100" /></td>
+                            }
+                            else
+                            {
+                                <td>@Html.DisplayFor(modelItem => item.ProfilePicture)</td>
+                            }
+                            @*<td>@Html.DisplayFor(modelItem => item.VolunteerVoucher)</td>*@
                             <td>@Html.DisplayFor(modelItem => item.QualificationUser)</td>
                             <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                            <td>@Html.DisplayFor(modelItem => item.LocationResidence.LocationID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.LocationResidence.City)</td>
                             <td>@Html.DisplayFor(modelItem => item.SexUser)</td>
                             @*<td>@Html.DisplayFor(modelItem => item.Curriculum)</td>*@
                             <td>@Html.DisplayFor(modelItem => item.VolunteerPermises)</td>

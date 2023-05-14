@@ -6,18 +6,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Diagnostics;
 using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using HomeHero.Filters;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
-using System.Data;
 
 namespace HomeHero.Controllers
 {
@@ -102,21 +94,25 @@ namespace HomeHero.Controllers
         [AuthorizeUsers]
         public IActionResult ManageRequest(int activeTab = 1)
         {
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
             ViewBag.active = activeTab;
             if (activeTab == 1)
             {
-                ViewBag.Requests = _context.Request.Where(e => e.ReqStateID_Request == 1).ToList();
+                ViewBag.Requests = _context.Request.Where(e => e.ReqStateID_Request == 1 && e.UserId_Request == idUser).ToList();
 
             }
             else if (activeTab == 2)
             {
 
-                ViewBag.Requests = _context.Request.Where(e => e.ReqStateID_Request == 2).ToList();
+                ViewBag.Requests = _context.Request.Where(e => e.ReqStateID_Request == 2 && e.UserId_Request == idUser).ToList();
 
             }
             else if (activeTab == 3)
             {
-                ViewBag.Requests = _context.Request.Where(e => e.ReqStateID_Request == 3).ToList();
+                ViewBag.Requests = _context.Request.Where(e => e.ReqStateID_Request == 3 && e.UserId_Request == idUser).ToList();
 
             }
 
@@ -124,22 +120,72 @@ namespace HomeHero.Controllers
             return View("~/Views/HeroViews/ManageRequest.cshtml");
         }
 
-        public IActionResult ManageRequest2(int RequestID)
+        public IActionResult ManageRequest2(int RequestID, int activeTab)
         {
-            ViewBag.Request = _context.Request.FirstOrDefault(r => r.RequestID == RequestID);
-            _context.Request.Include(r => r.Location_Request).ToList();
-            ViewBag.evaluation = false;
-            ViewBag.payComprobant = false;
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+            ViewBag.active = activeTab;
+
+
+            if (activeTab == 1)
+            {
+                ViewBag.RequestData = _context.AttentionRequest.Where(e => e.RequestID_AttentionRequest == RequestID && e.AttentionRequest_StateID == 1).ToList();
+                _context.AttentionRequest.Include(r => r.HelperUser).ToList();
+                ViewBag.Requests = _context.Request.Where(e => e.ReqStateID_Request == 1 && e.UserId_Request == idUser).ToList();
+                ViewBag.Request = _context.Request.FirstOrDefault(r => r.RequestID == RequestID);
+                _context.Request.Include(r => r.Location_Request).ToList();
+
+            }
+            else if (activeTab == 2)
+            {
+                ViewBag.RequestData = _context.AttentionRequest.Where(e => e.RequestID_AttentionRequest == RequestID && e.AttentionRequest_StateID == 2).ToList();
+                _context.AttentionRequest.Include(r => r.HelperUser).ToList();
+                ViewBag.Requests = _context.Request.Where(e => e.ReqStateID_Request == 2 && e.UserId_Request == idUser).ToList();
+                ViewBag.Request = _context.Request.FirstOrDefault(r => r.RequestID == RequestID);
+                _context.Request.Include(r => r.Location_Request).ToList();
+
+
+            }
+            else if (activeTab == 3)
+            {
+                ViewBag.RequestData = _context.AttentionRequest.Where(e => e.RequestID_AttentionRequest == RequestID && e.AttentionRequest_StateID == 3).ToList();
+                _context.AttentionRequest.Include(r => r.HelperUser).ToList();
+                ViewBag.Requests = _context.Request.Where(e => e.ReqStateID_Request == 3 && e.UserId_Request == idUser).ToList();
+                ViewBag.Request = _context.Request.FirstOrDefault(r => r.RequestID == RequestID);
+                _context.Request.Include(r => r.Location_Request).ToList();
+
+            }
+
             return View("~/Views/HeroViews/ManageRequest2.cshtml");
         }
         [AuthorizeUsers]
         public IActionResult ProfileMb(bool modifyProfile = false)
         {
             ViewData["modifyProfile"] = modifyProfile;
+            ViewBag.PublicProfile = false;
             var claimsPrincipal = HttpContext.User;
             var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
             int idUser;
             int.TryParse(idUserClaim.Value, out idUser);
+            User user = _context.User.FirstOrDefault(u => u.UserId == idUser);
+            ViewData["missindFields"] = _heroServices.getNullProperties(user);
+            ViewData["user"] = user;
+            ViewData["locationResidence"] = _context.Location.FirstOrDefault(l => l.LocationID == user.LocationResidenceID).City;
+            ViewData["Sexs"] = new List<string> { "Masculino", "Femenino", "No binario", "Prefiero no responder" };
+            ViewData["CurrentSex"] = GetSexUserValue(user.SexUser);
+            var data = _context.Location.ToList();
+            ViewBag.LocationData = new SelectList(data, "LocationID", "City");
+            List<Contact> contactData = _context.Contact.Where(c => c.UserID_Contact == idUser).ToList();
+            ViewBag.ContactData = contactData;
+            return View("~/Views/HeroViews/profileMb.cshtml");
+        }
+        [AuthorizeUsers]
+        public IActionResult VisitProfile(int idUser)
+        {
+            ViewData["modifyProfile"] = false;
+            ViewBag.PublicProfile = true;
             User user = _context.User.FirstOrDefault(u => u.UserId == idUser);
             ViewData["missindFields"] = _heroServices.getNullProperties(user);
             ViewData["user"] = user;
@@ -189,7 +235,11 @@ namespace HomeHero.Controllers
         [AuthorizeUsers]
         public IActionResult RequestList()
         {
-            ViewBag.Requests = _context.Request.ToList();
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+            ViewBag.Requests = _context.Request.Where(e => e.UserId_Request != idUser && e.ReqStateID_Request == 1).ToList();
             ViewBag.LocationData = _context.Request.Include(r => r.Location_Request).ToList();
             ViewBag.RequestSelected = _context.Request.FirstOrDefault();
             return View("~/Views/HeroViews/RequestList.cshtml");
@@ -213,11 +263,12 @@ namespace HomeHero.Controllers
             {
                 requests = requests.Where(r => r.PublicationReqDate.Date == dateFilter.Value.Date);
             }
-
-            // Incluir las relaciones necesarias
             requests = requests.Include(r => r.Location_Request);
-
-            ViewBag.Requests = requests.ToList();
+            var claimsPrincipal = HttpContext.User;
+            var idUserClaim = claimsPrincipal.FindFirst("IdUsuario");
+            int idUser;
+            int.TryParse(idUserClaim.Value, out idUser);
+            ViewBag.Requests = _context.Request.Where(e => e.UserId_Request != idUser && e.ReqStateID_Request == 1).ToList();
             ViewBag.LocationData = _context.Request.Include(r => r.Location_Request).ToList();
             return View("~/Views/HeroViews/RequestList.cshtml");
         }
@@ -368,7 +419,7 @@ namespace HomeHero.Controllers
             {
                 user.Curriculum = ConvertToByteArrayAsync(curriculum);
             }
-            if(image != null)
+            if (image != null)
             {
                 user.ProfilePicture = ConvertToByteArrayAsync(image);
             }
@@ -440,7 +491,7 @@ namespace HomeHero.Controllers
             if (await _heroServices.HHeroPostulation.AddPostulation(request, price, idUser))
             {
                 ViewBag.Message = "Postulación realizada correctamente!";
-                ViewBag.Requests = _context.Request.ToList();
+                ViewBag.Requests = _context.Request.Where(e => e.UserId_Request != idUser && e.ReqStateID_Request == 1).ToList();
                 ViewBag.LocationData = _context.Request.Include(r => r.Location_Request).ToList();
                 ViewBag.RequestSelected = _context.Request.FirstOrDefault();
                 return View("~/Views/HeroViews/RequestList.cshtml");
@@ -451,6 +502,61 @@ namespace HomeHero.Controllers
             ViewBag.LocationData = _context.Request.Include(r => r.Location_Request).ToList();
             ViewBag.RequestSelected = _context.Request.FirstOrDefault();
             return View("~/Views/HeroViews/RequestList.cshtml");
+        }
+        public async Task<IActionResult> AcceptPostulation(int idUser, int idAttentionRequest)
+        {
+            if (_context.AttentionRequest.FirstOrDefault(e => e.HelperUser.UserId == idUser && e.RequestID_AttentionRequest == idAttentionRequest && e.AttentionRequest_StateID !=1) == null)
+            {
+                if (await actualHeroes(idAttentionRequest) < _context.Request.FirstOrDefault(e => e.RequestID == idAttentionRequest).MembersNeeded)
+                {
+                    AttentionRequest attention = _context.AttentionRequest.FirstOrDefault(e => e.HelperUser.UserId == idUser && e.RequestID_AttentionRequest == idAttentionRequest);
+                    attention.AttentionRequest_StateID = 2;
+                    _context.AttentionRequest.Update(attention);
+                    await _context.SaveChangesAsync();
+                }
+                if (await actualHeroes(idAttentionRequest) == _context.Request.FirstOrDefault(e => e.RequestID == idAttentionRequest).MembersNeeded)
+                {
+                    Request request = _context.Request.Find(idAttentionRequest);
+                    request.ReqStateID_Request = 2;
+                    _context.Request.Update(request);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+
+            return RedirectToAction("ManageRequest");
+        }
+        public async Task<IActionResult> RejectPostulation(int idUser, int idAttentionRequest)
+        {
+            AttentionRequest attention = _context.AttentionRequest.FirstOrDefault(e => e.HelperUser.UserId == idUser && e.RequestID_AttentionRequest == idAttentionRequest);
+            _context.AttentionRequest.Remove(attention);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ManageRequest");
+        }
+        public async Task<int> actualHeroes(int idAttentionRequest)
+        {
+            return _context.AttentionRequest.Where(e => e.RequestID_AttentionRequest == idAttentionRequest && e.AttentionRequest_StateID !=1).ToList().Count();
+        }
+        public async Task<IActionResult> EvaluateHero(int idUser, int idAttentionRequest)
+        {
+            if (_context.AttentionRequest.FirstOrDefault(e => e.HelperUser.UserId == idUser && e.RequestID_AttentionRequest == idAttentionRequest && e.AttentionRequest_StateID != 2) == null)
+            {
+                if (await actualHeroes(idAttentionRequest) < _context.Request.FirstOrDefault(e => e.RequestID == idAttentionRequest).MembersNeeded)
+                {
+                    AttentionRequest attention = _context.AttentionRequest.FirstOrDefault(e => e.HelperUser.UserId == idUser && e.RequestID_AttentionRequest == idAttentionRequest);
+                    attention.AttentionRequest_StateID = 3;
+                    _context.AttentionRequest.Update(attention);
+                    await _context.SaveChangesAsync();
+                }
+                if (await actualHeroes(idAttentionRequest) == _context.Request.FirstOrDefault(e => e.RequestID == idAttentionRequest).MembersNeeded)
+                {
+                    Request request = _context.Request.Find(idAttentionRequest);
+                    request.ReqStateID_Request = 3;
+                    _context.Request.Update(request);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction("ManageRequest");
         }
     }
 }

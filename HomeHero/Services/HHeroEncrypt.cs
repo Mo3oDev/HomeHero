@@ -49,7 +49,7 @@ namespace HomeHero.Services
            
         }
       
-        public static byte[] GenerateSalt()
+        public byte[] GenerateSalt()
         {
             Random random = new Random();
             int number = random.Next(0, 255);
@@ -58,7 +58,7 @@ namespace HomeHero.Services
                 rng.GetBytes(salt);
             return salt;
         }
-        public static byte[] HashPassword(string password, byte[] salt)
+        public  byte[] HashPassword(string password, byte[] salt)
         {
             byte[] saltedPassword = Encoding.UTF8.GetBytes(password).Concat(salt).ToArray();
             using (var sha256 = SHA256.Create())
